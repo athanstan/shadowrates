@@ -1,66 +1,103 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<p align="center"><img src="https://en.shadowverse-evolve.com/wordpress/wp-content/themes/en-shadowverse-evolve/assets/images/common/logo.png" alt="Shadowverse Logo"></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# ShadowRates
 
-## About Laravel
+ShadowRates is a comprehensive companion app for Shadowverse players, designed to help track, rate, and analyze cards from the popular digital card game. Whether you're a competitive player looking to stay on top of the meta or a casual player exploring new decks, ShadowRates provides the tools you need to enhance your Shadowverse experience.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## About Shadowverse
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Shadowverse is a free-to-play digital collectible card game developed by Cygames. Known for its strategic gameplay, diverse craft classes, and beautiful artwork, Shadowverse has attracted millions of players worldwide. The game features regular expansions, adding new cards and mechanics that keep the gameplay experience fresh and engaging.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Features
 
-## Learning Laravel
+-   **Comprehensive Card Database**: Browse and search through all cards from the latest expansions.
+-   **Card Rating System**: Rate cards based on their performance in various formats and view community ratings.
+-   **Coming Soon**:
+    -   Deck Building: Create, save, and share your favorite decks.
+    -   Meta Analysis: Track the most popular and successful decks in the current meta.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Tech Stack
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+-   **Frontend**: Laravel Blade, Livewire, Tailwind CSS
+-   **Backend**: Laravel, PHP
+-   **Database**: PostgreSQL
+-   **Containerization**: Docker (Laravel Sail)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Getting Started
 
-## Laravel Sponsors
+### Prerequisites
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+-   Docker and Docker Compose
+-   Composer
+-   Git
 
-### Premium Partners
+### Installation
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+1. Clone the repository:
+
+    ```
+    git clone https://github.com/yourusername/shadowrates.git
+    cd shadowrates
+    ```
+
+2. Install dependencies:
+
+    ```
+    composer install
+    ```
+
+3. Copy the environment file and configure it:
+
+    ```
+    cp .env.example .env
+    ```
+
+4. Start the application using Laravel Sail:
+
+    ```
+    ./vendor/bin/sail up -d
+    ```
+
+5. Generate application key:
+
+    ```
+    ./vendor/bin/sail artisan key:generate
+    ```
+
+6. Run migrations:
+
+    ```
+    ./vendor/bin/sail artisan migrate
+    ```
+
+7. Seed the database with card data:
+    ```
+    ./vendor/bin/sail artisan db:seed
+    ```
+
+### Usage
+
+1. Browse cards by set, craft, or type
+2. Rate cards and read community reviews
+3. Create and save decks (coming soon)
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+-   Cygames for creating Shadowverse
+-   The Shadowverse community for their passion and support
+
+## Disclaimer
+
+ShadowRates is not affiliated with, endorsed, or sponsored by Cygames. All card images, game mechanics, and related Shadowverse content are property of Cygames.
