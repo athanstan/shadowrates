@@ -43,7 +43,7 @@ class CardSetFactory extends Factory
             'name' => $name,
             'slug' => Str::slug($name),
             'short_name' => $shortName,
-            'description' => $this->faker->paragraph(),
+            'description' => $this->faker->text(150),
             'logo_url' => $this->faker->imageUrl(200, 100),
             'release_date' => $this->faker->dateTimeBetween('-5 years', 'now'),
             'is_standard_legal' => $this->faker->boolean(70),

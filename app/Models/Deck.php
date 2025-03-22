@@ -23,7 +23,7 @@ class Deck extends Model
         'name',
         'description',
         'user_id',
-        'class_id',        // Now references Craft model
+        'craft_id',        // References Craft model
         'is_public',
         'format',          // e.g., 'rotation', 'unlimited'
         'thumbnail_url',
@@ -51,7 +51,7 @@ class Deck extends Model
      */
     public function craft(): BelongsTo
     {
-        return $this->belongsTo(Craft::class, 'class_id');
+        return $this->belongsTo(Craft::class);
     }
 
     /**

@@ -23,7 +23,7 @@ class CardTypeFactory extends Factory
         return [
             'name' => $name,
             'slug' => Str::slug($name),
-            'description' => $this->faker->sentence(),
+            'description' => $this->faker->text(100),
             'icon_url' => $this->faker->imageUrl(50, 50),
             'is_active' => true,
             'display_order' => $this->faker->numberBetween(1, 10),

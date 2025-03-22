@@ -21,17 +21,53 @@ class CardFactory extends Factory
      */
     public function definition(): array
     {
-        $name = $this->faker->unique()->sentence(rand(1, 3));
-        $name = ucwords($name);
+        // Create a name using random words
+        $wordList = [
+            'Ancient',
+            'Dark',
+            'Mystic',
+            'Forest',
+            'Dragon',
+            'Shadow',
+            'Sword',
+            'Blood',
+            'Haven',
+            'Portal',
+            'Rune',
+            'Fairy',
+            'Knight',
+            'Wizard',
+            'Necromancer',
+            'Warrior',
+            'Guardian',
+            'Spirit',
+            'Demon',
+            'Angel',
+            'Prince',
+            'Princess',
+            'King',
+            'Queen',
+            'Goblin',
+            'Elf',
+            'Golem',
+            'Phoenix',
+            'Wolf'
+        ];
+
+        // Manually select random words
+        shuffle($wordList);
+        $numWords = rand(1, 3);
+        $selectedWords = array_slice($wordList, 0, $numWords);
+        $name = ucwords(implode(' ', $selectedWords));
 
         $rarities = ['Bronze', 'Silver', 'Gold', 'Legendary'];
 
         return [
             'name' => $name,
             'slug' => Str::slug($name),
-            'description' => $this->faker->paragraph(),
-            'effect' => $this->faker->paragraph(),
-            'evolved_effect' => $this->faker->boolean(70) ? $this->faker->paragraph() : null,
+            'description' => $this->faker->text(),
+            'effect' => $this->faker->text(),
+            'evolved_effect' => $this->faker->boolean(70) ? $this->faker->text() : null,
 
             // Get or create dependencies
             'card_type_id' => function () {
