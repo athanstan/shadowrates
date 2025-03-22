@@ -22,7 +22,7 @@ class RatingFactory extends Factory
         return [
             'user_id' => User::factory(),
             'rating_value' => $this->faker->randomFloat(1, 1, 5),
-            'comment' => $this->faker->boolean(70) ? $this->faker->paragraph() : null,
+            'review' => $this->faker->boolean(70) ? $this->faker->paragraph() : null,
         ];
     }
 

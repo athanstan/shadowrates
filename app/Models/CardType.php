@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class CardType extends Model
 {
     /** @use HasFactory<\Database\Factories\CardTypeFactory> */
-    use HasFactory;
+    use HasFactory, Sluggable;
 
     /**
      * The attributes that are mass assignable.
@@ -34,6 +35,20 @@ class CardType extends Model
         'is_active' => 'boolean',
         'display_order' => 'integer',
     ];
+
+    /**
+     * Return the sluggable configuration array for this model.
+     *
+     * @return array
+     */
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'name'
+            ]
+        ];
+    }
 
     /**
      * Get the cards of this type.

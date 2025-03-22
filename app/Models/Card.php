@@ -2,16 +2,18 @@
 
 namespace App\Models;
 
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 
 class Card extends Model
 {
     /** @use HasFactory<\Database\Factories\CardFactory> */
-    use HasFactory;
+    use HasFactory, Sluggable;
 
     /**
      * The attributes that are mass assignable.
@@ -58,6 +60,20 @@ class Card extends Model
         'is_neutral' => 'boolean',
         'is_active' => 'boolean',
     ];
+
+    /**
+     * Return the sluggable configuration array for this model.
+     *
+     * @return array
+     */
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'name'
+            ]
+        ];
+    }
 
     /**
      * Get the decks that include this card.
@@ -141,6 +157,30 @@ class Card extends Model
     public function getAverageRatingAttribute(): float
     {
         return $this->ratings()->avg('rating_value') ?? 0.0;
+    }
+
+    /**
+     * Get the card's image URL from the card-images filesystem.
+     *
+     * @return string
+     */
+    public function getImage(): string
+    {
+        return $this->image
+            ? url('/card-images/' . $this->image)
+            : asset('images/card-placeholder.png');
+    }
+
+    /**
+     * Get the card's evolved image URL from the card-images filesystem.
+     *
+     * @return string
+     */
+    public function getEvolvedImage(): string
+    {
+        return $this->evolved_image
+            ? url('/card-images/' . $this->evolved_image)
+            : asset('images/card-placeholder.png');
     }
 
     /**

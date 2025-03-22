@@ -21,7 +21,9 @@ class Rating extends Model
         'card_id',
         'deck_id',
         'rating_value',
-        'comment',
+        'review',
+        'format',
+        'is_published',
     ];
 
     /**
@@ -30,7 +32,8 @@ class Rating extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'rating_value' => 'float',
+        'rating_value' => 'decimal:1',
+        'is_published' => 'boolean',
     ];
 
     /**
@@ -42,7 +45,7 @@ class Rating extends Model
     }
 
     /**
-     * Get the card that is rated (if applicable).
+     * Get the card that was rated.
      */
     public function card(): BelongsTo
     {
@@ -50,7 +53,7 @@ class Rating extends Model
     }
 
     /**
-     * Get the deck that is rated (if applicable).
+     * Get the deck that was rated.
      */
     public function deck(): BelongsTo
     {

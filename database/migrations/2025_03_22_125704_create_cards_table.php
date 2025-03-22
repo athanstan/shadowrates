@@ -29,8 +29,8 @@ return new class extends Migration
             // Card attributes
             $table->integer('cost');
             $table->string('rarity');
-            $table->string('image_url')->nullable();
-            $table->string('evolved_image_url')->nullable();
+            $table->string('image')->nullable();
+            $table->string('evolved_image')->nullable();
 
             // Follower stats (nullable for spells and amulets)
             $table->integer('attack')->nullable();
@@ -45,7 +45,7 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
 
             // If this is an alternate art version, reference the original card
-            $table->foreignId('original_card_id')->nullable()->constrained('cards');
+            $table->string('original_card_id')->nullable();
 
             $table->timestamps();
         });

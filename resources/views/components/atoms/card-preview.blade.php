@@ -1,15 +1,14 @@
 @props(['card'])
 
-<div class="card-container neo-brutal-panel overflow-hidden hover:shadow-purple-700/30 transition-shadow duration-300 pixel-corners"
+<div class="overflow-hidden transition-shadow duration-300 card-container neo-brutal-panel hover:shadow-purple-700/30 pixel-corners"
     wire:key="card-{{ $card->id }}">
     <div class="relative">
         <!-- Card Image -->
-        <img src="{{ $card->image_url ?? 'https://via.placeholder.com/250x350?text=Card+Image' }}"
-            alt="{{ $card->name }}" class="w-full h-auto object-cover">
+        <img src="{{ $card->getImage() }}" alt="{{ $card->name }}" class="object-cover w-full h-auto">
 
         <!-- Card Cost -->
         <div
-            class="absolute top-2 left-2 bg-blue-500 text-white font-bold rounded-full w-8 h-8 flex items-center justify-center shadow-lg shadow-blue-500/30">
+            class="absolute flex items-center justify-center w-8 h-8 font-bold text-white bg-blue-500 rounded-full shadow-lg top-2 left-2 shadow-blue-500/30">
             {{ $card->cost }}
         </div>
 
@@ -32,7 +31,7 @@
         <h3 class="font-bold text-purple-100 truncate">{{ $card->name }}</h3>
 
         <!-- Card Info (Type / Craft) -->
-        <div class="flex justify-between text-sm text-purple-300 mb-1">
+        <div class="flex justify-between mb-1 text-sm text-purple-300">
             <span>{{ $card->cardType->name ?? 'Unknown Type' }}</span>
             <span>{{ $card->craft->name ?? 'Unknown Craft' }}</span>
         </div>
@@ -52,7 +51,7 @@
 
     <!-- View Details Button -->
     <a href="{{ route('cards.show', $card) }}" wire:navigate
-        class="block w-full bg-purple-700 hover:bg-purple-600 text-white font-semibold text-center py-2 transition-colors duration-200">
+        class="block w-full py-2 font-semibold text-center text-white transition-colors duration-200 bg-purple-700 hover:bg-purple-600">
         View Details
     </a>
 </div>
