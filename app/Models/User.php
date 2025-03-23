@@ -108,13 +108,11 @@ class User extends Authenticatable
         return $this->hasMany(Rating::class);
     }
 
-    /**
-     * Get the card collection of the user.
-     */
-    public function collection(): BelongsToMany
+
+    public function cards(): BelongsToMany
     {
-        return $this->belongsToMany(Card::class, 'user_cards')
-            ->withPivot(['quantity', 'foil_quantity', 'liquefied', 'date_acquired'])
+        return $this->belongsToMany(Card::class)
+            ->withPivot(['quantity'])
             ->withTimestamps()
             ->as('collection_item');
     }

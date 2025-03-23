@@ -3,9 +3,22 @@
 <div class="relative z-10 overflow-hidden transition-all duration-300 transform cursor-pointer card-container hover:shadow-purple-700/30 hover:scale-125 hover:z-30"
     wire:key="card-{{ $card->id }}" x-data="{
         showModal: false,
-        count: 0, // This will be replaced with actual collection count from backend
         showAnimation: false,
-        animationType: ''
+        animationType: '',
+        addCard() {
+            $wire.cardCollection[{{ $card->id }}] = ($wire.cardCollection[{{ $card->id }}] || 0) + 1;
+            this.showAnimation = true;
+            this.animationType = 'add';
+            setTimeout(() => this.showAnimation = false, 500);
+        },
+        removeCard() {
+            if ($wire.cardCollection[{{ $card->id }}] > 0) {
+                $wire.cardCollection[{{ $card->id }}] = Math.max(0, $wire.cardCollection[{{ $card->id }}] - 1);
+                this.showAnimation = true;
+                this.animationType = 'subtract';
+                setTimeout(() => this.showAnimation = false, 500);
+            }
+        }
     }" @click="showModal = true">
     <div class="relative">
         <!-- Card Image -->
@@ -29,17 +42,18 @@
                     <div class="absolute bottom-0 left-0 right-0 flex items-center justify-center p-2 bg-black/70"
                         @click.stop>
                         <button class="px-3 py-1 text-lg font-bold transition-colors rounded-l-full"
-                            :class="count > 0 ? 'text-purple-300 hover:text-purple-100 hover:bg-purple-900/50' :
+                            :class="$wire.cardCollection[{{ $card->id }}] > 0 ?
+                                'text-purple-300 hover:text-purple-100 hover:bg-purple-900/50' :
                                 'text-purple-900 cursor-default'"
-                            @click="if(count > 0) { count = Math.max(0, count - 1); showAnimation = true; animationType = 'subtract'; setTimeout(() => showAnimation = false, 500); }">
+                            @click="removeCard()">
                             <span class="sr-only">Remove card</span>
                             -
                         </button>
-                        <span class="mx-3 text-lg font-bold text-purple-100 min-w-[2ch] text-center" x-text="count"></span>
-                        <button class="px-3 py-1 text-lg font-bold transition-colors rounded-r-full"
-                            :class="count < 3 ? 'text-purple-300 hover:text-purple-100 hover:bg-purple-900/50' :
-                                'text-purple-900 cursor-default'"
-                            @click="if(count < 3) { count = Math.min(3, count + 1); showAnimation = true; animationType = 'add'; setTimeout(() => showAnimation = false, 500); }">
+                        <span class="mx-3 text-lg font-bold text-purple-100 min-w-[2ch] text-center"
+                            x-text="$wire.cardCollection[{{ $card->id }}] ?? 0"></span>
+                        <button
+                            class="px-3 py-1 text-lg font-bold text-purple-300 transition-colors rounded-r-full hover:text-purple-100 hover:bg-purple-900/50"
+                            @click="addCard()">
                             <span class="sr-only">Add card</span>
                             +
                         </button>

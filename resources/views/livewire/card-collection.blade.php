@@ -5,28 +5,42 @@
     <!-- Filters Section -->
     <x-molecules.filter-section>
         <!-- Basic Filters -->
-        <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-2 lg:grid-cols-4">
-            <!-- Search Bar -->
-            <x-atoms.filter-group label="Search" for="search" colspan="1 md:col-span-2">
-                <x-atoms.search-input wire:model.live.debounce.300ms="search" id="search"
-                    placeholder="Search by name or text" />
-            </x-atoms.filter-group>
+        <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-12">
+            <!-- Search Bar with Owned Toggle -->
+            <div class="md:col-span-6 lg:col-span-6">
+                <x-atoms.filter-group label="Search" for="search">
+                    <div class="flex items-center w-full space-x-4">
+                        <div class="relative flex-grow">
+                            <x-atoms.search-input wire:model.live.debounce.300ms="search" id="search"
+                                placeholder="Search by name or text" class="w-full" />
+                        </div>
+                        <div class="flex items-center space-x-2 whitespace-nowrap">
+                            <label for="owned" class="text-sm font-medium text-purple-300">Owned</label>
+                            <x-atoms.toggle-input wire:model.live.debounce.300ms="ownedFilter" id="owned" />
+                        </div>
+                    </div>
+                </x-atoms.filter-group>
+            </div>
 
             <!-- Card Type Filter -->
-            <x-atoms.filter-group label="Card Type" for="cardType">
-                <x-atoms.select-input wire:model.live.debounce.300ms="selectedCardType" id="cardType" :options="$cardTypes"
-                    emptyOption="All Types" />
-            </x-atoms.filter-group>
+            <div class="md:col-span-3 lg:col-span-3">
+                <x-atoms.filter-group label="Card Type" for="cardType">
+                    <x-atoms.select-input wire:model.live.debounce.300ms="selectedCardType" id="cardType"
+                        :options="$cardTypes" emptyOption="All Types" class="w-full" />
+                </x-atoms.filter-group>
+            </div>
 
             <!-- Craft Filter -->
-            <x-atoms.filter-group label="Craft" for="craft">
-                <x-atoms.select-input wire:model.live.debounce.300ms="selectedCraft" id="craft" :options="$crafts"
-                    emptyOption="All Crafts" />
-            </x-atoms.filter-group>
+            <div class="md:col-span-3 lg:col-span-3">
+                <x-atoms.filter-group label="Craft" for="craft">
+                    <x-atoms.select-input wire:model.live.debounce.300ms="selectedCraft" id="craft"
+                        :options="$crafts" emptyOption="All Crafts" class="w-full" />
+                </x-atoms.filter-group>
+            </div>
         </div>
 
         <!-- More Filters Toggle -->
-        <div class="mb-4" x-data="{ showMoreFilters: false }">
+        <div class="mb-4" x-data="{ showMoreFilters: false }" x-init="console.log($wire.cardCollection)">
             <button @click="showMoreFilters = !showMoreFilters"
                 class="flex items-center px-4 py-2 text-sm font-medium text-purple-300 transition-colors rounded-md hover:bg-purple-700/50">
                 <span x-text="showMoreFilters ? 'Less Filters' : 'More Filters'"></span>
@@ -99,6 +113,12 @@
 
     <!-- Results Count -->
     <x-molecules.pagination-results :paginator="$cards" />
+
+    <div class="flex justify-end mb-4">
+        <x-atoms.button wire:click="saveCardCollection" variant="primary">
+            Save Card Collection
+        </x-atoms.button>
+    </div>
 
     <!-- Cards Grid -->
     <x-molecules.card-grid>

@@ -13,7 +13,12 @@ return new class extends Migration
     {
         Schema::create('card_user', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('card_id')->constrained('cards');
+            $table->foreignId('user_id')->constrained('users');
+            $table->integer('quantity');
             $table->timestamps();
+
+            $table->unique(['card_id', 'user_id']);
         });
     }
 

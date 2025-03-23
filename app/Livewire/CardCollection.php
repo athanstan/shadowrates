@@ -5,10 +5,12 @@ namespace App\Livewire;
 use App\Models\Card;
 use App\Models\CardSet;
 use App\Models\CardType;
+use App\Models\CardUser;
 use App\Models\Craft;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
 
 class CardCollection extends Component
@@ -22,6 +24,7 @@ class CardCollection extends Component
     public $selectedCardSet = '';
     public $costFilter = '';
     public $rarityFilter = '';
+    public $ownedFilter = false; // New owned filter
     public $sortBy = 'name';
     public $sortDirection = 'asc';
     public $perPage = 24;
@@ -40,15 +43,24 @@ class CardCollection extends Component
         'selectedCardSet' => ['except' => ''],
         'costFilter' => ['except' => ''],
         'rarityFilter' => ['except' => ''],
+        'ownedFilter' => ['except' => false], // Add to query string
         'sortBy' => ['except' => 'name'],
         'sortDirection' => ['except' => 'asc'],
     ];
+
+    public array $cardCollection = [];
 
     public function mount()
     {
         $this->cardTypes = CardType::orderBy('name')->get();
         $this->crafts = Craft::orderBy('name')->get();
         $this->cardSets = CardSet::orderBy('release_date', 'desc')->get();
+
+        $this->cardCollection = CardUser::query()
+            ->where('user_id', Auth::user()->id)
+            ->where('quantity', '>', 0)
+            ->pluck('quantity', 'card_id')
+            ->toArray();
     }
 
     public function updatingSearch()
@@ -81,6 +93,11 @@ class CardCollection extends Component
         $this->resetPage();
     }
 
+    public function updatingOwnedFilter() // New method to reset page on owned filter change
+    {
+        $this->resetPage();
+    }
+
     public function sortBy($field)
     {
         if ($this->sortBy === $field) {
@@ -89,6 +106,16 @@ class CardCollection extends Component
             $this->sortBy = $field;
             $this->sortDirection = 'asc';
         }
+    }
+
+    public function saveCardCollection()
+    {
+        $userCards = [];
+        foreach ($this->cardCollection as $cardId => $quantity) {
+            $userCards[$cardId] = ['quantity' => $quantity];
+        }
+
+        Auth::user()->cards()->syncWithoutDetaching($userCards);
     }
 
     #[Computed]
@@ -100,8 +127,8 @@ class CardCollection extends Component
                 fn(Builder $query) =>
                 $query->where(
                     fn(Builder $query) =>
-                    $query->where('name', 'like', '%' . $this->search . '%')
-                        ->orWhere('description', 'like', '%' . $this->search . '%')
+                    $query->where('name', 'ilike', '%' . $this->search . '%')
+                        ->orWhere('description', 'ilike', '%' . $this->search . '%')
                 )
             )
             ->when(
@@ -131,6 +158,11 @@ class CardCollection extends Component
                 fn(Builder $query) =>
                 $query->where('rarity', $this->rarityFilter)
             )
+            ->when(
+                $this->ownedFilter, // Apply owned filter
+                fn(Builder $query) =>
+                $query->whereIn('id', array_keys($this->cardCollection))
+            )
             ->orderBy($this->sortBy, $this->sortDirection);
     }
 
@@ -149,7 +181,8 @@ class CardCollection extends Component
             'selectedCraft',
             'selectedCardSet',
             'costFilter',
-            'rarityFilter'
+            'rarityFilter',
+            'ownedFilter' // Reset owned filter
         ]);
         $this->resetPage();
     }
