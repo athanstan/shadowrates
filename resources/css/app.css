@@ -41,3 +41,21 @@ h4 {
             8px 100%,
             0px calc(100% - 8px));
 }
+
+.game-number-good {
+    font-family: 'Noto Serif JP', serif;
+    font-weight: 700;
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5),
+                -1px -1px 0 rgba(255, 255, 255, 0.2);
+    letter-spacing: -0.05em;
+    color: #ffd700;
+}
+
+.game-number-bad {
+    font-family: 'Noto Serif JP', serif;
+    font-weight: 700;
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5),
+                -1px -1px 0 rgba(255, 255, 255, 0.2);
+    letter-spacing: -0.05em;
+    color: #ff3b3b;
+}

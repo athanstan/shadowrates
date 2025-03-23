@@ -90,38 +90,52 @@ class CardCollection extends Component
         }
     }
 
+    public function getCardsQueryProperty(): Builder
+    {
+        return Card::query()
+            ->when(
+                strlen($this->search) >= 3,
+                fn(Builder $query) =>
+                $query->where(
+                    fn(Builder $query) =>
+                    $query->where('name', 'like', '%' . $this->search . '%')
+                        ->orWhere('description', 'like', '%' . $this->search . '%')
+                )
+            )
+            ->when(
+                $this->selectedCardType,
+                fn(Builder $query) =>
+                $query->where('card_type_id', $this->selectedCardType)
+            )
+            ->when(
+                $this->selectedCraft,
+                fn(Builder $query) =>
+                $query->where('craft_id', $this->selectedCraft)
+            )
+            ->when(
+                $this->selectedCardSet,
+                fn(Builder $query) =>
+                $query->where('card_set_id', $this->selectedCardSet)
+            )
+            ->when(
+                $this->costFilter,
+                fn(Builder $query) =>
+                $this->costFilter === '9+'
+                    ? $query->where('cost', '>=', 9)
+                    : $query->where('cost', $this->costFilter)
+            )
+            ->when(
+                $this->rarityFilter,
+                fn(Builder $query) =>
+                $query->where('rarity', $this->rarityFilter)
+            )
+            ->orderBy($this->sortBy, $this->sortDirection);
+    }
+
     public function render()
     {
-        $cards = Card::query()
-            ->when($this->search, function (Builder $query) {
-                return $query->where(function (Builder $query) {
-                    $query->where('name', 'like', '%' . $this->search . '%')
-                        ->orWhere('description', 'like', '%' . $this->search . '%');
-                });
-            })
-            ->when($this->selectedCardType, function (Builder $query) {
-                return $query->where('card_type_id', $this->selectedCardType);
-            })
-            ->when($this->selectedCraft, function (Builder $query) {
-                return $query->where('craft_id', $this->selectedCraft);
-            })
-            ->when($this->selectedCardSet, function (Builder $query) {
-                return $query->where('card_set_id', $this->selectedCardSet);
-            })
-            ->when($this->costFilter, function (Builder $query) {
-                if ($this->costFilter === '9+') {
-                    return $query->where('cost', '>=', 9);
-                }
-                return $query->where('cost', $this->costFilter);
-            })
-            ->when($this->rarityFilter, function (Builder $query) {
-                return $query->where('rarity', $this->rarityFilter);
-            })
-            ->orderBy($this->sortBy, $this->sortDirection)
-            ->paginate($this->perPage);
-
         return view('livewire.card-collection', [
-            'cards' => $cards,
+            'cards' => $this->cardsQuery->paginate($this->perPage),
         ]);
     }
 

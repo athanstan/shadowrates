@@ -6,19 +6,19 @@
         <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-2 lg:grid-cols-4">
             <!-- Search Bar -->
             <x-atoms.filter-group label="Search" for="search" colspan="1 md:col-span-2">
-                <x-atoms.search-input wire:model.debounce.300ms="search" id="search"
+                <x-atoms.search-input wire:model.live.debounce.300ms="search" id="search"
                     placeholder="Search by name or text" />
             </x-atoms.filter-group>
 
             <!-- Card Type Filter -->
             <x-atoms.filter-group label="Card Type" for="cardType">
-                <x-atoms.select-input wire:model="selectedCardType" id="cardType" :options="$cardTypes"
+                <x-atoms.select-input wire:model.live.debounce.300ms="selectedCardType" id="cardType" :options="$cardTypes"
                     emptyOption="All Types" />
             </x-atoms.filter-group>
 
             <!-- Craft Filter -->
             <x-atoms.filter-group label="Craft" for="craft">
-                <x-atoms.select-input wire:model="selectedCraft" id="craft" :options="$crafts"
+                <x-atoms.select-input wire:model.live.debounce.300ms="selectedCraft" id="craft" :options="$crafts"
                     emptyOption="All Crafts" />
             </x-atoms.filter-group>
         </div>
@@ -26,19 +26,19 @@
         <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-2 lg:grid-cols-4">
             <!-- Card Set Filter -->
             <x-atoms.filter-group label="Card Set" for="cardSet">
-                <x-atoms.select-input wire:model="selectedCardSet" id="cardSet" :options="$cardSets"
+                <x-atoms.select-input wire:model.live.debounce.300ms="selectedCardSet" id="cardSet" :options="$cardSets"
                     emptyOption="All Card Sets" />
             </x-atoms.filter-group>
 
             <!-- Cost Filter -->
             <x-atoms.filter-group label="PP Cost" for="cost">
-                <x-atoms.select-input wire:model="costFilter" id="cost" :options="$costs"
+                <x-atoms.select-input wire:model.live.debounce.300ms="costFilter" id="cost" :options="$costs"
                     emptyOption="All Costs" />
             </x-atoms.filter-group>
 
             <!-- Rarity Filter -->
             <x-atoms.filter-group label="Rarity" for="rarity">
-                <x-atoms.select-input wire:model="rarityFilter" id="rarity" :options="$rarities"
+                <x-atoms.select-input wire:model.live.debounce.300ms="rarityFilter" id="rarity" :options="$rarities"
                     emptyOption="All Rarities" />
             </x-atoms.filter-group>
 
@@ -84,7 +84,7 @@
     <!-- Cards Grid -->
     <x-molecules.card-grid>
         @forelse($cards as $card)
-            <x-atoms.card-preview :card="$card" />
+            <x-atoms.card-preview :card="$card" collectible />
         @empty
             <x-atoms.empty-state title="No cards found" message="Try adjusting your search or filter criteria">
                 <x-slot name="actions">
