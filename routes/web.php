@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\Auth\AuthController;
 use App\Livewire\CardCollection;
 use Illuminate\Support\Facades\Route;
 
@@ -24,6 +25,9 @@ Route::prefix('auth/google')->name('auth.google.')->group(function () {
     Route::get('redirect', [GoogleController::class, 'redirectToGoogle'])->name('redirect');
     Route::get('callback', [GoogleController::class, 'handleGoogleCallback'])->name('callback');
 });
+
+// Auth Routes
+Route::post('/logout', [AuthController::class, 'destroy'])->name('logout');
 
 // Card Routes
 Route::get('/cards', function () {

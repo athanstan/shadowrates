@@ -1,8 +1,10 @@
 <div class="container py-6 mx-auto">
-    <h1 class="mb-8 text-3xl font-bold text-center text-purple-100">Card Collection</h1>
+    <h1 class="text-3xl font-bold text-center text-purple-100 ">Card Collection</h1>
+    <p class="mb-8 text-lg text-center text-purple-300">Browse and manage your card collection.</p>
 
     <!-- Filters Section -->
     <x-molecules.filter-section>
+        <!-- Basic Filters -->
         <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-2 lg:grid-cols-4">
             <!-- Search Bar -->
             <x-atoms.filter-group label="Search" for="search" colspan="1 md:col-span-2">
@@ -23,30 +25,40 @@
             </x-atoms.filter-group>
         </div>
 
-        <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-2 lg:grid-cols-4">
-            <!-- Card Set Filter -->
-            <x-atoms.filter-group label="Card Set" for="cardSet">
-                <x-atoms.select-input wire:model.live.debounce.300ms="selectedCardSet" id="cardSet" :options="$cardSets"
-                    emptyOption="All Card Sets" />
-            </x-atoms.filter-group>
+        <!-- More Filters Toggle -->
+        <div class="mb-4" x-data="{ showMoreFilters: false }">
+            <button @click="showMoreFilters = !showMoreFilters"
+                class="flex items-center px-4 py-2 text-sm font-medium text-purple-300 transition-colors rounded-md hover:bg-purple-700/50">
+                <span x-text="showMoreFilters ? 'Less Filters' : 'More Filters'"></span>
+                <svg class="w-4 h-4 ml-2 transition-transform" :class="showMoreFilters ? 'rotate-180' : ''"
+                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
+                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                        clip-rule="evenodd" />
+                </svg>
+            </button>
 
-            <!-- Cost Filter -->
-            <x-atoms.filter-group label="PP Cost" for="cost">
-                <x-atoms.select-input wire:model.live.debounce.300ms="costFilter" id="cost" :options="$costs"
-                    emptyOption="All Costs" />
-            </x-atoms.filter-group>
+            <!-- Advanced Filters -->
+            <div x-show="showMoreFilters" x-transition>
+                <div class="grid grid-cols-1 gap-4 mt-4 md:grid-cols-2 lg:grid-cols-4">
+                    <!-- Card Set Filter -->
+                    <x-atoms.filter-group label="Card Set" for="cardSet">
+                        <x-atoms.select-input wire:model.live.debounce.300ms="selectedCardSet" id="cardSet"
+                            :options="$cardSets" emptyOption="All Card Sets" />
+                    </x-atoms.filter-group>
 
-            <!-- Rarity Filter -->
-            <x-atoms.filter-group label="Rarity" for="rarity">
-                <x-atoms.select-input wire:model.live.debounce.300ms="rarityFilter" id="rarity" :options="$rarities"
-                    emptyOption="All Rarities" />
-            </x-atoms.filter-group>
+                    <!-- Cost Filter -->
+                    <x-atoms.filter-group label="PP Cost" for="cost">
+                        <x-atoms.select-input wire:model.live.debounce.300ms="costFilter" id="cost"
+                            :options="$costs" emptyOption="All Costs" />
+                    </x-atoms.filter-group>
 
-            <!-- Reset Filters Button -->
-            <div class="flex items-end">
-                <x-atoms.reset-button wire:click="resetFilters">
-                    Reset Filters
-                </x-atoms.reset-button>
+                    <!-- Rarity Filter -->
+                    <x-atoms.filter-group label="Rarity" for="rarity">
+                        <x-atoms.select-input wire:model.live.debounce.300ms="rarityFilter" id="rarity"
+                            :options="$rarities" emptyOption="All Rarities" />
+                    </x-atoms.filter-group>
+                </div>
             </div>
         </div>
 
@@ -63,20 +75,27 @@
                 <x-atoms.sort-button wire:click="sortBy('created_at')" :active="$sortBy === 'created_at'" :direction="$sortDirection">
                     Newest
                 </x-atoms.sort-button>
+                <x-atoms.sort-button wire:click="$set('perPage', 12)" :active="$perPage === 12">
+                    12
+                </x-atoms.sort-button>
+                <x-atoms.sort-button wire:click="$set('perPage', 24)" :active="$perPage === 24">
+                    24
+                </x-atoms.sort-button>
+                <x-atoms.sort-button wire:click="$set('perPage', 48)" :active="$perPage === 48">
+                    48
+                </x-atoms.sort-button>
+                <x-atoms.sort-button wire:click="$set('perPage', 96)" :active="$perPage === 96">
+                    96
+                </x-atoms.sort-button>
             </div>
 
             <div>
-                <x-atoms.select-input wire:model="perPage" :options="[12, 24, 48, 96]" optionLabel="null" optionValue="null"
-                    class="w-auto">
-                </x-atoms.select-input>
+                <x-atoms.reset-button wire:click="resetFilters">
+                    Reset Filters
+                </x-atoms.reset-button>
             </div>
         </div>
     </x-molecules.filter-section>
-
-    <!-- Loading Indicator -->
-    <div wire:loading class="w-full my-4">
-        <x-atoms.loading-spinner />
-    </div>
 
     <!-- Results Count -->
     <x-molecules.pagination-results :paginator="$cards" />

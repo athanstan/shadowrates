@@ -62,6 +62,22 @@ class User extends Authenticatable
     ];
 
     /**
+     * Get the user's avatar URL, generating a default if none exists.
+     */
+    public function getAvatarAttribute($value)
+    {
+        if ($value) {
+            return $value;
+        }
+
+        $apiUrl = config('services.dicebear.api_url');
+        $style = config('services.dicebear.style');
+        $seed = $this->email ?? $this->id;
+
+        return "{$apiUrl}/{$style}/svg?seed={$seed}";
+    }
+
+    /**
      * Return the sluggable configuration array for this model.
      *
      * @return array

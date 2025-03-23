@@ -24,12 +24,12 @@
 
 <body class="font-sans antialiased">
     <!-- Navigation -->
-    <nav class="fixed z-10 w-full bg-gray-900 border-b border-purple-900 bg-opacity-80 backdrop-blur-sm">
+    <nav class="fixed z-50 w-full bg-gray-900 border-b border-purple-900 bg-opacity-80 backdrop-blur-sm">
         <div class="container px-4 mx-auto">
             <div class="flex items-center justify-between h-16">
                 <!-- Logo -->
                 <div class="flex items-center flex-shrink-0">
-                    <a href="{{ route('cards.index') }}" class="flex items-center">
+                    <a href="/" class="flex items-center">
                         <span class="text-xl font-bold text-purple-400">Shadow<span
                                 class="text-indigo-400">Rates</span></span>
                     </a>
@@ -60,15 +60,39 @@
                 <!-- Login / Profile -->
                 <div class="flex items-center">
                     @auth
-                        <div class="relative ml-3">
+                        <div class="relative ml-3" x-data="{ open: false }">
                             <div>
-                                <button type="button"
-                                    class="flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
-                                    id="user-menu-button">
-                                    <img class="object-cover w-8 h-8 rounded-full"
-                                        src="{{ auth()->user()->profile_photo_url ?? 'https://via.placeholder.com/150' }}"
-                                        alt="{{ auth()->user()->name }}">
+                                <button type="button" @click="open = !open" @click.away="open = false"
+                                    class="relative flex text-sm cursor-pointer focus:outline-none" id="user-menu-button">
+                                    <div class="absolute inset-0 transition-colors rounded-lg shadow-lg bg-gradient-to-br from-purple-500/50 to-indigo-500/50"
+                                        :class="open ? 'animate-[pulse_1s_ease-in-out_infinite]' :
+                                            'animate-[pulse_3s_ease-in-out_infinite]'">
+                                    </div>
+                                    <div class="absolute inset-[2px] bg-gray-900 rounded-lg"></div>
+                                    <img class="relative object-cover w-10 h-10 p-1 rounded-lg pixel-corners"
+                                        src="{{ auth()->user()->avatar }}" alt="{{ auth()->user()->name }}"
+                                        style="image-rendering: pixelated;">
                                 </button>
+                            </div>
+
+                            <div x-show="open" x-transition:enter="transition ease-out duration-100"
+                                x-transition:enter-start="transform opacity-0 scale-95"
+                                x-transition:enter-end="transform opacity-100 scale-100"
+                                x-transition:leave="transition ease-in duration-75"
+                                x-transition:leave-start="transform opacity-100 scale-100"
+                                x-transition:leave-end="transform opacity-0 scale-95"
+                                class="absolute right-0 w-48 py-1 mt-2 origin-top-right bg-gray-800 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                <a href="#"
+                                    class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">Profile</a>
+                                <a href="#"
+                                    class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">Settings</a>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit"
+                                        class="block w-full px-4 py-2 text-sm text-left text-gray-300 hover:bg-gray-700">
+                                        Sign Out
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     @else

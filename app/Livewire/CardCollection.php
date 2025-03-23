@@ -9,6 +9,7 @@ use App\Models\Craft;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Database\Eloquent\Builder;
+use Livewire\Attributes\Computed;
 
 class CardCollection extends Component
 {
@@ -90,7 +91,8 @@ class CardCollection extends Component
         }
     }
 
-    public function getCardsQueryProperty(): Builder
+    #[Computed]
+    public function cardsQuery(): Builder
     {
         return Card::query()
             ->when(

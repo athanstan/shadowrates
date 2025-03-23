@@ -13,38 +13,41 @@
             class="object-cover w-full h-auto transition-transform duration-300 transform-gpu"
             style="image-rendering: -webkit-optimize-contrast; backface-visibility: hidden;">
 
-        <div class="absolute inset-0 z-50 flex items-center justify-center pointer-events-none" x-show="showAnimation"
-            x-transition.duration.500ms>
-            <span x-show="animationType === 'subtract'" class="text-5xl font-bold game-number-bad animate-bounce">
-                -1
-            </span>
-            <span x-show="animationType === 'add'" class="text-5xl font-bold game-number-good animate-bounce">
-                +1
-            </span>
-        </div>
-
-        @if ($collectible ?? false)
-            <div class="relative">
-                <div class="absolute bottom-0 left-0 right-0 flex items-center justify-center p-2 bg-black/70"
-                    @click.stop>
-                    <button class="px-3 py-1 text-lg font-bold transition-colors rounded-l-full"
-                        :class="count > 0 ? 'text-purple-300 hover:text-purple-100 hover:bg-purple-900/50' :
-                            'text-purple-900 cursor-default'"
-                        @click="if(count > 0) { count = Math.max(0, count - 1); showAnimation = true; animationType = 'subtract'; setTimeout(() => showAnimation = false, 500); }">
-                        <span class="sr-only">Remove card</span>
-                        -
-                    </button>
-                    <span class="mx-3 text-lg font-bold text-purple-100 min-w-[2ch] text-center" x-text="count"></span>
-                    <button class="px-3 py-1 text-lg font-bold transition-colors rounded-r-full"
-                        :class="count < 3 ? 'text-purple-300 hover:text-purple-100 hover:bg-purple-900/50' :
-                            'text-purple-900 cursor-default'"
-                        @click="if(count < 3) { count = Math.min(3, count + 1); showAnimation = true; animationType = 'add'; setTimeout(() => showAnimation = false, 500); }">
-                        <span class="sr-only">Add card</span>
-                        +
-                    </button>
-                </div>
+        @auth
+            <div class="absolute inset-0 z-50 flex items-center justify-center pointer-events-none" x-show="showAnimation"
+                x-transition.duration.500ms>
+                <span x-show="animationType === 'subtract'" class="text-5xl font-bold game-number-bad animate-bounce">
+                    -1
+                </span>
+                <span x-show="animationType === 'add'" class="text-5xl font-bold game-number-good animate-bounce">
+                    +1
+                </span>
             </div>
-        @endif
+
+            @if ($collectible ?? false)
+                <div class="relative">
+                    <div class="absolute bottom-0 left-0 right-0 flex items-center justify-center p-2 bg-black/70"
+                        @click.stop>
+                        <button class="px-3 py-1 text-lg font-bold transition-colors rounded-l-full"
+                            :class="count > 0 ? 'text-purple-300 hover:text-purple-100 hover:bg-purple-900/50' :
+                                'text-purple-900 cursor-default'"
+                            @click="if(count > 0) { count = Math.max(0, count - 1); showAnimation = true; animationType = 'subtract'; setTimeout(() => showAnimation = false, 500); }">
+                            <span class="sr-only">Remove card</span>
+                            -
+                        </button>
+                        <span class="mx-3 text-lg font-bold text-purple-100 min-w-[2ch] text-center" x-text="count"></span>
+                        <button class="px-3 py-1 text-lg font-bold transition-colors rounded-r-full"
+                            :class="count < 3 ? 'text-purple-300 hover:text-purple-100 hover:bg-purple-900/50' :
+                                'text-purple-900 cursor-default'"
+                            @click="if(count < 3) { count = Math.min(3, count + 1); showAnimation = true; animationType = 'add'; setTimeout(() => showAnimation = false, 500); }">
+                            <span class="sr-only">Add card</span>
+                            +
+                        </button>
+                    </div>
+                </div>
+            @endif
+        @endauth
+
     </div>
 
     <!-- Modal -->
@@ -89,14 +92,14 @@
                         @if ($card->effect)
                             <div class="pt-2 border-t border-purple-700">
                                 <p class="font-semibold text-purple-200">Effect:</p>
-                                <p class="text-purple-300">{{ $card->effect }}</p>
+                                <p class="text-purple-300">{!! $card->effect !!}</p>
                             </div>
                         @endif
 
                         @if ($card->evolved_effect)
                             <div class="pt-2">
                                 <p class="font-semibold text-purple-200">Evolved Effect:</p>
-                                <p class="text-purple-300">{{ $card->evolved_effect }}</p>
+                                <p class="text-white">{{ $card->evolved_effect }}</p>
                             </div>
                         @endif
                     </div>

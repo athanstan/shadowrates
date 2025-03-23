@@ -262,7 +262,7 @@ class ContentSeeder extends Seeder
                     [
                         'original_card_id' => $cardData['id'] ?? null,
                         'description' => $cardData['description'] ?? $cardData['flavor_text'] ?? 'No description available',
-                        'effect' => $cardData['effect_text'] ?? 'No effect available',
+                        'effect' => $cardData['effects'] ?? 'No effect available',
                         'evolved_effect' => $cardData['evolved_effect_text'] ?? null,
                         'card_type_id' => $cardTypeId,
                         'craft_id' => $craftId,
