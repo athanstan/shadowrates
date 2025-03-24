@@ -12,6 +12,8 @@ use App\Models\Craft;
 use App\Models\Deck;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Computed;
+use Illuminate\Database\Eloquent\Builder;
 
 class DeckBuilder extends Component
 {
@@ -54,6 +56,41 @@ class DeckBuilder extends Component
         'perPage' => ['except' => 24],
     ];
 
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingSelectedCardType()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingSelectedCardSubType()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingSelectedCraft()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingSelectedCardSet()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingCostFilter()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingRarityFilter()
+    {
+        $this->resetPage();
+    }
+
     public function resetFilters()
     {
         $this->reset([
@@ -65,6 +102,7 @@ class DeckBuilder extends Component
             'costFilter',
             'rarityFilter',
         ]);
+        $this->resetPage();
     }
 
     public function sortBy($field)
@@ -90,10 +128,10 @@ class DeckBuilder extends Component
         }
 
         // Get all the necessary data for filters
-        $this->cardTypes = CardType::pluck('name', 'id')->toArray();
+        $this->cardTypes = CardType::orderBy('name')->get();
         $this->cardSubTypes = CardSubType::cases();
-        $this->crafts = Craft::pluck('name', 'id')->toArray();
-        $this->cardSets = CardSet::pluck('name', 'id')->toArray();
+        $this->crafts = Craft::orderBy('name')->get();
+        $this->cardSets = CardSet::orderBy('release_date', 'desc')->get();
         $this->costs = range(0, 10);
         $this->rarities = ['Bronze', 'Silver', 'Gold', 'Legendary'];
     }
@@ -146,41 +184,59 @@ class DeckBuilder extends Component
         return redirect()->route('decks.index');
     }
 
+    #[Computed]
+    public function cardsQuery(): Builder
+    {
+        return Card::query()
+            ->when(
+                strlen($this->search) >= 3,
+                fn(Builder $query) =>
+                $query->where(
+                    fn(Builder $query) =>
+                    $query->where('name', 'ilike', '%' . $this->search . '%')
+                        ->orWhere('effects', 'ilike', '%' . $this->search . '%')
+                )
+            )
+            ->when(
+                $this->selectedCardType,
+                fn(Builder $query) =>
+                $query->where('card_type_id', $this->selectedCardType)
+            )
+            ->when(
+                $this->selectedCardSubType,
+                fn(Builder $query) =>
+                $query->where('sub_type', 'ilike', $this->selectedCardSubType)
+            )
+            ->when(
+                $this->selectedCraft,
+                fn(Builder $query) =>
+                $query->where('craft_id', $this->selectedCraft)
+            )
+            ->when(
+                $this->selectedCardSet,
+                fn(Builder $query) =>
+                $query->where('card_set_id', $this->selectedCardSet)
+            )
+            ->when(
+                $this->costFilter,
+                fn(Builder $query) =>
+                $this->costFilter === '9+'
+                    ? $query->where('cost', '>=', 9)
+                    : $query->where('cost', $this->costFilter)
+            )
+            ->when(
+                $this->rarityFilter,
+                fn(Builder $query) =>
+                $query->where('rarity', $this->rarityFilter)
+            )
+            ->orderBy($this->sortBy, $this->sortDirection);
+    }
+
     #[Layout('components.app-layout')]
     public function render()
     {
-        $cards = Card::query()
-            ->when($this->search, function ($query) {
-                return $query->where(function ($subQuery) {
-                    $subQuery->where('name', 'like', '%' . $this->search . '%')
-                        ->orWhere('effects', 'like', '%' . $this->search . '%');
-                });
-            })
-            ->when($this->selectedCardType, function ($query) {
-                return $query->whereHas('cardType', function ($subQuery) {
-                    $subQuery->where('id', $this->selectedCardType);
-                });
-            })
-            ->when($this->selectedCardSubType, function ($query) {
-                return $query->where('sub_type', $this->selectedCardSubType);
-            })
-            ->when($this->selectedCraft, function ($query) {
-                return $query->where('craft_id', $this->selectedCraft);
-            })
-            ->when($this->selectedCardSet, function ($query) {
-                return $query->where('card_set_id', $this->selectedCardSet);
-            })
-            ->when($this->costFilter, function ($query) {
-                return $query->where('cost', $this->costFilter);
-            })
-            ->when($this->rarityFilter, function ($query) {
-                return $query->where('rarity', $this->rarityFilter);
-            })
-            ->orderBy($this->sortBy, $this->sortDirection)
-            ->paginate($this->perPage);
-
         return view('livewire.deck-builder', [
-            'cards' => $cards,
+            'cards' => $this->cardsQuery()->paginate($this->perPage),
         ]);
     }
 }
