@@ -84,11 +84,19 @@ class CardCollection extends Component
         ]);
     }
 
-    public function resetFilters()
+    public function resetFilters(): void
     {
-        // Call parent resetFilters and add our own filter
-        parent::resetFilters();
-        $this->reset(['ownedFilter']);
+        $this->reset([
+            'search',
+            'selectedCardType',
+            'selectedCardSubType',
+            'selectedCraft',
+            'selectedCardSet',
+            'costFilter',
+            'rarityFilter',
+            'ownedFilter'
+        ]);
+
         $this->resetPage();
     }
 }

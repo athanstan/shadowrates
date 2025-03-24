@@ -18,10 +18,12 @@
                             <x-atoms.search-input wire:model.live.debounce.300ms="search" id="search"
                                 placeholder="Search by name or text" class="w-full" />
                         </div>
-                        <div class="flex items-center space-x-2 whitespace-nowrap">
-                            <label for="owned" class="text-sm font-medium text-purple-300">Owned</label>
-                            <x-atoms.toggle-input wire:model.live.debounce.300ms="ownedFilter" id="owned" />
-                        </div>
+                        @auth
+                            <div class="flex items-center space-x-2 whitespace-nowrap">
+                                <label for="owned" class="text-sm font-medium text-purple-300">Owned</label>
+                                <x-atoms.toggle-input wire:model.live.debounce.300ms="ownedFilter" id="owned" />
+                            </div>
+                        @endauth
                     </div>
                 </x-atoms.filter-group>
             </div>
@@ -129,11 +131,13 @@
     <!-- Results Count -->
     <x-molecules.pagination-results :paginator="$cards" />
 
-    <div class="flex justify-end mb-4">
-        <x-atoms.button wire:click="saveCardCollection" variant="primary">
-            Save Card Collection
-        </x-atoms.button>
-    </div>
+    @auth
+        <div class="flex justify-end mb-4">
+            <x-atoms.button wire:click="saveCardCollection" variant="primary">
+                Save Card Collection
+            </x-atoms.button>
+        </div>
+    @endauth
 
     <!-- Cards Grid -->
     <x-molecules.card-grid>

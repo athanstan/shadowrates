@@ -172,32 +172,7 @@
                                                     </div>
 
                                                     <div class="flex pt-4 space-x-2">
-                                                        <button type="button"
-                                                            @click="addCardToDeck({
-                                                                id: {{ $card->id }},
-                                                                name: '{{ addslashes($card->name) }}',
-                                                                cost: '{{ $card->cost }}',
-                                                                rarity: '{{ $card->rarity }}',
-                                                                cardType: { name: '{{ $card->cardType->name }}' },
-                                                                sub_type: '{{ $card->sub_type }}',
-                                                                getImage: '{{ $card->getImage() }}'
-                                                            }); showModal = false"
-                                                            class="px-4 py-2 font-semibold text-white transition-colors duration-200 bg-purple-700 rounded hover:bg-purple-600">
-                                                            Add to Main Deck
-                                                        </button>
-                                                        <button type="button"
-                                                            @click="addCardToEvoDeck({
-                                                                id: {{ $card->id }},
-                                                                name: '{{ addslashes($card->name) }}',
-                                                                cost: '{{ $card->cost }}',
-                                                                rarity: '{{ $card->rarity }}',
-                                                                cardType: { name: '{{ $card->cardType->name }}' },
-                                                                sub_type: '{{ $card->sub_type }}',
-                                                                getImage: '{{ $card->getImage() }}'
-                                                            }); showModal = false"
-                                                            class="px-4 py-2 font-semibold text-white transition-colors duration-200 bg-purple-700 rounded hover:bg-purple-600">
-                                                            Add to Evo Deck
-                                                        </button>
+
                                                         <button @click="showModal = false"
                                                             class="px-4 py-2 font-semibold text-purple-200 transition-colors duration-200 bg-transparent border border-purple-700 rounded hover:bg-purple-700/30">
                                                             Close
@@ -238,7 +213,7 @@
                                 <h2 class="text-xl font-bold text-purple-100">Deck Filters</h2>
                             </div>
                             <!-- Filters Section -->
-                            <div x-data="{ showFilters: false }">
+                            <div x-data="{ showFilters: true }">
                                 <button @click="showFilters = !showFilters"
                                     class="flex items-center w-full px-3 py-2 mb-3 text-sm font-medium text-purple-300 transition-colors rounded-md bg-purple-900/30 hover:bg-purple-900/50">
                                     <span x-text="showFilters ? 'Hide Filters' : 'Show Filters'"></span>
@@ -251,12 +226,12 @@
                                     </svg>
                                 </button>
 
-                                <div x-show="showFilters" x-transition class="mb-4 space-y-3">
+                                <div x-show="showFilters" x-transition class="grid grid-cols-4 gap-4 mb-4 space-y-2">
                                     <!-- Card Type Filter -->
                                     <div>
                                         <x-atoms.filter-group label="Card Type" for="cardType">
                                             <x-atoms.select-input wire:model.live.debounce.300ms="selectedCardType"
-                                                id="cardType" :options="$cardTypes" emptyOption="All Types"
+                                                id="cardType" :options="$cardTypes" emptyOption="All Types" small
                                                 class="w-full" />
                                         </x-atoms.filter-group>
                                     </div>
@@ -266,7 +241,7 @@
                                         <x-atoms.filter-group label="Card SubType" for="cardSubType">
                                             <x-atoms.select-input wire:model.live.debounce.300ms="selectedCardSubType"
                                                 id="cardSubType" :options="$cardSubTypes" optionValue="value"
-                                                optionLabel="name" emptyOption="All SubTypes" class="w-full" />
+                                                optionLabel="name" emptyOption="All SubTypes" small class="w-full" />
                                         </x-atoms.filter-group>
                                     </div>
 
@@ -274,7 +249,7 @@
                                     <div>
                                         <x-atoms.filter-group label="Craft" for="craft">
                                             <x-atoms.select-input wire:model.live.debounce.300ms="selectedCraft"
-                                                id="craft" :options="$crafts" emptyOption="All Crafts"
+                                                id="craft" :options="$crafts" emptyOption="All Crafts" small
                                                 class="w-full" />
                                         </x-atoms.filter-group>
                                     </div>
@@ -283,7 +258,7 @@
                                     <div>
                                         <x-atoms.filter-group label="Card Set" for="cardSet">
                                             <x-atoms.select-input wire:model.live.debounce.300ms="selectedCardSet"
-                                                id="cardSet" :options="$cardSets" emptyOption="All Card Sets"
+                                                id="cardSet" :options="$cardSets" emptyOption="All Card Sets" small
                                                 class="w-full" />
                                         </x-atoms.filter-group>
                                     </div>
@@ -292,7 +267,7 @@
                                     <div>
                                         <x-atoms.filter-group label="PP Cost" for="cost">
                                             <x-atoms.select-input wire:model.live.debounce.300ms="costFilter"
-                                                id="cost" :options="$costs" emptyOption="All Costs"
+                                                id="cost" :options="$costs" emptyOption="All Costs" small
                                                 class="w-full" />
                                         </x-atoms.filter-group>
                                     </div>
@@ -301,13 +276,13 @@
                                     <div>
                                         <x-atoms.filter-group label="Rarity" for="rarity">
                                             <x-atoms.select-input wire:model.live.debounce.300ms="rarityFilter"
-                                                id="rarity" :options="$rarities" emptyOption="All Rarities"
+                                                id="rarity" :options="$rarities" emptyOption="All Rarities" small
                                                 class="w-full" />
                                         </x-atoms.filter-group>
                                     </div>
 
-                                    <div class="flex justify-end">
-                                        <x-atoms.reset-button wire:click="resetFilters">
+                                    <div class="flex justify-end col-span-full">
+                                        <x-atoms.reset-button wire:click="resetFilters" small>
                                             Reset Filters
                                         </x-atoms.reset-button>
                                     </div>
@@ -333,16 +308,8 @@
                                         <template x-if="slot.card">
                                             <div>
                                                 <img :src="slot.card.image" :alt="slot.card.name"
+                                                    @click="removeCardFromMainDeck(slot.card.id)"
                                                     class="absolute inset-0 object-cover w-full h-full">
-                                                <button type="button" @click="removeCardFromMainDeck(slot.card.id)"
-                                                    class="absolute top-0 right-0 z-10 p-1 text-white bg-red-800/80 rounded-bl-md hover:bg-red-700">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3"
-                                                        viewBox="0 0 20 20" fill="currentColor">
-                                                        <path fill-rule="evenodd"
-                                                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                                            clip-rule="evenodd" />
-                                                    </svg>
-                                                </button>
                                             </div>
                                         </template>
                                         <template x-if="!slot.card">

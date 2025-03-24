@@ -18,8 +18,6 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <!-- Livewire Styles -->
-    @livewireStyles
 </head>
 
 <body class="font-sans antialiased">
@@ -40,19 +38,11 @@
                     <div class="flex items-center ml-10 space-x-4">
                         <a href="{{ route('cards.index') }}" wire:navigate
                             class="px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('cards.index') ? 'bg-purple-800 text-white' : 'text-gray-300 hover:bg-purple-700 hover:text-white' }}">
-                            Cards
-                        </a>
-                        <a href="#" wire:navigate
-                            class="px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-purple-700 hover:text-white">
-                            Decks
-                        </a>
-                        <a href="#" wire:navigate
-                            class="px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-purple-700 hover:text-white">
-                            Meta Report
-                        </a>
-                        <a href="#" wire:navigate
-                            class="px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-purple-700 hover:text-white">
                             Collection
+                        </a>
+                        <a href="{{ route('decks.create') }}" wire:navigate
+                            class="px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-purple-700 hover:text-white">
+                            Deck Builder
                         </a>
                     </div>
                 </div>
@@ -174,8 +164,6 @@
         });
     </script>
 
-    <!-- Livewire Scripts -->
-    @livewireScripts
 </body>
 
 </html>

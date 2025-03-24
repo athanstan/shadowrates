@@ -102,7 +102,7 @@ trait HasCardFilters
         }
     }
 
-    public function resetFilters()
+    public function resetFilters(): void
     {
         $this->reset([
             'search',

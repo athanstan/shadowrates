@@ -218,6 +218,9 @@ class ContentSeeder extends Seeder
         $count = 0;
         $batchSize = 100;
         $totalCards = count($cards);
+        $uniqueCards = 0;
+
+        $this->log("Found {$totalCards} cards in db.json");
 
         // Get all crafts, card types and card sets for lookups
         $crafts = Craft::all()->keyBy('name');
@@ -254,45 +257,76 @@ class ContentSeeder extends Seeder
                 }
 
                 // Create or update the card
-                Card::firstOrCreate(
-                    ['name' => $cardData['name'], 'sub_type' => $cardData['sub_type'] ?? null], // Composite unique constraint
-                    [
-                        'slug' => Str::slug($cardData['name'] . '-' . ($cardData['sub_type'] ?? '')),
-                        'original_card_id' => $cardData['id'] ?? null,
-                        'main_type' => $cardData['main_type'] ?? 'follower',
-                        'sub_type' => $cardData['sub_type'] ?? null,
-                        'description' => $cardData['description'] ?? $cardData['flavor_text'] ?? 'No description available',
-                        'effects' => $cardData['effects'] ?? 'No effect available',
-                        'traits' => $cardData['traits'] ?? null,
-                        'language' => $cardData['language'] ?? 'en',
-                        'card_type_id' => $cardTypeId,
-                        'craft_id' => $craftId,
-                        'card_set_id' => $cardSetId,
-                        'cost' => $cardData['cost'] ?? 0,
-                        'rarity' => $this->mapRarity($cardData['rarity'] ?? 'bronze'),
-                        'image' => $cardData['id'] . '.jpg',
-                        'evolved_image' => $cardData['sub_type'] === 'evolved' ? $cardData['id'] . '.jpg' : null,
-                        'atk' => $cardData['atk'] ?? null, // Changed from attack to atk
-                        'health' => $cardData['health'] ?? null, // Changed from defense to health
-                        'evolved_atk' => $cardData['sub_type'] === 'evolved' ? $cardData['atk'] ?? null : null,
-                        'evolved_health' => $cardData['sub_type'] === 'evolved' ? $cardData['health'] ?? null : null,
-                        'is_token' => $cardData['is_token'] ?? false,
-                        'is_basic' => $cardData['is_basic'] ?? false,
-                        'is_neutral' => $craftName === 'Neutral',
-                        'is_active' => true,
-                    ]
-                );
+                try {
+                    // If we have an original_card_id, use that as the primary unique key
+                    if (isset($cardData['id']) && !empty($cardData['id'])) {
+                        $uniqueKey['original_card_id'] = $cardData['id'];
+                    } else {
+                        // Otherwise use the composite key
+                        $uniqueKey = [
+                            'name' => $cardData['name'],
+                            'sub_type' => $cardData['sub_type'] ?? null,
+                            'rarity' => $this->mapRarity($cardData['rarity'] ?? 'bronze'),
+                            'card_set_id' => $cardSetId
+                        ];
+                    }
+
+                    // Generate a unique slug
+                    $cardSetShortName = $cardData['expansion_id'] ?? 'unknown';
+                    $rarityShort = strtolower(substr($this->mapRarity($cardData['rarity'] ?? 'bronze'), 0, 3));
+                    // Add a unique identifier to make the slug truly unique
+                    $uniqueIdentifier = isset($cardData['id']) ? substr(md5($cardData['id']), 0, 8) : substr(md5(uniqid()), 0, 8);
+                    $uniqueSlug = Str::slug($cardData['name'] . '-' . ($cardData['sub_type'] ?? '') . '-' . $cardSetShortName . '-' . $rarityShort . '-' . $uniqueIdentifier);
+
+                    $card = Card::firstOrCreate(
+                        $uniqueKey, // Use original_card_id if available, otherwise composite key
+                        [
+                            'name' => $cardData['name'],
+                            'slug' => $uniqueSlug,
+                            'original_card_id' => $cardData['id'] ?? null,
+                            'main_type' => $cardData['main_type'] ?? 'follower',
+                            'sub_type' => $cardData['sub_type'] ?? null,
+                            'description' => $cardData['description'] ?? $cardData['flavor_text'] ?? 'No description available',
+                            'effects' => $cardData['effects'] ?? 'No effect available',
+                            'traits' => $cardData['traits'] ?? null,
+                            'language' => $cardData['language'] ?? 'en',
+                            'card_type_id' => $cardTypeId,
+                            'craft_id' => $craftId,
+                            'card_set_id' => $cardSetId,
+                            'cost' => $cardData['cost'] ?? 0,
+                            'rarity' => $this->mapRarity($cardData['rarity'] ?? 'bronze'),
+                            'image' => $cardData['id'] . '.jpg',
+                            'evolved_image' => $cardData['sub_type'] === 'evolved' ? $cardData['id'] . '.jpg' : null,
+                            'atk' => $cardData['atk'] ?? null, // Changed from attack to atk
+                            'health' => $cardData['health'] ?? null, // Changed from defense to health
+                            'evolved_atk' => $cardData['sub_type'] === 'evolved' ? $cardData['atk'] ?? null : null,
+                            'evolved_health' => $cardData['sub_type'] === 'evolved' ? $cardData['health'] ?? null : null,
+                            'is_token' => $cardData['is_token'] ?? false,
+                            'is_basic' => $cardData['is_basic'] ?? false,
+                            'is_neutral' => $craftName === 'Neutral',
+                            'is_active' => true,
+                        ]
+                    );
+
+                    // Check if this was a newly created card
+                    if ($card->wasRecentlyCreated) {
+                        $uniqueCards++;
+                    }
+                } catch (\Exception $e) {
+                    $this->logError("Error seeding card {$cardData['name']}: " . $e->getMessage());
+                    continue;
+                }
 
                 $count++;
 
                 // Show progress
                 if ($count % 100 === 0 || $count === $totalCards) {
-                    $this->log("Seeded {$count}/{$totalCards} cards...");
+                    $this->log("Processed {$count}/{$totalCards} cards... (Unique: {$uniqueCards})");
                 }
             }
         }
 
-        $this->log("Completed seeding {$count} cards.");
+        $this->log("Completed seeding. Processed {$count} cards, imported {$uniqueCards} unique cards.");
     }
 
     /**
