@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SearchFilter extends Model
 {
-    /** @use HasFactory<\Database\Factories\SearchFilterFactory> */
     use HasFactory;
 
     /**

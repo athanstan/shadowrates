@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DeckCode extends Model
 {
-    /** @use HasFactory<\Database\Factories\DeckCodeFactory> */
     use HasFactory;
 
     /**

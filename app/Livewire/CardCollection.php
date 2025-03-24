@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Enums\CardSubType;
 use App\Models\Card;
 use App\Models\CardSet;
 use App\Models\CardType;
@@ -20,6 +21,7 @@ class CardCollection extends Component
     // Search and filter properties
     public $search = '';
     public $selectedCardType = '';
+    public $selectedCardSubType = '';
     public $selectedCraft = '';
     public $selectedCardSet = '';
     public $costFilter = '';
@@ -31,6 +33,7 @@ class CardCollection extends Component
 
     // Dropdown options
     public $cardTypes = [];
+    public $cardSubTypes = [];
     public $crafts = [];
     public $cardSets = [];
     public $rarities = ['Bronze', 'Silver', 'Gold', 'Legendary'];
@@ -39,6 +42,7 @@ class CardCollection extends Component
     protected $queryString = [
         'search' => ['except' => ''],
         'selectedCardType' => ['except' => ''],
+        'selectedCardSubType' => ['except' => ''],
         'selectedCraft' => ['except' => ''],
         'selectedCardSet' => ['except' => ''],
         'costFilter' => ['except' => ''],
@@ -53,6 +57,7 @@ class CardCollection extends Component
     public function mount()
     {
         $this->cardTypes = CardType::orderBy('name')->get();
+        $this->cardSubTypes = CardSubType::cases();
         $this->crafts = Craft::orderBy('name')->get();
         $this->cardSets = CardSet::orderBy('release_date', 'desc')->get();
 
@@ -117,7 +122,12 @@ class CardCollection extends Component
             $userCards[$cardId] = ['quantity' => $quantity];
         }
 
-        Auth::user()->cards()->syncWithoutDetaching($userCards);
+        try {
+            Auth::user()->cards()->syncWithoutDetaching($userCards);
+            $this->dispatch('show-success', message: 'Card collection saved successfully!');
+        } catch (\Exception) {
+            $this->dispatch('show-error', message: 'Failed to save card collection. Please try again.');
+        }
     }
 
     #[Computed]
@@ -138,6 +148,11 @@ class CardCollection extends Component
                 $this->selectedCardType,
                 fn(Builder $query) =>
                 $query->where('card_type_id', $this->selectedCardType)
+            )
+            ->when(
+                $this->selectedCardSubType,
+                fn(Builder $query) =>
+                $query->where('sub_type', 'ilike', $this->selectedCardSubType)
             )
             ->when(
                 $this->selectedCraft,
@@ -172,7 +187,7 @@ class CardCollection extends Component
     public function render()
     {
         return view('livewire.card-collection', [
-            'cards' => $this->cardsQuery->paginate($this->perPage),
+            'cards' => $this->cardsQuery()->paginate($this->perPage),
         ]);
     }
 

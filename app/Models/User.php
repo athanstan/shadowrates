@@ -132,4 +132,12 @@ class User extends Authenticatable
     {
         return $this->hasOne(SearchFilter::class)->where('is_default', true);
     }
+
+    /**
+     * Get the URL for the user's profile photo.
+     */
+    public function getProfilePhotoUrlAttribute(): string
+    {
+        return $this->provider_avatar ?? $this->getAvatarAttribute(null);
+    }
 }

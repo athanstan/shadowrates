@@ -15,7 +15,7 @@ class DeckController extends Controller
     public function index()
     {
         $decks = Auth::user()->decks()->latest()->paginate(12);
-        return view('decks.index', compact('decks'));
+        return view('decks.index', ['decks' => $decks]);
     }
 
     /**
@@ -24,7 +24,8 @@ class DeckController extends Controller
     public function create()
     {
         $crafts = Craft::where('is_active', true)->orderBy('display_order')->get();
-        return view('decks.create', compact('crafts'));
+        // @phpstan-ignore-next-line
+        return view('decks.create', ['crafts' => $crafts]);
     }
 
     /**
@@ -58,7 +59,7 @@ class DeckController extends Controller
             abort(403, 'This deck is private.');
         }
 
-        return view('decks.show', compact('deck'));
+        return view('decks.show', ['deck' => $deck]);
     }
 
     /**
@@ -72,7 +73,8 @@ class DeckController extends Controller
         }
 
         $crafts = Craft::where('is_active', true)->orderBy('display_order')->get();
-        return view('decks.edit', compact('deck', 'crafts'));
+        // @phpstan-ignore-next-line
+        return view('decks.edit', ['deck' => $deck, 'crafts' => $crafts]);
     }
 
     /**

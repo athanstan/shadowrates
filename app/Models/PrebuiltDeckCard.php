@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PrebuiltDeckCard extends Model
 {
-    /** @use HasFactory<\Database\Factories\PrebuiltDeckCardFactory> */
     use HasFactory;
 
     /**

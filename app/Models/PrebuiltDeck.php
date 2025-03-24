@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class PrebuiltDeck extends Model
 {
-    /** @use HasFactory<\Database\Factories\PrebuiltDeckFactory> */
     use HasFactory, Sluggable;
 
     /**

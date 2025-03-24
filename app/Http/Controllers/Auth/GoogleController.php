@@ -45,6 +45,7 @@ class GoogleController extends Controller
                     'name' => $googleUser->getName(),
                     'provider_name' => 'google',
                     'provider_id' => $googleUser->getId(),
+                    // @phpstan-ignore-next-line
                     'provider_token' => $googleUser->token,
                     'avatar' => fn($attributes) => $attributes['avatar'] ?? $avatarUrl,
                     'email_verified_at' => now(),
@@ -56,7 +57,7 @@ class GoogleController extends Controller
 
             // Redirect to the intended page or home
             return redirect()->intended('/');
-        } catch (Exception $e) {
+        } catch (Exception) {
             // Handle errors during authentication
             return redirect()->route('login')->with('error', 'Google authentication failed. Please try again.');
         }

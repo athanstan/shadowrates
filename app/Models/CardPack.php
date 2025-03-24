@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class CardPack extends Model
 {
-    /** @use HasFactory<\Database\Factories\CardPackFactory> */
     use HasFactory;
 
     /**

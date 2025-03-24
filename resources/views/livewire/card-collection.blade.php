@@ -2,6 +2,10 @@
     <h1 class="text-3xl font-bold text-center text-purple-100 ">Card Collection</h1>
     <p class="mb-8 text-lg text-center text-purple-300">Browse and manage your card collection.</p>
 
+    <!-- Alert Components -->
+    <x-atoms.success-alert position="top-center" />
+    <x-atoms.error-alert position="top-center" />
+
     <!-- Filters Section -->
     <x-molecules.filter-section>
         <!-- Basic Filters -->
@@ -22,12 +26,23 @@
                 </x-atoms.filter-group>
             </div>
 
-            <!-- Card Type Filter -->
-            <div class="md:col-span-3 lg:col-span-3">
-                <x-atoms.filter-group label="Card Type" for="cardType">
-                    <x-atoms.select-input wire:model.live.debounce.300ms="selectedCardType" id="cardType"
-                        :options="$cardTypes" emptyOption="All Types" class="w-full" />
-                </x-atoms.filter-group>
+            <div class="grid grid-cols-2 gap-4 md:col-span-3 lg:col-span-3">
+                <!-- Card Type Filter -->
+                <div class="">
+                    <x-atoms.filter-group label="Card Type" for="cardType">
+                        <x-atoms.select-input wire:model.live.debounce.300ms="selectedCardType" id="cardType"
+                            :options="$cardTypes" emptyOption="All Types" class="w-full" />
+                    </x-atoms.filter-group>
+                </div>
+                <!-- Card Sub type Filter -->
+                <div class="">
+                    <x-atoms.filter-group label="Card SubType" for="cardSubType">
+                        <x-atoms.select-input wire:model.live.debounce.300ms="selectedCardSubType" id="cardSubType"
+                            :options="$cardSubTypes" optionValue="value" optionLabel="name" emptyOption="All SubTypes"
+                            class="w-full" />
+                    </x-atoms.filter-group>
+                </div>
+
             </div>
 
             <!-- Craft Filter -->
