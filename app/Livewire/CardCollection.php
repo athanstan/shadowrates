@@ -37,7 +37,7 @@ class CardCollection extends Component
     public $crafts = [];
     public $cardSets = [];
     public $rarities = ['Bronze', 'Silver', 'Gold', 'Legendary'];
-    public $costs = ['1', '2', '3', '4', '5', '6', '7', '8', '9+'];
+    public $costs = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9+'];
 
     protected $queryString = [
         'search' => ['except' => ''],

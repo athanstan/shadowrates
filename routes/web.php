@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Livewire\CardCollection;
+use App\Livewire\DeckBuilder;
 use App\Livewire\User\UserProfile;
 use Illuminate\Support\Facades\Route;
 
@@ -40,3 +41,16 @@ Route::get('/cards/{card}', function ($card) {
 
 // User Routes
 Route::get('/users/{slug}', UserProfile::class)->name('users.profile');
+
+// Deck Routes
+Route::get('/decks', function () {
+    return view('decks.index');
+})->name('decks.index');
+
+Route::get('/decks/create', DeckBuilder::class)->name('decks.create');
+
+Route::get('/decks/{deck}/edit', DeckBuilder::class)->name('decks.edit');
+
+Route::get('/decks/{deck}', function ($deck) {
+    return view('decks.show', ['deck' => \App\Models\Deck::findOrFail($deck)]);
+})->name('decks.show');
