@@ -3,116 +3,28 @@
 namespace App\Livewire;
 
 use Livewire\Component;
-use Livewire\WithPagination;
 use App\Models\Card;
-use App\Enums\CardSubType;
-use App\Models\CardSet;
-use App\Models\CardType;
-use App\Models\Craft;
 use App\Models\Deck;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Computed;
 use Illuminate\Database\Eloquent\Builder;
+use App\Traits\HasCardFilters;
 
 class DeckBuilder extends Component
 {
-    use WithPagination;
-
-    // Search and filter properties
-    public $search = '';
-    public $selectedCardType = '';
-    public $selectedCardSubType = '';
-    public $selectedCraft = '';
-    public $selectedCardSet = '';
-    public $costFilter = '';
-    public $rarityFilter = '';
-    public $sortBy = 'name';
-    public $sortDirection = 'asc';
-    public $perPage = 24;
+    use HasCardFilters;
 
     // Deck properties
     public $deckName = 'New Deck';
     public $mainDeck = [];
     public $evolutionDeck = [];
+    protected $queryString = [];
 
-    public $cardTypes = [];
-    public $cardSubTypes = [];
-    public $crafts = [];
-    public $cardSets = [];
-    public $rarities = ['Bronze', 'Silver', 'Gold', 'Legendary'];
-    public $costs = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9+'];
-
-    protected $queryString = [
-        'search' => ['except' => ''],
-        'selectedCardType' => ['except' => ''],
-        'selectedCardSubType' => ['except' => ''],
-        'selectedCraft' => ['except' => ''],
-        'selectedCardSet' => ['except' => ''],
-        'costFilter' => ['except' => ''],
-        'rarityFilter' => ['except' => ''],
-        'sortBy' => ['except' => 'name'],
-        'sortDirection' => ['except' => 'asc'],
-        'perPage' => ['except' => 24],
-    ];
-
-    public function updatingSearch()
+    public function boot()
     {
-        $this->resetPage();
-    }
-
-    public function updatingSelectedCardType()
-    {
-        $this->resetPage();
-    }
-
-    public function updatingSelectedCardSubType()
-    {
-        $this->resetPage();
-    }
-
-    public function updatingSelectedCraft()
-    {
-        $this->resetPage();
-    }
-
-    public function updatingSelectedCardSet()
-    {
-        $this->resetPage();
-    }
-
-    public function updatingCostFilter()
-    {
-        $this->resetPage();
-    }
-
-    public function updatingRarityFilter()
-    {
-        $this->resetPage();
-    }
-
-    public function resetFilters()
-    {
-        $this->reset([
-            'search',
-            'selectedCardType',
-            'selectedCardSubType',
-            'selectedCraft',
-            'selectedCardSet',
-            'costFilter',
-            'rarityFilter',
-        ]);
-        $this->resetPage();
-    }
-
-    public function sortBy($field)
-    {
-        if ($this->sortBy === $field) {
-            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
-        } else {
-            $this->sortBy = $field;
-            $this->sortDirection = 'asc';
-        }
+        // Set up query string parameters from the trait
+        $this->queryString = $this->getCardFilterQueryString();
     }
 
     public function mount($deck = null)
@@ -127,13 +39,8 @@ class DeckBuilder extends Component
             // This is just a placeholder, you'll implement the actual logic
         }
 
-        // Get all the necessary data for filters
-        $this->cardTypes = CardType::orderBy('name')->get();
-        $this->cardSubTypes = CardSubType::cases();
-        $this->crafts = Craft::orderBy('name')->get();
-        $this->cardSets = CardSet::orderBy('release_date', 'desc')->get();
-        $this->costs = range(0, 10);
-        $this->rarities = ['Bronze', 'Silver', 'Gold', 'Legendary'];
+        // Initialize card filters
+        $this->initializeCardFilters();
     }
 
     public function saveDeck()
@@ -187,49 +94,10 @@ class DeckBuilder extends Component
     #[Computed]
     public function cardsQuery(): Builder
     {
-        return Card::query()
-            ->when(
-                strlen($this->search) >= 3,
-                fn(Builder $query) =>
-                $query->where(
-                    fn(Builder $query) =>
-                    $query->where('name', 'ilike', '%' . $this->search . '%')
-                        ->orWhere('effects', 'ilike', '%' . $this->search . '%')
-                )
-            )
-            ->when(
-                $this->selectedCardType,
-                fn(Builder $query) =>
-                $query->where('card_type_id', $this->selectedCardType)
-            )
-            ->when(
-                $this->selectedCardSubType,
-                fn(Builder $query) =>
-                $query->where('sub_type', 'ilike', $this->selectedCardSubType)
-            )
-            ->when(
-                $this->selectedCraft,
-                fn(Builder $query) =>
-                $query->where('craft_id', $this->selectedCraft)
-            )
-            ->when(
-                $this->selectedCardSet,
-                fn(Builder $query) =>
-                $query->where('card_set_id', $this->selectedCardSet)
-            )
-            ->when(
-                $this->costFilter,
-                fn(Builder $query) =>
-                $this->costFilter === '9+'
-                    ? $query->where('cost', '>=', 9)
-                    : $query->where('cost', $this->costFilter)
-            )
-            ->when(
-                $this->rarityFilter,
-                fn(Builder $query) =>
-                $query->where('rarity', $this->rarityFilter)
-            )
-            ->orderBy($this->sortBy, $this->sortDirection);
+        $query = Card::query();
+
+        // Apply the common filters from the trait
+        return $this->applyCardFilters($query);
     }
 
     #[Layout('components.app-layout')]

@@ -2,64 +2,35 @@
 
 namespace App\Livewire;
 
-use App\Enums\CardSubType;
 use App\Models\Card;
-use App\Models\CardSet;
-use App\Models\CardType;
 use App\Models\CardUser;
-use App\Models\Craft;
 use Livewire\Component;
-use Livewire\WithPagination;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
+use App\Traits\HasCardFilters;
 
 class CardCollection extends Component
 {
-    use WithPagination;
+    use HasCardFilters;
 
-    // Search and filter properties
-    public $search = '';
-    public $selectedCardType = '';
-    public $selectedCardSubType = '';
-    public $selectedCraft = '';
-    public $selectedCardSet = '';
-    public $costFilter = '';
-    public $rarityFilter = '';
-    public $ownedFilter = false; // New owned filter
-    public $sortBy = 'name';
-    public $sortDirection = 'asc';
-    public $perPage = 24;
-
-    // Dropdown options
-    public $cardTypes = [];
-    public $cardSubTypes = [];
-    public $crafts = [];
-    public $cardSets = [];
-    public $rarities = ['Bronze', 'Silver', 'Gold', 'Legendary'];
-    public $costs = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9+'];
-
-    protected $queryString = [
-        'search' => ['except' => ''],
-        'selectedCardType' => ['except' => ''],
-        'selectedCardSubType' => ['except' => ''],
-        'selectedCraft' => ['except' => ''],
-        'selectedCardSet' => ['except' => ''],
-        'costFilter' => ['except' => ''],
-        'rarityFilter' => ['except' => ''],
-        'ownedFilter' => ['except' => false], // Add to query string
-        'sortBy' => ['except' => 'name'],
-        'sortDirection' => ['except' => 'asc'],
-    ];
-
+    // Additional properties specific to CardCollection
+    public $ownedFilter = false;
     public array $cardCollection = [];
+    protected $queryString = [];
+
+    public function boot()
+    {
+        // Set up query string parameters by merging trait's query string with component-specific ones
+        $this->queryString = array_merge(
+            $this->getCardFilterQueryString(),
+            ['ownedFilter' => ['except' => false]]
+        );
+    }
 
     public function mount()
     {
-        $this->cardTypes = CardType::orderBy('name')->get();
-        $this->cardSubTypes = CardSubType::cases();
-        $this->crafts = Craft::orderBy('name')->get();
-        $this->cardSets = CardSet::orderBy('release_date', 'desc')->get();
+        $this->initializeCardFilters();
 
         if (Auth::check()) {
             $this->cardCollection = CardUser::query()
@@ -70,49 +41,9 @@ class CardCollection extends Component
         }
     }
 
-    public function updatingSearch()
+    public function updatingOwnedFilter()
     {
         $this->resetPage();
-    }
-
-    public function updatingSelectedCardType()
-    {
-        $this->resetPage();
-    }
-
-    public function updatingSelectedCraft()
-    {
-        $this->resetPage();
-    }
-
-    public function updatingSelectedCardSet()
-    {
-        $this->resetPage();
-    }
-
-    public function updatingCostFilter()
-    {
-        $this->resetPage();
-    }
-
-    public function updatingRarityFilter()
-    {
-        $this->resetPage();
-    }
-
-    public function updatingOwnedFilter() // New method to reset page on owned filter change
-    {
-        $this->resetPage();
-    }
-
-    public function sortBy($field)
-    {
-        if ($this->sortBy === $field) {
-            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
-        } else {
-            $this->sortBy = $field;
-            $this->sortDirection = 'asc';
-        }
     }
 
     public function saveCardCollection()
@@ -133,55 +64,17 @@ class CardCollection extends Component
     #[Computed]
     public function cardsQuery(): Builder
     {
-        return Card::query()
-            ->when(
-                strlen($this->search) >= 3,
-                fn(Builder $query) =>
-                $query->where(
-                    fn(Builder $query) =>
-                    $query->where('name', 'ilike', '%' . $this->search . '%')
-                        ->orWhere('description', 'ilike', '%' . $this->search . '%')
-                        ->orWhere('effects', 'ilike', '%' . $this->search . '%')
-                )
-            )
-            ->when(
-                $this->selectedCardType,
-                fn(Builder $query) =>
-                $query->where('card_type_id', $this->selectedCardType)
-            )
-            ->when(
-                $this->selectedCardSubType,
-                fn(Builder $query) =>
-                $query->where('sub_type', 'ilike', $this->selectedCardSubType)
-            )
-            ->when(
-                $this->selectedCraft,
-                fn(Builder $query) =>
-                $query->where('craft_id', $this->selectedCraft)
-            )
-            ->when(
-                $this->selectedCardSet,
-                fn(Builder $query) =>
-                $query->where('card_set_id', $this->selectedCardSet)
-            )
-            ->when(
-                $this->costFilter,
-                fn(Builder $query) =>
-                $this->costFilter === '9+'
-                    ? $query->where('cost', '>=', 9)
-                    : $query->where('cost', $this->costFilter)
-            )
-            ->when(
-                $this->rarityFilter,
-                fn(Builder $query) =>
-                $query->where('rarity', $this->rarityFilter)
-            )
-            ->when(
-                $this->ownedFilter, // Apply owned filter
-                fn(Builder $query) =>
-                $query->whereIn('id', array_keys($this->cardCollection))
-            )
-            ->orderBy($this->sortBy, $this->sortDirection);
+        $query = Card::query();
+
+        // Apply the common filters from the trait
+        $query = $this->applyCardFilters($query);
+
+        // Apply the owned filter which is specific to this component
+        if ($this->ownedFilter) {
+            $query->whereIn('id', array_keys($this->cardCollection));
+        }
+
+        return $query;
     }
 
     public function render()
@@ -193,15 +86,9 @@ class CardCollection extends Component
 
     public function resetFilters()
     {
-        $this->reset([
-            'search',
-            'selectedCardType',
-            'selectedCraft',
-            'selectedCardSet',
-            'costFilter',
-            'rarityFilter',
-            'ownedFilter' // Reset owned filter
-        ]);
+        // Call parent resetFilters and add our own filter
+        parent::resetFilters();
+        $this->reset(['ownedFilter']);
         $this->resetPage();
     }
 }
