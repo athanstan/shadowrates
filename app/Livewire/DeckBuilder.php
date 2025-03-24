@@ -9,6 +9,8 @@ use App\Enums\CardSubType;
 use App\Models\CardSet;
 use App\Models\CardType;
 use App\Models\Craft;
+use App\Models\Deck;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 
 class DeckBuilder extends Component
@@ -75,8 +77,6 @@ class DeckBuilder extends Component
         }
     }
 
-    // We'll leave the add/remove card methods as placeholders
-    // since you mentioned you'll handle the backend logic yourself
     public function mount($deck = null)
     {
         // Initialize empty deck arrays
@@ -96,6 +96,54 @@ class DeckBuilder extends Component
         $this->cardSets = CardSet::pluck('name', 'id')->toArray();
         $this->costs = range(0, 10);
         $this->rarities = ['Bronze', 'Silver', 'Gold', 'Legendary'];
+    }
+
+    public function saveDeck()
+    {
+        // Data has already been validated on the client side
+        // Create a new deck
+        $deckCraftId = null;
+
+        // Get craft ID from the first card if available
+        if (!empty($this->mainDeck)) {
+            $firstCardId = array_key_first($this->mainDeck);
+            if ($firstCardId) {
+                $firstCard = Card::find($firstCardId);
+                if ($firstCard) {
+                    $deckCraftId = $firstCard->craft_id;
+                }
+            }
+        }
+
+        $deck = Deck::create([
+            'name' => $this->deckName,
+            'user_id' => Auth::id(),
+            'craft_id' => $deckCraftId,
+        ]);
+
+        // Add main deck cards
+        foreach ($this->mainDeck as $cardId => $cardData) {
+            $deck->cards()->attach($cardId, [
+                'quantity' => $cardData['quantity'],
+                'is_evolution' => false,
+            ]);
+        }
+
+        // Add evolution cards
+        foreach ($this->evolutionDeck as $cardId => $cardData) {
+            $deck->cards()->attach($cardId, [
+                'quantity' => $cardData['quantity'],
+                'is_evolution' => true,
+            ]);
+        }
+
+        $this->dispatch('notify', [
+            'type' => 'success',
+            'message' => 'Deck saved successfully!'
+        ]);
+
+        // Redirect to the decks index
+        return redirect()->route('decks.index');
     }
 
     #[Layout('components.app-layout')]
