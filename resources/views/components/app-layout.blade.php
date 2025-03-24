@@ -82,7 +82,7 @@
                                 x-transition:leave-start="transform opacity-100 scale-100"
                                 x-transition:leave-end="transform opacity-0 scale-95"
                                 class="absolute right-0 w-48 py-1 mt-2 origin-top-right bg-gray-800 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                <a href="#"
+                                <a href="{{ route('users.profile', auth()->user()->slug) }}" wire:navigate
                                     class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">Profile</a>
                                 <a href="#"
                                     class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">Settings</a>

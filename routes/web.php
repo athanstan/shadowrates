@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Livewire\CardCollection;
+use App\Livewire\User\UserProfile;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,3 +37,6 @@ Route::get('/cards', function () {
 Route::get('/cards/{card}', function ($card) {
     return view('cards.show', ['card' => \App\Models\Card::findOrFail($card)]);
 })->name('cards.show');
+
+// User Routes
+Route::get('/users/{slug}', UserProfile::class)->name('users.profile');
