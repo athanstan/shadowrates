@@ -12,20 +12,22 @@ class UserProfile extends Component
 
     public function mount($slug)
     {
-        $this->user = User::where('slug', $slug)->firstOrFail();
+        $this->user = User::with(['decks' => function ($query) {
+            $query->take(6);
+        }, 'cards' => function ($query) {
+            $query->take(8);
+        }, 'ratings.card' => function ($query) {
+            $query->take(5);
+        }])->where('slug', $slug)->firstOrFail();
     }
 
     #[Layout('components.app-layout')]
     public function render()
     {
-        $decks = $this->user->decks()->latest()->take(6)->get();
-        $cards = $this->user->cards()->latest()->take(8)->get();
-        $ratings = $this->user->ratings()->with('card')->latest()->take(5)->get();
-
         return view('livewire.user.user-profile', [
-            'decks' => $decks,
-            'cards' => $cards,
-            'ratings' => $ratings,
+            'decks' => $this->user->decks,
+            'cards' => $this->user->cards,
+            'ratings' => $this->user->ratings,
         ]);
     }
 }

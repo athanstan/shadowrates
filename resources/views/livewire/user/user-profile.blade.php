@@ -1,26 +1,26 @@
 <div class="container px-4 mx-auto">
-    <!-- Profile Header -->
-    <div class="mb-8">
-        <div class="overflow-hidden bg-gray-900 border border-purple-900 rounded-lg shadow-md">
-            <div class="px-6 py-8">
-                <div class="flex flex-col items-center md:flex-row md:items-start">
-                    <div class="flex-shrink-0 mb-4 md:mb-0 md:mr-6">
-                        <img class="object-cover w-24 h-24 p-1 rounded-lg pixel-corners" src="{{ $user->avatar }}"
-                            alt="{{ $user->name }}" style="image-rendering: pixelated;">
-                    </div>
-                    <div class="flex-1 text-center md:text-left">
-                        <h1 class="text-2xl font-bold text-white">{{ $user->name }}</h1>
-                        <p class="text-gray-400">Member since {{ $user->created_at->format('F Y') }}</p>
+    <x-atoms.neo-brutal-panel class="my-8">
+        <div class="mb-8">
+            <!-- Profile Header -->
+            <div class="overflow-hidden bg-gray-900 border border-purple-900 rounded-lg shadow-md">
+                <div class="px-6 py-8">
+                    <div class="flex flex-col items-center md:flex-row md:items-start">
+                        <div class="flex-shrink-0 mb-4 md:mb-0 md:mr-6">
+                            <img class="object-cover w-24 h-24 p-1 rounded-lg pixel-corners" src="{{ $user->avatar }}"
+                                alt="{{ $user->name }}" style="image-rendering: pixelated;">
+                        </div>
+                        <div class="flex-1 text-center md:text-left">
+                            <h1 class="text-2xl font-bold text-white">{{ $user->name }}</h1>
+                            <p class="text-gray-400">Member since {{ $user->created_at->format('F Y') }}</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- User Stats Section -->
-    <x-molecules.section-heading title="Player Stats" subtitle="Game performance and collection statistics" />
-    <div class="mb-8">
-        <x-atoms.neo-brutal-panel>
+        <!-- User Stats Section -->
+        <x-molecules.section-heading title="Player Stats" subtitle="Game performance and collection statistics" />
+        <div class="mb-8">
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 <div class="p-4 text-center">
                     <div class="text-3xl font-bold text-purple-400">{{ $user->cards->count() }}</div>
@@ -39,8 +39,8 @@
                     <div class="text-gray-400">Days as Member</div>
                 </div>
             </div>
-        </x-atoms.neo-brutal-panel>
-    </div>
+        </div>
+    </x-atoms.neo-brutal-panel>
 
     <!-- Decks Collection Section -->
     <x-molecules.section-heading title="Deck Collection" subtitle="Player's constructed decks" action-text="View All"
@@ -62,7 +62,7 @@
         action-url="#" />
     <div class="mb-8">
         @if ($cards->count() > 0)
-            <div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <div class="grid grid-cols-2 gap-4 sm:grid-cols-6">
                 @foreach ($cards as $card)
                     <x-atoms.card-preview :card="$card" />
                 @endforeach
