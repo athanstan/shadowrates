@@ -92,28 +92,26 @@
                         <p class="text-purple-300"><span class="font-semibold">Rarity:</span> {{ $card->rarity }}</p>
                         <p class="text-purple-300"><span class="font-semibold">Cost:</span> {{ $card->cost }} PP</p>
 
+                        @if ($card->traits)
+                            <p class="text-purple-300"><span class="font-semibold">Traits:</span> {{ $card->traits }}
+                            </p>
+                        @endif
+
                         @if ($card->cardType && $card->cardType->name === 'Follower')
                             <div class="pt-2 border-t border-purple-700">
                                 <p class="text-purple-300"><span class="font-semibold">Stats:</span>
-                                    {{ $card->attack }}/{{ $card->defense }}</p>
-                                @if ($card->evolved_attack && $card->evolved_defense)
+                                    {{ $card->atk }}/{{ $card->health }}</p>
+                                @if ($card->evolved_atk && $card->evolved_health)
                                     <p class="text-purple-300"><span class="font-semibold">Evolved:</span>
-                                        {{ $card->evolved_attack }}/{{ $card->evolved_defense }}</p>
+                                        {{ $card->evolved_atk }}/{{ $card->evolved_health }}</p>
                                 @endif
                             </div>
                         @endif
 
-                        @if ($card->effect)
+                        @if ($card->effects)
                             <div class="pt-2 border-t border-purple-700">
                                 <p class="font-semibold text-purple-200">Effect:</p>
-                                <p class="text-purple-300">{!! $card->effect !!}</p>
-                            </div>
-                        @endif
-
-                        @if ($card->evolved_effect)
-                            <div class="pt-2">
-                                <p class="font-semibold text-purple-200">Evolved Effect:</p>
-                                <p class="text-white">{{ $card->evolved_effect }}</p>
+                                <p class="text-purple-300">{!! $card->effects !!}</p>
                             </div>
                         @endif
                     </div>

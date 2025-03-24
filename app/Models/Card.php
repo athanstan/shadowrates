@@ -24,8 +24,11 @@ class Card extends Model
         'name',
         'slug',
         'description',
-        'effect',
-        'evolved_effect',
+        'effects',
+        'traits',
+        'main_type',
+        'sub_type',
+        'language',
         'card_type_id',
         'craft_id',
         'card_set_id',
@@ -33,10 +36,10 @@ class Card extends Model
         'rarity',
         'image_url',
         'evolved_image_url',
-        'attack',
-        'defense',
-        'evolved_attack',
-        'evolved_defense',
+        'atk',
+        'health',
+        'evolved_atk',
+        'evolved_health',
         'is_token',
         'is_basic',
         'is_neutral',
@@ -51,10 +54,10 @@ class Card extends Model
      */
     protected $casts = [
         'cost' => 'integer',
-        'attack' => 'integer',
-        'defense' => 'integer',
-        'evolved_attack' => 'integer',
-        'evolved_defense' => 'integer',
+        'atk' => 'integer',
+        'health' => 'integer',
+        'evolved_atk' => 'integer',
+        'evolved_health' => 'integer',
         'is_token' => 'boolean',
         'is_basic' => 'boolean',
         'is_neutral' => 'boolean',
@@ -132,7 +135,7 @@ class Card extends Model
      */
     public function collections(): HasMany
     {
-        return $this->hasMany(Collection::class);
+        return $this->hasMany(CardUser::class);
     }
 
     /**

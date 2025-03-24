@@ -17,14 +17,20 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
-            $table->text('description')->nullable();
-            $table->text('effect')->nullable();
-            $table->text('evolved_effect')->nullable();
+            $table->string('original_card_id')->nullable(); // From 'id' in JSON
+
+            // Card attributes from JSON
+            $table->string('main_type'); // follower, spell, amulet
+            $table->string('sub_type')->nullable(); // evolved, etc.
+            $table->text('description')->nullable(); // Maps to flavor_text in some cards
+            $table->text('effects')->nullable();
+            $table->string('traits')->nullable(); // Natura/Beast etc.
+            $table->string('language')->default('en');
 
             // Foreign keys
             $table->foreignId('card_type_id')->constrained('card_types');
-            $table->foreignId('craft_id')->constrained('crafts');
-            $table->foreignId('card_set_id')->constrained('card_sets');
+            $table->foreignId('craft_id')->constrained('crafts'); // Maps to clan_id
+            $table->foreignId('card_set_id')->constrained('card_sets'); // Maps to expansion_id
 
             // Card attributes
             $table->integer('cost');
@@ -33,19 +39,16 @@ return new class extends Migration
             $table->string('evolved_image')->nullable();
 
             // Follower stats (nullable for spells and amulets)
-            $table->integer('attack')->nullable();
-            $table->integer('defense')->nullable();
-            $table->integer('evolved_attack')->nullable();
-            $table->integer('evolved_defense')->nullable();
+            $table->integer('atk')->nullable(); // Instead of attack
+            $table->integer('health')->nullable(); // Instead of defense
+            $table->integer('evolved_atk')->nullable(); // For evolved cards
+            $table->integer('evolved_health')->nullable(); // For evolved cards
 
             // Card metadata
             $table->boolean('is_token')->default(false);
             $table->boolean('is_basic')->default(false);
             $table->boolean('is_neutral')->default(false);
             $table->boolean('is_active')->default(true);
-
-            // If this is an alternate art version, reference the original card
-            $table->string('original_card_id')->nullable();
 
             $table->timestamps();
         });

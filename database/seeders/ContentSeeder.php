@@ -232,49 +232,50 @@ class ContentSeeder extends Seeder
         // Process in batches to avoid memory issues
         foreach (array_chunk($cards, $batchSize) as $cardBatch) {
             foreach ($cardBatch as $cardData) {
-                // Extract card data based on JSON structure
-                // This is an example and might need adjustment based on actual JSON structure
-
                 // Skip if card doesn't have essential data
                 if (!isset($cardData['name'])) {
                     continue;
                 }
 
-                // Map card type
-                $cardTypeName = isset($cardData['card_type']) ? $this->mapCardType($cardData['card_type']) : 'Follower';
+                // Map card type from main_type
+                $cardTypeName = isset($cardData['main_type']) ? $this->mapCardType($cardData['main_type']) : 'Follower';
                 $cardTypeId = $cardTypes->get($cardTypeName, $fallbackCardType)->id;
 
-                // Map craft
+                // Map craft from clan_name
                 $craftName = $cardData['clan_name'] ?? null;
                 $craftId = $craftName ? ($crafts->get($craftName, $fallbackCraft)->id) : $fallbackCraft->id;
 
-                // Map card set
+                // Map card set from expansion_id
                 $cardSetId = null;
-                if (isset($cardData['card_set_id'])) {
-                    $cardSetId = $cardSets->get($cardData['card_set_id'], $fallbackCardSet)->id;
+                if (isset($cardData['expansion_id'])) {
+                    $cardSetId = $cardSets->get($cardData['expansion_id'], $fallbackCardSet)->id;
                 } else {
                     $cardSetId = $fallbackCardSet->id;
                 }
 
                 // Create or update the card
                 Card::firstOrCreate(
-                    ['name' => $cardData['name']],
+                    ['name' => $cardData['name'], 'sub_type' => $cardData['sub_type'] ?? null], // Composite unique constraint
                     [
+                        'slug' => Str::slug($cardData['name'] . '-' . ($cardData['sub_type'] ?? '')),
                         'original_card_id' => $cardData['id'] ?? null,
+                        'main_type' => $cardData['main_type'] ?? 'follower',
+                        'sub_type' => $cardData['sub_type'] ?? null,
                         'description' => $cardData['description'] ?? $cardData['flavor_text'] ?? 'No description available',
-                        'effect' => $cardData['effects'] ?? 'No effect available',
-                        'evolved_effect' => $cardData['evolved_effect_text'] ?? null,
+                        'effects' => $cardData['effects'] ?? 'No effect available',
+                        'traits' => $cardData['traits'] ?? null,
+                        'language' => $cardData['language'] ?? 'en',
                         'card_type_id' => $cardTypeId,
                         'craft_id' => $craftId,
                         'card_set_id' => $cardSetId,
                         'cost' => $cardData['cost'] ?? 0,
                         'rarity' => $this->mapRarity($cardData['rarity'] ?? 'bronze'),
                         'image' => $cardData['id'] . '.jpg',
-                        'evolved_image' => $cardData['evolved_image'] ?? null,
-                        'attack' => $cardData['attack'] ?? null,
-                        'defense' => $cardData['defense'] ?? null,
-                        'evolved_attack' => $cardData['evolved_attack'] ?? null,
-                        'evolved_defense' => $cardData['evolved_defense'] ?? null,
+                        'evolved_image' => $cardData['sub_type'] === 'evolved' ? $cardData['id'] . '.jpg' : null,
+                        'atk' => $cardData['atk'] ?? null, // Changed from attack to atk
+                        'health' => $cardData['health'] ?? null, // Changed from defense to health
+                        'evolved_atk' => $cardData['sub_type'] === 'evolved' ? $cardData['atk'] ?? null : null,
+                        'evolved_health' => $cardData['sub_type'] === 'evolved' ? $cardData['health'] ?? null : null,
                         'is_token' => $cardData['is_token'] ?? false,
                         'is_basic' => $cardData['is_basic'] ?? false,
                         'is_neutral' => $craftName === 'Neutral',

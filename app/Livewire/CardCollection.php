@@ -56,11 +56,13 @@ class CardCollection extends Component
         $this->crafts = Craft::orderBy('name')->get();
         $this->cardSets = CardSet::orderBy('release_date', 'desc')->get();
 
-        $this->cardCollection = CardUser::query()
-            ->where('user_id', Auth::user()->id)
-            ->where('quantity', '>', 0)
-            ->pluck('quantity', 'card_id')
-            ->toArray();
+        if (Auth::check()) {
+            $this->cardCollection = CardUser::query()
+                ->where('user_id', Auth::user()->id)
+                ->where('quantity', '>', 0)
+                ->pluck('quantity', 'card_id')
+                ->toArray();
+        }
     }
 
     public function updatingSearch()
@@ -129,6 +131,7 @@ class CardCollection extends Component
                     fn(Builder $query) =>
                     $query->where('name', 'ilike', '%' . $this->search . '%')
                         ->orWhere('description', 'ilike', '%' . $this->search . '%')
+                        ->orWhere('effects', 'ilike', '%' . $this->search . '%')
                 )
             )
             ->when(
