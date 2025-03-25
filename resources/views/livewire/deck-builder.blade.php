@@ -2,24 +2,46 @@
     <div x-data='deckBuilder'>
         <div class="container py-6 mx-auto">
             <div class="flex items-center justify-between mb-6">
-                <div class="flex items-center">
-                    <h1 class="text-3xl font-bold text-purple-100">{{ $deckName }}</h1>
-                    <div class="relative ml-4">
-                        <input type="text" wire:model.live="deckName"
-                            class="px-3 py-1 text-white bg-transparent border-b border-purple-500 focus:border-purple-300 focus:outline-none"
-                            placeholder="Deck Name">
+                <div class="flex flex-col items-start" x-data="{ showDeckNameInput: false }">
+                    <div class="flex items-center">
+                        <h1 class="text-3xl font-bold text-purple-100" x-text="$wire.deckName"></h1>
+                        <button @click="showDeckNameInput = true" x-show="!showDeckNameInput"
+                            class="p-1 ml-2 text-purple-300 transition-colors rounded-full hover:bg-purple-900/50 hover:text-purple-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="mt-2" x-show="showDeckNameInput">
+                        <div class="flex items-center">
+                            <input type="text" wire:model="deckName"
+                                class="px-3 py-1 text-white bg-transparent border-b border-purple-500 focus:border-purple-300 focus:outline-none"
+                                placeholder="Deck Name" @blur="showDeckNameInput = false">
+                            <button @click="showDeckNameInput = false"
+                                class="p-1 ml-2 text-purple-300 transition-colors rounded-full hover:bg-purple-900/50 hover:text-purple-100">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <div class="flex items-center space-x-3">
-                    <a href="{{ route('decks.index') }}" wire:navigate
-                        class="px-4 py-2 text-sm font-medium text-purple-300 transition-colors rounded-md bg-purple-900/50 hover:bg-purple-800">
-                        Cancel
-                    </a>
-                    <button @click.prevent="saveDeck()"
-                        class="px-4 py-2 text-sm font-medium text-white transition-colors bg-purple-700 rounded-md hover:bg-purple-600">
-                        Save Deck
-                    </button>
-                </div>
+                @auth
+                    <div class="flex items-center space-x-3">
+                        <a href="{{ route('decks.index') }}" wire:navigate
+                            class="px-4 py-2 text-sm font-medium text-purple-300 transition-colors rounded-md bg-purple-900/50 hover:bg-purple-800">
+                            Cancel
+                        </a>
+                        <button @click.prevent="saveDeck()"
+                            class="px-4 py-2 text-sm font-medium text-white transition-colors bg-purple-700 rounded-md hover:bg-purple-600">
+                            Save Deck
+                        </button>
+                    </div>
+                @endauth
             </div>
 
             <!-- Alert Components -->
