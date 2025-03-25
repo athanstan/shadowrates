@@ -19,6 +19,8 @@ class DeckBuilder extends Component
     public $deckName = 'New Deck';
     public $mainDeck = [];
     public $evolutionDeck = [];
+    public $leaderCardId = null;
+    public $deckCraftId = null;
     protected $queryString = [];
 
     public function boot()
@@ -32,6 +34,8 @@ class DeckBuilder extends Component
         // Initialize empty deck arrays
         $this->mainDeck = [];
         $this->evolutionDeck = [];
+        $this->leaderCardId = null;
+        $this->deckCraftId = null;
 
         // If editing an existing deck
         if ($deck) {
@@ -43,27 +47,75 @@ class DeckBuilder extends Component
         $this->initializeCardFilters();
     }
 
+    /**
+     * Update the deck craft based on the leader card
+     */
+    public function updateDeckCraft($cardId)
+    {
+        $this->leaderCardId = $cardId;
+
+        // Get the craft ID from the leader card
+        $card = Card::find($cardId);
+        if ($card) {
+            $this->deckCraftId = $card->craft_id;
+        }
+    }
+
+    /**
+     * Clear the deck craft when leader is removed
+     */
+    public function clearDeckCraft()
+    {
+        $this->leaderCardId = null;
+        $this->deckCraftId = null;
+    }
+
     public function saveDeck()
     {
-        // Data has already been validated on the client side
-        // Create a new deck
-        $deckCraftId = null;
-
-        // Get craft ID from the first card if available
-        if (!empty($this->mainDeck)) {
-            $firstCardId = array_key_first($this->mainDeck);
-            if ($firstCardId) {
-                $firstCard = Card::find($firstCardId);
-                if ($firstCard) {
-                    $deckCraftId = $firstCard->craft_id;
-                }
-            }
+        // Validate deck name
+        if (!$this->deckName) {
+            $this->dispatch('notify', [
+                'type' => 'error',
+                'message' => 'Please provide a name for your deck'
+            ]);
+            return;
         }
 
+        // Validate deck size
+        $mainDeckCount = collect($this->mainDeck)->sum(function ($card) {
+            return $card['quantity'];
+        });
+
+        if ($mainDeckCount < 40) {
+            $this->dispatch('notify', [
+                'type' => 'error',
+                'message' => 'Your main deck must have at least 40 cards'
+            ]);
+            return;
+        }
+
+        if ($mainDeckCount > 50) {
+            $this->dispatch('notify', [
+                'type' => 'error',
+                'message' => 'Your main deck cannot have more than 50 cards'
+            ]);
+            return;
+        }
+
+        // Validate leader card (required)
+        if (!$this->leaderCardId) {
+            $this->dispatch('notify', [
+                'type' => 'error',
+                'message' => 'Your deck must have a Leader card'
+            ]);
+            return;
+        }
+
+        // Create a new deck with the craft from the leader card
         $deck = Deck::create([
             'name' => $this->deckName,
             'user_id' => Auth::id(),
-            'craft_id' => $deckCraftId,
+            'craft_id' => $this->deckCraftId,
         ]);
 
         // Add main deck cards

@@ -452,34 +452,79 @@
                     },
 
                     addCardToDeck(card) {
-                        // Check if we already have this card in the deck
-                        if (this.mainDeck[card.id]) {
-                            // Check card limit based on rarity
-                            const currentQuantity = this.mainDeck[card.id].quantity;
-                            const maxCopies = (card.rarity === 'Legendary') ? 1 : 3;
-
-                            if (currentQuantity >= maxCopies) {
-                                // Show error notification
+                        // Check if the card is an evolved card - automatically add to evolution deck
+                        if (card.sub_type === 'evolved') {
+                            // Check if evolution deck is full
+                            if (this.getEvoDeckCount() >= 10) {
                                 $wire.dispatch('notify', {
                                     type: 'error',
-                                    message: `You can't add more than ${maxCopies} copies of this card`
+                                    message: 'Evolution deck cannot have more than 10 cards'
                                 });
                                 return;
                             }
 
-                            // Increment quantity
-                            this.mainDeck[card.id].quantity++;
-                        } else {
-                            // Add the card to the deck with quantity 1
+                            // Check if we already have this card in the evolution deck
+                            if (this.evoDeck[card.id]) {
+                                // Only 1 copy of each evolution card
+                                $wire.dispatch('show-error', {
+                                    message: "You can only have 1 copy of each Evolution card"
+                                });
+                                return;
+                            }
+
+                            // Add the card to the evolution deck
+                            this.evoDeck[card.id] = {
+                                id: card.id,
+                                name: card.name,
+                                cost: card.cost,
+                                rarity: card.rarity,
+                                card_type: card.cardType.name,
+                                sub_type: card.sub_type,
+                                quantity: 1,
+                                image: card.getImage
+                            };
+                            return;
+                        }
+
+                        // Check if card is a Leader and we already have a Leader
+                        if (card.cardType.name === 'Leader') {
+                            // Check if we already have a Leader card
+                            const hasLeader = Object.values(this.mainDeck).some(deckCard => deckCard.cardType.name ===
+                                'Leader');
+                            if (hasLeader) {
+                                // If we already have a different Leader
+                                const existingLeader = Object.values(this.mainDeck).find(deckCard => deckCard
+                                    .cardType.name === 'Leader');
+
+                                if (existingLeader && existingLeader.id !== card.id) {
+                                    $wire.dispatch('show-error', {
+                                        message: "You can only have one Leader card in your deck"
+                                    });
+                                    return;
+                                }
+                            }
+                        }
+
+                        const totalCardCountInDeck = Object.values(this.mainDeck).reduce((sum, deckCard) => {
+                            return deckCard.name === card.name ? sum + deckCard.quantity : sum;
+                        }, 0);
+
+                        // Check if we already have this card in the deck
+                        if (!this.mainDeck[card.id] && totalCardCountInDeck < 3) {
+                            // Add the card for the first time
                             this.mainDeck[card.id] = {
                                 id: card.id,
                                 name: card.name,
                                 cost: card.cost,
                                 rarity: card.rarity,
                                 card_type: card.cardType.name,
+                                sub_type: card.sub_type,
                                 quantity: 1,
                                 image: card.getImage
                             };
+                        } else if (this.mainDeck[card.id] && totalCardCountInDeck < 3) {
+                            // Increment quantity of this specific card
+                            this.mainDeck[card.id].quantity++;
                         }
 
                         // Check deck limit
@@ -498,6 +543,11 @@
                             });
                             return;
                         }
+
+                        // If a Leader card was added, update the Livewire component's craft
+                        if (card.sub_type === 'Leader') {
+                            $wire.updateDeckCraft(card.id);
+                        }
                     },
 
                     removeCardFromMainDeck(cardId) {
@@ -505,69 +555,18 @@
                             if (this.mainDeck[cardId].quantity > 1) {
                                 this.mainDeck[cardId].quantity--;
                             } else {
+                                // If removing a Leader, update the component
+                                if (this.mainDeck[cardId].sub_type === 'Leader') {
+                                    $wire.clearDeckCraft();
+                                }
                                 delete this.mainDeck[cardId];
                             }
                         }
                     },
 
-                    addCardToEvoDeck(card) {
-                        // Check if it's an evolution card
-                        if (card.sub_type !== 'Evolved') {
-                            $wire.dispatch('notify', {
-                                type: 'error',
-                                message: 'Only Evolution cards can be added to the Evolution deck'
-                            });
-                            return;
-                        }
-
-                        // Check if we already have this card in the deck
-                        if (this.evoDeck[card.id]) {
-                            // Check limit (1 copy per evo card)
-                            const currentQuantity = this.evoDeck[card.id].quantity;
-
-                            if (currentQuantity >= 1) {
-                                $wire.dispatch('notify', {
-                                    type: 'error',
-                                    message: "You can only have 1 copy of each Evolution card"
-                                });
-                                return;
-                            }
-
-                            // Increment quantity
-                            this.evoDeck[card.id].quantity++;
-                        } else {
-                            // Add the card to the evo deck with quantity 1
-                            this.evoDeck[card.id] = {
-                                id: card.id,
-                                name: card.name,
-                                cost: card.cost,
-                                rarity: card.rarity,
-                                card_type: card.cardType.name,
-                                quantity: 1,
-                                image: card.getImage
-                            };
-                        }
-
-                        // Check evolution deck limit
-                        const totalCards = this.getEvoDeckCount();
-                        if (totalCards > 10) {
-                            delete this.evoDeck[card.id];
-
-                            $wire.dispatch('notify', {
-                                type: 'error',
-                                message: 'Evolution deck cannot have more than 10 cards'
-                            });
-                            return;
-                        }
-                    },
-
                     removeCardFromEvoDeck(cardId) {
                         if (this.evoDeck[cardId]) {
-                            if (this.evoDeck[cardId].quantity > 1) {
-                                this.evoDeck[cardId].quantity--;
-                            } else {
-                                delete this.evoDeck[cardId];
-                            }
+                            delete this.evoDeck[cardId];
                         }
                     },
 
@@ -595,6 +594,16 @@
                             $wire.dispatch('notify', {
                                 type: 'error',
                                 message: 'Your main deck cannot have more than 50 cards'
+                            });
+                            return false;
+                        }
+
+                        // Validate that the deck has a Leader card
+                        const hasLeader = Object.values(this.mainDeck).some(card => card.sub_type === 'Leader');
+                        if (!hasLeader) {
+                            $wire.dispatch('notify', {
+                                type: 'error',
+                                message: 'Your deck must have a Leader card'
                             });
                             return false;
                         }

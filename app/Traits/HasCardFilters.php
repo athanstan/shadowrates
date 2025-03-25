@@ -119,6 +119,7 @@ trait HasCardFilters
     protected function applyCardFilters(Builder $query): Builder
     {
         return $query
+            ->with('cardType', 'craft', 'cardSet')
             ->when(
                 strlen($this->search) >= 3,
                 fn(Builder $query) =>
