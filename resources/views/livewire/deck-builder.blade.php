@@ -56,16 +56,24 @@
                 </div>
             </div>
             @auth
-                <div class="flex items-center space-x-3">
-                    <a href="{{ route('decks.index') }}" wire:navigate
-                        class="px-4 py-2 text-sm font-medium text-purple-300 transition-colors rounded-md bg-purple-900/50 hover:bg-purple-800">
-                        Cancel
-                    </a>
-                    <button wire:click.debounce.1000ms="saveDeck"
-                        class="px-4 py-2 text-sm font-medium text-white transition-colors bg-purple-700 rounded-md hover:bg-purple-600">
-                        Save Deck
-                    </button>
+                <div class="flex-col space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <a href="{{ route('decks.index') }}" wire:navigate
+                            class="px-4 py-2 text-sm font-medium text-purple-300 transition-colors rounded-md bg-purple-900/50 hover:bg-purple-800">
+                            Cancel
+                        </a>
+                        <button wire:click.debounce.1000ms="saveDeck"
+                            class="px-4 py-2 text-sm font-medium text-white transition-colors bg-purple-700 rounded-md hover:bg-purple-600">
+                            Save Deck
+                        </button>
+                    </div>
+
+                    <div class="flex items-center justify-end space-x-2 whitespace-nowrap">
+                        <label for="public" class="text-sm font-medium text-purple-300">Public</label>
+                        <x-atoms.toggle-input wire:model='isPublic' id="public" />
+                    </div>
                 </div>
+
             @endauth
         </div>
 

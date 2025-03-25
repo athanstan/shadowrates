@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Livewire\CardCollection;
 use App\Livewire\DeckBuilder;
+use App\Livewire\Card\CardProfile;
 use App\Livewire\User\UserProfile;
 use Illuminate\Support\Facades\Route;
 
@@ -35,9 +36,7 @@ Route::post('/logout', [AuthController::class, 'destroy'])->name('logout');
 Route::get('/cards', function () {
     return view('cards.index');
 })->name('cards.index');
-Route::get('/cards/{card}', function ($card) {
-    return view('cards.show', ['card' => \App\Models\Card::findOrFail($card)]);
-})->name('cards.show');
+Route::get('/cards/{card}', CardProfile::class)->name('cards.show');
 
 // User Routes
 Route::get('/users/{slug}', UserProfile::class)->name('users.profile');

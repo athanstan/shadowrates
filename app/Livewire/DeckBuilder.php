@@ -20,6 +20,7 @@ class DeckBuilder extends Component
     // Deck properties
     public $deckName;
     public $deckDescription = '';
+    public $isPublic = false;
     public $mainDeck = [];
     public $evolutionDeck = [];
     public $leaderCardId = null;
@@ -48,6 +49,7 @@ class DeckBuilder extends Component
         } else {
             $this->deckName = $deck->name;
             $this->deckDescription = $deck->description;
+            $this->isPublic = $deck->is_public;
             foreach ($deck->cards as $card) {
                 $values = [
                     "id" => $card->id,

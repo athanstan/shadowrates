@@ -61,13 +61,15 @@ class CardFactory extends Factory
         $name = ucwords(implode(' ', $selectedWords));
 
         $rarities = ['Bronze', 'Silver', 'Gold', 'Legendary'];
+        $mainTypes = ['follower', 'spell', 'amulet'];
 
         return [
             'name' => $name,
             'slug' => Str::slug($name),
             'description' => $this->faker->text(),
-            'effect' => $this->faker->text(),
-            'evolved_effect' => $this->faker->boolean(70) ? $this->faker->text() : null,
+            'effects' => $this->faker->text(),
+            'main_type' => $this->faker->randomElement($mainTypes),
+            'traits' => $this->faker->boolean(50) ? $this->faker->words(2, true) : null,
 
             // Get or create dependencies
             'card_type_id' => function () {
@@ -83,14 +85,14 @@ class CardFactory extends Factory
             // Card attributes
             'cost' => $this->faker->numberBetween(1, 10),
             'rarity' => $this->faker->randomElement($rarities),
-            'image_url' => $this->faker->imageUrl(350, 450),
-            'evolved_image_url' => $this->faker->boolean(70) ? $this->faker->imageUrl(350, 450) : null,
+            'image' => $this->faker->boolean(80) ? 'card-' . $this->faker->numberBetween(1, 100) . '.jpg' : null,
+            'evolved_image' => $this->faker->boolean(60) ? 'card-evolved-' . $this->faker->numberBetween(1, 100) . '.jpg' : null,
 
             // Follower stats - will be null for non-followers
-            'attack' => $this->faker->boolean(60) ? $this->faker->numberBetween(1, 8) : null,
-            'defense' => $this->faker->boolean(60) ? $this->faker->numberBetween(1, 8) : null,
-            'evolved_attack' => $this->faker->boolean(60) ? $this->faker->numberBetween(3, 10) : null,
-            'evolved_defense' => $this->faker->boolean(60) ? $this->faker->numberBetween(3, 10) : null,
+            'atk' => $this->faker->boolean(60) ? $this->faker->numberBetween(1, 8) : null,
+            'health' => $this->faker->boolean(60) ? $this->faker->numberBetween(1, 8) : null,
+            'evolved_atk' => $this->faker->boolean(60) ? $this->faker->numberBetween(3, 10) : null,
+            'evolved_health' => $this->faker->boolean(60) ? $this->faker->numberBetween(3, 10) : null,
 
             // Card metadata
             'is_token' => $this->faker->boolean(20),
@@ -107,16 +109,17 @@ class CardFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
+                'main_type' => 'follower',
                 'card_type_id' => function () {
                     return CardType::firstOrCreate(
                         ['name' => 'Follower'],
                         ['slug' => 'follower', 'is_active' => true]
                     )->id;
                 },
-                'attack' => $this->faker->numberBetween(1, 8),
-                'defense' => $this->faker->numberBetween(1, 8),
-                'evolved_attack' => $this->faker->numberBetween(3, 10),
-                'evolved_defense' => $this->faker->numberBetween(3, 10),
+                'atk' => $this->faker->numberBetween(1, 8),
+                'health' => $this->faker->numberBetween(1, 8),
+                'evolved_atk' => $this->faker->numberBetween(3, 10),
+                'evolved_health' => $this->faker->numberBetween(3, 10),
             ];
         });
     }
@@ -128,17 +131,17 @@ class CardFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
+                'main_type' => 'spell',
                 'card_type_id' => function () {
                     return CardType::firstOrCreate(
                         ['name' => 'Spell'],
                         ['slug' => 'spell', 'is_active' => true]
                     )->id;
                 },
-                'attack' => null,
-                'defense' => null,
-                'evolved_attack' => null,
-                'evolved_defense' => null,
-                'evolved_effect' => null,
+                'atk' => null,
+                'health' => null,
+                'evolved_atk' => null,
+                'evolved_health' => null,
             ];
         });
     }

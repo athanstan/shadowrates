@@ -31,7 +31,7 @@ trait HasCardFilters
     public $crafts = [];
     public $cardSets = [];
     public $rarities = ['Bronze', 'Silver', 'Gold', 'Legendary'];
-    public $costs = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9+'];
+    public $costs = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15'];
 
     protected function getCardFilterQueryString()
     {
@@ -151,11 +151,8 @@ trait HasCardFilters
                 $query->where('card_set_id', $this->selectedCardSet)
             )
             ->when(
-                $this->costFilter,
-                fn(Builder $query) =>
-                $this->costFilter === '9+'
-                    ? $query->where('cost', '>=', 9)
-                    : $query->where('cost', $this->costFilter)
+                $this->costFilter !== '',
+                fn(Builder $query) => $query->where('cost', '=', $this->costFilter)
             )
             ->when(
                 $this->rarityFilter,
