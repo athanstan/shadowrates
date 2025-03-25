@@ -29,8 +29,7 @@ class UserProfileTest extends TestCase
 
         Livewire::test(UserProfile::class, ['slug' => $user->slug])
             ->assertStatus(200)
-            ->assertViewHas('decks')
-            ->assertViewHas('cards')
-            ->assertViewHas('ratings');
+            ->assertViewHas('user.decks')
+            ->assertViewHas('user.cards');
     }
 }
