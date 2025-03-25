@@ -207,108 +207,237 @@
                 <!-- Deck Builder Panel - Right -->
                 <div class="space-y-4 lg:col-span-2">
                     <div class="p-4 border rounded-lg shadow-lg bg-gray-800/50 border-purple-900/50">
-                        <!-- Deck Filters -->
+                        <!-- Deck Stats Section -->
                         <div class="mb-6">
-                            <div class="flex items-center justify-between mb-4">
-                                <h2 class="text-xl font-bold text-purple-100">Deck Filters</h2>
+                            <div class="mb-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h2 class="text-xl font-bold text-purple-100">Deck Stats</h2>
+                                </div>
+                                <div x-data="{ showStats: false }">
+                                    <button @click="showStats = !showStats"
+                                        class="flex items-center w-full px-3 py-2 mb-3 text-sm font-medium text-purple-300 transition-colors rounded-md bg-purple-900/30 hover:bg-purple-900/50">
+                                        <span x-text="showStats ? 'Hide Stats' : 'Show Stats'"></span>
+                                        <svg class="w-4 h-4 ml-2 transition-transform"
+                                            :class="showStats ? 'rotate-180' : ''" xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
+
+                                    <div x-show="showStats" x-transition
+                                        class="grid grid-cols-1 gap-4 mb-4 sm:grid-cols-2 lg:grid-cols-3">
+                                        <!-- Cost Curve -->
+                                        <div class="p-3 rounded-lg bg-gray-900/50">
+                                            <h3 class="mb-2 text-sm font-medium text-purple-300">Mana Curve</h3>
+                                            <div class="flex items-end h-24 space-x-1">
+                                                <template x-for="i in 10" :key="i">
+                                                    <div class="flex flex-col items-center flex-1">
+                                                        <div class="w-full rounded-t bg-purple-900/30"
+                                                            :style="{ height: `${calculateCostPercentage(i)}%` }"></div>
+                                                        <span class="mt-1 text-xs text-purple-400"
+                                                            x-text="i < 10 ? i : '10+'"></span>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </div>
+
+                                        <!-- Card Types -->
+                                        <div class="p-3 rounded-lg bg-gray-900/50">
+                                            <h3 class="mb-2 text-sm font-medium text-purple-300">Card Types</h3>
+                                            <div class="space-y-2">
+                                                <div class="flex items-center justify-between">
+                                                    <span class="text-xs text-purple-400">Follower</span>
+                                                    <span class="text-xs text-purple-200"
+                                                        x-text="getCardTypeCount('Follower')"></span>
+                                                </div>
+                                                <div class="flex items-center justify-between">
+                                                    <span class="text-xs text-purple-400">Spell</span>
+                                                    <span class="text-xs text-purple-200"
+                                                        x-text="getCardTypeCount('Spell')"></span>
+                                                </div>
+                                                <div class="flex items-center justify-between">
+                                                    <span class="text-xs text-purple-400">Amulet</span>
+                                                    <span class="text-xs text-purple-200"
+                                                        x-text="getCardTypeCount('Amulet')"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Rarity Distribution -->
+                                        <div class="p-3 rounded-lg bg-gray-900/50">
+                                            <h3 class="mb-2 text-sm font-medium text-purple-300">Rarity</h3>
+                                            <div class="space-y-2">
+                                                <div class="flex items-center justify-between">
+                                                    <span class="text-xs text-purple-400">Bronze</span>
+                                                    <span class="text-xs text-purple-200"
+                                                        x-text="getRarityCount('Bronze')"></span>
+                                                </div>
+                                                <div class="flex items-center justify-between">
+                                                    <span class="text-xs text-purple-400">Silver</span>
+                                                    <span class="text-xs text-purple-200"
+                                                        x-text="getRarityCount('Silver')"></span>
+                                                </div>
+                                                <div class="flex items-center justify-between">
+                                                    <span class="text-xs text-purple-400">Gold</span>
+                                                    <span class="text-xs text-purple-200"
+                                                        x-text="getRarityCount('Gold')"></span>
+                                                </div>
+                                                <div class="flex items-center justify-between">
+                                                    <span class="text-xs text-purple-400">Legendary</span>
+                                                    <span class="text-xs text-purple-200"
+                                                        x-text="getRarityCount('Legendary')"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <!-- Filters Section -->
-                            <div x-data="{ showFilters: true }">
-                                <button @click="showFilters = !showFilters"
-                                    class="flex items-center w-full px-3 py-2 mb-3 text-sm font-medium text-purple-300 transition-colors rounded-md bg-purple-900/30 hover:bg-purple-900/50">
-                                    <span x-text="showFilters ? 'Hide Filters' : 'Show Filters'"></span>
-                                    <svg class="w-4 h-4 ml-2 transition-transform"
-                                        :class="showFilters ? 'rotate-180' : ''" xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd"
-                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                </button>
 
-                                <div x-show="showFilters" x-transition class="grid grid-cols-4 gap-4 mb-4 space-y-2">
-                                    <!-- Card Type Filter -->
-                                    <div>
-                                        <x-atoms.filter-group label="Card Type" for="cardType">
-                                            <x-atoms.select-input wire:model.live.debounce.300ms="selectedCardType"
-                                                id="cardType" :options="$cardTypes" emptyOption="All Types" small
-                                                class="w-full" />
-                                        </x-atoms.filter-group>
-                                    </div>
+                            <!-- Deck Filters -->
+                            <div class="mb-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h2 class="text-xl font-bold text-purple-100">Deck Filters</h2>
+                                </div>
+                                <!-- Filters Section -->
+                                <div x-data="{ showFilters: false }">
+                                    <button @click="showFilters = !showFilters"
+                                        class="flex items-center w-full px-3 py-2 mb-3 text-sm font-medium text-purple-300 transition-colors rounded-md bg-purple-900/30 hover:bg-purple-900/50">
+                                        <span x-text="showFilters ? 'Hide Filters' : 'Show Filters'"></span>
+                                        <svg class="w-4 h-4 ml-2 transition-transform"
+                                            :class="showFilters ? 'rotate-180' : ''" xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
 
-                                    <!-- Card Sub type Filter -->
-                                    <div>
-                                        <x-atoms.filter-group label="Card SubType" for="cardSubType">
-                                            <x-atoms.select-input wire:model.live.debounce.300ms="selectedCardSubType"
-                                                id="cardSubType" :options="$cardSubTypes" optionValue="value"
-                                                optionLabel="name" emptyOption="All SubTypes" small class="w-full" />
-                                        </x-atoms.filter-group>
-                                    </div>
+                                    <div x-show="showFilters" x-transition
+                                        class="grid grid-cols-4 gap-4 mb-4 space-y-2">
+                                        <!-- Card Type Filter -->
+                                        <div>
+                                            <x-atoms.filter-group label="Card Type" for="cardType">
+                                                <x-atoms.select-input wire:model.live.debounce.300ms="selectedCardType"
+                                                    id="cardType" :options="$cardTypes" emptyOption="All Types" small
+                                                    class="w-full" />
+                                            </x-atoms.filter-group>
+                                        </div>
 
-                                    <!-- Craft Filter -->
-                                    <div>
-                                        <x-atoms.filter-group label="Craft" for="craft">
-                                            <x-atoms.select-input wire:model.live.debounce.300ms="selectedCraft"
-                                                id="craft" :options="$crafts" emptyOption="All Crafts" small
-                                                class="w-full" />
-                                        </x-atoms.filter-group>
-                                    </div>
+                                        <!-- Card Sub type Filter -->
+                                        <div>
+                                            <x-atoms.filter-group label="Card SubType" for="cardSubType">
+                                                <x-atoms.select-input
+                                                    wire:model.live.debounce.300ms="selectedCardSubType"
+                                                    id="cardSubType" :options="$cardSubTypes" optionValue="value"
+                                                    optionLabel="name" emptyOption="All SubTypes" small
+                                                    class="w-full" />
+                                            </x-atoms.filter-group>
+                                        </div>
 
-                                    <!-- Card Set Filter -->
-                                    <div>
-                                        <x-atoms.filter-group label="Card Set" for="cardSet">
-                                            <x-atoms.select-input wire:model.live.debounce.300ms="selectedCardSet"
-                                                id="cardSet" :options="$cardSets" emptyOption="All Card Sets" small
-                                                class="w-full" />
-                                        </x-atoms.filter-group>
-                                    </div>
+                                        <!-- Craft Filter -->
+                                        <div>
+                                            <x-atoms.filter-group label="Craft" for="craft">
+                                                <x-atoms.select-input wire:model.live.debounce.300ms="selectedCraft"
+                                                    id="craft" :options="$crafts" emptyOption="All Crafts" small
+                                                    class="w-full" />
+                                            </x-atoms.filter-group>
+                                        </div>
 
-                                    <!-- Cost Filter -->
-                                    <div>
-                                        <x-atoms.filter-group label="PP Cost" for="cost">
-                                            <x-atoms.select-input wire:model.live.debounce.300ms="costFilter"
-                                                id="cost" :options="$costs" emptyOption="All Costs" small
-                                                class="w-full" />
-                                        </x-atoms.filter-group>
-                                    </div>
+                                        <!-- Card Set Filter -->
+                                        <div>
+                                            <x-atoms.filter-group label="Card Set" for="cardSet">
+                                                <x-atoms.select-input wire:model.live.debounce.300ms="selectedCardSet"
+                                                    id="cardSet" :options="$cardSets" emptyOption="All Card Sets"
+                                                    small class="w-full" />
+                                            </x-atoms.filter-group>
+                                        </div>
 
-                                    <!-- Rarity Filter -->
-                                    <div>
-                                        <x-atoms.filter-group label="Rarity" for="rarity">
-                                            <x-atoms.select-input wire:model.live.debounce.300ms="rarityFilter"
-                                                id="rarity" :options="$rarities" emptyOption="All Rarities" small
-                                                class="w-full" />
-                                        </x-atoms.filter-group>
-                                    </div>
+                                        <!-- Cost Filter -->
+                                        <div>
+                                            <x-atoms.filter-group label="PP Cost" for="cost">
+                                                <x-atoms.select-input wire:model.live.debounce.300ms="costFilter"
+                                                    id="cost" :options="$costs" emptyOption="All Costs" small
+                                                    class="w-full" />
+                                            </x-atoms.filter-group>
+                                        </div>
 
-                                    <div class="flex justify-end col-span-full">
-                                        <x-atoms.reset-button wire:click="resetFilters" small>
-                                            Reset Filters
-                                        </x-atoms.reset-button>
+                                        <!-- Rarity Filter -->
+                                        <div>
+                                            <x-atoms.filter-group label="Rarity" for="rarity">
+                                                <x-atoms.select-input wire:model.live.debounce.300ms="rarityFilter"
+                                                    id="rarity" :options="$rarities" emptyOption="All Rarities" small
+                                                    class="w-full" />
+                                            </x-atoms.filter-group>
+                                        </div>
+
+                                        <div class="flex justify-end col-span-full">
+                                            <x-atoms.reset-button wire:click="resetFilters" small>
+                                                Reset Filters
+                                            </x-atoms.reset-button>
+                                        </div>
                                     </div>
+                                </div>
+                            </div>
+
+                            <!-- Main Deck Section -->
+                            <div class="mb-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h2 class="text-xl font-bold text-purple-100">Main Deck</h2>
+                                    <span
+                                        class="px-3 py-1 text-sm font-medium text-purple-300 rounded-full bg-purple-900/50">
+                                        <span x-text="getMainDeckCount()"></span> / 50
+                                    </span>
+                                </div>
+
+                                <div class="grid grid-cols-5 gap-2 md:grid-cols-10 lg:grid-cols-10 xl:grid-cols-10">
+                                    <template x-for="(slot, index) in generateMainDeckSlots()" :key="index">
+                                        <div class="aspect-[3/4] relative rounded-md overflow-hidden"
+                                            :class="slot.card ? 'border-2 border-purple-500' : 'border border-purple-900/80'"
+                                            style="background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxkZWZzPgogICAgPHBhdHRlcm4gaWQ9InBhdHRlcm4iIHg9IjAiIHk9IjAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgcGF0dGVyblRyYW5zZm9ybT0icm90YXRlKDQ1KSI+CiAgICAgIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSI2IiBoZWlnaHQ9IjYiIGZpbGw9IiMyMzFmMzkwMCIgLz4KICAgIDwvcGF0dGVybj4KICA8L2RlZnM+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzEzMTEyMCIgLz4KICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3BhdHRlcm4pIiAvPgo8L3N2Zz4=');">
+                                            <template x-if="slot.card">
+                                                <div>
+                                                    <img :src="slot.card.image" :alt="slot.card.name"
+                                                        @click="removeCardFromMainDeck(slot.card.id)"
+                                                        class="absolute inset-0 object-cover w-full h-full">
+                                                </div>
+                                            </template>
+                                            <template x-if="!slot.card">
+                                                <div
+                                                    class="absolute inset-0 flex items-center justify-center text-purple-900/50">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6"
+                                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2" d="M12 4v16m8-8H4" />
+                                                    </svg>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </template>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Main Deck Section -->
+                        <!-- Evolution Deck Section -->
                         <div class="mb-6">
                             <div class="flex items-center justify-between mb-4">
-                                <h2 class="text-xl font-bold text-purple-100">Main Deck</h2>
+                                <h2 class="text-xl font-bold text-purple-100">Evolution Deck</h2>
                                 <span
                                     class="px-3 py-1 text-sm font-medium text-purple-300 rounded-full bg-purple-900/50">
-                                    <span x-text="getMainDeckCount()"></span> / 50
+                                    <span x-text="getEvoDeckCount()"></span> / 10
                                 </span>
                             </div>
 
                             <div class="grid grid-cols-5 gap-2 md:grid-cols-10 lg:grid-cols-10 xl:grid-cols-10">
-                                <template x-for="(slot, index) in generateMainDeckSlots()" :key="index">
+                                <template x-for="(slot, index) in generateEvoDeckSlots()" :key="index">
                                     <div class="aspect-[3/4] relative rounded-md overflow-hidden"
                                         :class="slot.card ? 'border-2 border-purple-500' : 'border border-purple-900/80'"
-                                        style="background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxkZWZzPgogICAgPHBhdHRlcm4gaWQ9InBhdHRlcm4iIHg9IjAiIHk9IjAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgcGF0dGVyblRyYW5zZm9ybT0icm90YXRlKDQ1KSI+CiAgICAgIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSI2IiBoZWlnaHQ9IjYiIGZpbGw9IiMyMzFmMzkwMCIgLz4KICAgIDwvcGF0dGVybj4KICA8L2RlZnM+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzEzMTEyMCIgLz4KICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3BhdHRlcm4pIiAvPgo8L3N2Zz4=');">
+                                        style="background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxkZWZzPgogICAgPHBhdHRlcm4gaWQ9InBhdHRlcm4iIHg9IjAiIHk9IjAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgcGF0dGVyblRyYW5zZm9ybT0icm90YXRlKDQ1KSI+CiAgICAgIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSI2IiBoZWlnaHQ9IjYiIGZpbGw9IiMyYzFmMzkwMCIgLz4KICAgIDwvcGF0dGVybj4KICA8L2RlZnM+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzEzMTEyMCIgLz4KICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3BhdHRlcm4pIiAvPgo8L3N2Zz4=');">
                                         <template x-if="slot.card">
                                             <div>
                                                 <img :src="slot.card.image" :alt="slot.card.name"
-                                                    @click="removeCardFromMainDeck(slot.card.id)"
+                                                    @click="removeCardFromEvoDeck(slot.card.id)"
                                                     class="absolute inset-0 object-cover w-full h-full">
                                             </div>
                                         </template>
@@ -326,391 +455,395 @@
                                 </template>
                             </div>
                         </div>
-                    </div>
+                        <!-- Deck Stats Panel -->
+                        <div class="p-4 border rounded-lg shadow-lg bg-gray-800/50 border-purple-900/50">
+                            <h2 class="mb-4 text-xl font-bold text-purple-100">Deck Stats</h2>
 
-                    <!-- Evolution Deck Section -->
-                    <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <h2 class="text-xl font-bold text-purple-100">Evolution Deck</h2>
-                            <span class="px-3 py-1 text-sm font-medium text-purple-300 rounded-full bg-purple-900/50">
-                                <span x-text="getEvoDeckCount()"></span> / 10
-                            </span>
-                        </div>
-
-                        <div class="grid grid-cols-5 gap-2 md:grid-cols-10 lg:grid-cols-10 xl:grid-cols-10">
-                            <template x-for="(slot, index) in generateEvoDeckSlots()" :key="index">
-                                <div class="aspect-[3/4] relative rounded-md overflow-hidden"
-                                    :class="slot.card ? 'border-2 border-purple-500' : 'border border-purple-900/80'"
-                                    style="background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxkZWZzPgogICAgPHBhdHRlcm4gaWQ9InBhdHRlcm4iIHg9IjAiIHk9IjAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgcGF0dGVyblRyYW5zZm9ybT0icm90YXRlKDQ1KSI+CiAgICAgIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSI2IiBoZWlnaHQ9IjYiIGZpbGw9IiMyYzFmMzkwMCIgLz4KICAgIDwvcGF0dGVybj4KICA8L2RlZnM+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzEzMTEyMCIgLz4KICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3BhdHRlcm4pIiAvPgo8L3N2Zz4=');">
-                                    <template x-if="slot.card">
-                                        <div>
-                                            <img :src="slot.card.image" :alt="slot.card.name"
-                                                class="absolute inset-0 object-cover w-full h-full">
-                                            <button type="button" @click="removeCardFromEvoDeck(slot.card.id)"
-                                                class="absolute top-0 right-0 z-10 p-1 text-white bg-red-800/80 rounded-bl-md hover:bg-red-700">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3"
-                                                    viewBox="0 0 20 20" fill="currentColor">
-                                                    <path fill-rule="evenodd"
-                                                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                                        clip-rule="evenodd" />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </template>
-                                    <template x-if="!slot.card">
-                                        <div
-                                            class="absolute inset-0 flex items-center justify-center text-purple-900/50">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
-                                                viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M12 4v16m8-8H4" />
-                                            </svg>
-                                        </div>
-                                    </template>
-                                </div>
-                            </template>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Deck Stats Panel -->
-                <div class="p-4 border rounded-lg shadow-lg bg-gray-800/50 border-purple-900/50">
-                    <h2 class="mb-4 text-xl font-bold text-purple-100">Deck Stats</h2>
-
-                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                        <!-- Cost Curve -->
-                        <div class="p-3 rounded-lg bg-gray-900/50">
-                            <h3 class="mb-2 text-sm font-medium text-purple-300">Mana Curve</h3>
-                            <div class="flex items-end h-24 space-x-1">
-                                <template x-for="i in 10" :key="i">
-                                    <div class="flex flex-col items-center flex-1">
-                                        <div class="w-full rounded-t bg-purple-900/30"
-                                            :style="{ height: `${calculateCostPercentage(i)}%` }"></div>
-                                        <span class="mt-1 text-xs text-purple-400" x-text="i < 10 ? i : '10+'"></span>
+                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                                <!-- Cost Curve -->
+                                <div class="p-3 rounded-lg bg-gray-900/50">
+                                    <h3 class="mb-2 text-sm font-medium text-purple-300">Mana Curve</h3>
+                                    <div class="flex items-end h-24 space-x-1">
+                                        <template x-for="i in 10" :key="i">
+                                            <div class="flex flex-col items-center flex-1">
+                                                <div class="w-full rounded-t bg-purple-900/30"
+                                                    :style="{ height: `${calculateCostPercentage(i)}%` }"></div>
+                                                <span class="mt-1 text-xs text-purple-400"
+                                                    x-text="i < 10 ? i : '10+'"></span>
+                                            </div>
+                                        </template>
                                     </div>
-                                </template>
-                            </div>
-                        </div>
+                                </div>
 
-                        <!-- Card Types -->
-                        <div class="p-3 rounded-lg bg-gray-900/50">
-                            <h3 class="mb-2 text-sm font-medium text-purple-300">Card Types</h3>
-                            <div class="space-y-2">
-                                <div class="flex items-center justify-between">
-                                    <span class="text-xs text-purple-400">Follower</span>
-                                    <span class="text-xs text-purple-200"
-                                        x-text="getCardTypeCount('Follower')"></span>
+                                <!-- Card Types -->
+                                <div class="p-3 rounded-lg bg-gray-900/50">
+                                    <h3 class="mb-2 text-sm font-medium text-purple-300">Card Types</h3>
+                                    <div class="space-y-2">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs text-purple-400">Follower</span>
+                                            <span class="text-xs text-purple-200"
+                                                x-text="getCardTypeCount('Follower')"></span>
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs text-purple-400">Spell</span>
+                                            <span class="text-xs text-purple-200"
+                                                x-text="getCardTypeCount('Spell')"></span>
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs text-purple-400">Amulet</span>
+                                            <span class="text-xs text-purple-200"
+                                                x-text="getCardTypeCount('Amulet')"></span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="flex items-center justify-between">
-                                    <span class="text-xs text-purple-400">Spell</span>
-                                    <span class="text-xs text-purple-200" x-text="getCardTypeCount('Spell')"></span>
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <span class="text-xs text-purple-400">Amulet</span>
-                                    <span class="text-xs text-purple-200" x-text="getCardTypeCount('Amulet')"></span>
-                                </div>
-                            </div>
-                        </div>
 
-                        <!-- Rarity Distribution -->
-                        <div class="p-3 rounded-lg bg-gray-900/50">
-                            <h3 class="mb-2 text-sm font-medium text-purple-300">Rarity</h3>
-                            <div class="space-y-2">
-                                <div class="flex items-center justify-between">
-                                    <span class="text-xs text-purple-400">Bronze</span>
-                                    <span class="text-xs text-purple-200" x-text="getRarityCount('Bronze')"></span>
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <span class="text-xs text-purple-400">Silver</span>
-                                    <span class="text-xs text-purple-200" x-text="getRarityCount('Silver')"></span>
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <span class="text-xs text-purple-400">Gold</span>
-                                    <span class="text-xs text-purple-200" x-text="getRarityCount('Gold')"></span>
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <span class="text-xs text-purple-400">Legendary</span>
-                                    <span class="text-xs text-purple-200" x-text="getRarityCount('Legendary')"></span>
+                                <!-- Rarity Distribution -->
+                                <div class="p-3 rounded-lg bg-gray-900/50">
+                                    <h3 class="mb-2 text-sm font-medium text-purple-300">Rarity</h3>
+                                    <div class="space-y-2">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs text-purple-400">Bronze</span>
+                                            <span class="text-xs text-purple-200"
+                                                x-text="getRarityCount('Bronze')"></span>
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs text-purple-400">Silver</span>
+                                            <span class="text-xs text-purple-200"
+                                                x-text="getRarityCount('Silver')"></span>
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs text-purple-400">Gold</span>
+                                            <span class="text-xs text-purple-200"
+                                                x-text="getRarityCount('Gold')"></span>
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs text-purple-400">Legendary</span>
+                                            <span class="text-xs text-purple-200"
+                                                x-text="getRarityCount('Legendary')"></span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        @script
-            <script>
-                Alpine.data('deckBuilder', () => ({
-                    mainDeck: {},
-                    evoDeck: {},
+            @script
+                <script>
+                    Alpine.data('deckBuilder', () => ({
+                        mainDeck: {},
+                        evoDeck: {},
 
-                    init() {
-                        // Initialize from Livewire data if available
-                        this.mainDeck = Object.keys($wire.mainDeck).length > 0 ? $wire.mainDeck : {};
-                        this.evoDeck = Object.keys($wire.evolutionDeck).length > 0 ? $wire.evolutionDeck : {};
-                    },
+                        init() {
+                            // Initialize from Livewire data if available
+                            this.mainDeck = Object.keys($wire.mainDeck).length > 0 ? $wire.mainDeck : {};
+                            this.evoDeck = Object.keys($wire.evolutionDeck).length > 0 ? $wire.evolutionDeck : {};
+                        },
 
-                    addCardToDeck(card) {
-                        // Check if the card is an evolved card - automatically add to evolution deck
-                        if (card.sub_type === 'evolved') {
-                            // Check if evolution deck is full
-                            if (this.getEvoDeckCount() >= 10) {
-                                $wire.dispatch('notify', {
-                                    type: 'error',
-                                    message: 'Evolution deck cannot have more than 10 cards'
-                                });
-                                return;
-                            }
-
-                            // Check if we already have this card in the evolution deck
-                            if (this.evoDeck[card.id]) {
-                                // Only 1 copy of each evolution card
-                                $wire.dispatch('show-error', {
-                                    message: "You can only have 1 copy of each Evolution card"
-                                });
-                                return;
-                            }
-
-                            // Add the card to the evolution deck
-                            this.evoDeck[card.id] = {
-                                id: card.id,
-                                name: card.name,
-                                cost: card.cost,
-                                rarity: card.rarity,
-                                card_type: card.cardType.name,
-                                sub_type: card.sub_type,
-                                quantity: 1,
-                                image: card.getImage
-                            };
-                            return;
-                        }
-
-                        // Check if card is a Leader and we already have a Leader
-                        if (card.cardType.name === 'Leader') {
-                            // Check if we already have a Leader card
-                            const hasLeader = Object.values(this.mainDeck).some(deckCard => deckCard.cardType.name ===
-                                'Leader');
-                            if (hasLeader) {
-                                // If we already have a different Leader
-                                const existingLeader = Object.values(this.mainDeck).find(deckCard => deckCard
-                                    .cardType.name === 'Leader');
-
-                                if (existingLeader && existingLeader.id !== card.id) {
-                                    $wire.dispatch('show-error', {
-                                        message: "You can only have one Leader card in your deck"
+                        addCardToDeck(card) {
+                            // Check if the card is an evolved card - automatically add to evolution deck
+                            if (card.sub_type === 'evolved') {
+                                // Check if evolution deck is full
+                                if (this.getEvoDeckCount() >= 10) {
+                                    $wire.dispatch('notify', {
+                                        type: 'error',
+                                        message: 'Evolution deck cannot have more than 10 cards'
                                     });
                                     return;
                                 }
+
+                                // Check if card is a Leader and we already have a Leader in evo deck
+                                if (card.cardType && card.cardType.name === 'Leader') {
+                                    // Check if we already have a Leader card
+                                    const hasLeader = Object.values(this.evoDeck).some(deckCard =>
+                                        deckCard.card_type === 'Leader');
+
+                                    if (hasLeader) {
+                                        // If we already have a different Leader
+                                        const existingLeader = Object.values(this.evoDeck).find(deckCard =>
+                                            deckCard.card_type === 'Leader');
+
+                                        if (existingLeader && existingLeader.id !== card.id) {
+                                            $wire.dispatch('show-error', {
+                                                message: "You can only have one Leader card in your evolution deck"
+                                            });
+                                            return;
+                                        }
+
+                                        // If we already have this Leader card
+                                        if (existingLeader && existingLeader.id === card.id) {
+                                            $wire.dispatch('show-error', {
+                                                message: "You can only have one copy of each Leader card"
+                                            });
+                                            return;
+                                        }
+                                    }
+                                }
+
+                                const totalCardCountInEvoDeck = Object.values(this.evoDeck).reduce((sum, deckCard) => {
+                                    return deckCard.name === card.name ? sum + deckCard.quantity : sum;
+                                }, 0);
+
+                                // Check if we already have this card in the evolution deck
+                                if (!this.evoDeck[card.id] && totalCardCountInEvoDeck < 3) {
+                                    // Add the card for the first time
+                                    this.evoDeck[card.id] = {
+                                        id: card.id,
+                                        name: card.name,
+                                        cost: card.cost,
+                                        rarity: card.rarity,
+                                        card_type: card.cardType ? card.cardType.name : '',
+                                        sub_type: card.sub_type,
+                                        quantity: 1,
+                                        image: card.getImage
+                                    };
+                                } else if (this.evoDeck[card.id] && totalCardCountInEvoDeck < 3) {
+                                    // Increment quantity of this specific card
+                                    this.evoDeck[card.id].quantity++;
+                                } else {
+                                    $wire.dispatch('show-error', {
+                                        message: "You can only have 3 copies of each card"
+                                    });
+                                }
+                                return;
                             }
-                        }
 
-                        const totalCardCountInDeck = Object.values(this.mainDeck).reduce((sum, deckCard) => {
-                            return deckCard.name === card.name ? sum + deckCard.quantity : sum;
-                        }, 0);
+                            // Check if card is a Leader and we already have a Leader
+                            if (card.cardType && card.cardType.name === 'Leader') {
+                                // Check if we already have a Leader card
+                                const hasLeader = Object.values(this.mainDeck).some(deckCard =>
+                                    deckCard.card_type === 'Leader');
 
-                        // Check if we already have this card in the deck
-                        if (!this.mainDeck[card.id] && totalCardCountInDeck < 3) {
-                            // Add the card for the first time
-                            this.mainDeck[card.id] = {
-                                id: card.id,
-                                name: card.name,
-                                cost: card.cost,
-                                rarity: card.rarity,
-                                card_type: card.cardType.name,
-                                sub_type: card.sub_type,
-                                quantity: 1,
-                                image: card.getImage
-                            };
-                        } else if (this.mainDeck[card.id] && totalCardCountInDeck < 3) {
-                            // Increment quantity of this specific card
-                            this.mainDeck[card.id].quantity++;
-                        }
+                                if (hasLeader) {
+                                    // If we already have a different Leader
+                                    const existingLeader = Object.values(this.mainDeck).find(deckCard =>
+                                        deckCard.card_type === 'Leader');
 
-                        // Check deck limit
-                        const totalCards = this.getMainDeckCount();
-                        if (totalCards > 50) {
-                            // Decrement the quantity if we just added it
-                            if (this.mainDeck[card.id].quantity > 1) {
-                                this.mainDeck[card.id].quantity--;
+                                    if (existingLeader && existingLeader.id !== card.id) {
+                                        $wire.dispatch('show-error', {
+                                            message: "You can only have one Leader card in your deck"
+                                        });
+                                        return;
+                                    }
+
+                                    // If we already have this Leader card
+                                    if (existingLeader && existingLeader.id === card.id) {
+                                        $wire.dispatch('show-error', {
+                                            message: "You can only have one copy of each Leader card"
+                                        });
+                                        return;
+                                    }
+                                }
+                            }
+
+                            const totalCardCountInDeck = Object.values(this.mainDeck).reduce((sum, deckCard) => {
+                                return deckCard.name === card.name ? sum + deckCard.quantity : sum;
+                            }, 0);
+
+                            // Check if we already have this card in the deck
+                            if (!this.mainDeck[card.id] && totalCardCountInDeck < 3) {
+                                // Add the card for the first time
+                                this.mainDeck[card.id] = {
+                                    id: card.id,
+                                    name: card.name,
+                                    cost: card.cost,
+                                    rarity: card.rarity,
+                                    card_type: card.cardType ? card.cardType.name : '',
+                                    sub_type: card.sub_type,
+                                    quantity: 1,
+                                    image: card.getImage
+                                };
+                            } else if (this.mainDeck[card.id] && totalCardCountInDeck < 3) {
+                                // Increment quantity of this specific card
+                                this.mainDeck[card.id].quantity++;
                             } else {
-                                delete this.mainDeck[card.id];
+                                $wire.dispatch('show-error', {
+                                    message: "You can only have 3 copies of each card"
+                                });
                             }
 
-                            $wire.dispatch('notify', {
-                                type: 'error',
-                                message: 'Main deck cannot have more than 50 cards'
-                            });
-                            return;
-                        }
+                            // Check deck limit
+                            const totalCards = this.getMainDeckCount();
+                            if (totalCards > 50) {
+                                // Decrement the quantity if we just added it
+                                if (this.mainDeck[card.id].quantity > 1) {
+                                    this.mainDeck[card.id].quantity--;
+                                } else {
+                                    delete this.mainDeck[card.id];
+                                }
 
-                        // If a Leader card was added, update the Livewire component's craft
-                        if (card.sub_type === 'Leader') {
-                            $wire.updateDeckCraft(card.id);
-                        }
-                    },
+                                $wire.dispatch('notify', {
+                                    type: 'error',
+                                    message: 'Main deck cannot have more than 50 cards'
+                                });
+                                return;
+                            }
+                        },
 
-                    removeCardFromMainDeck(cardId) {
-                        if (this.mainDeck[cardId]) {
-                            if (this.mainDeck[cardId].quantity > 1) {
-                                this.mainDeck[cardId].quantity--;
+                        removeCardFromMainDeck(cardId) {
+                            if (this.mainDeck[cardId]) {
+                                if (this.mainDeck[cardId].quantity > 1) {
+                                    this.mainDeck[cardId].quantity--;
+                                } else {
+                                    // If removing a Leader, update the component
+                                    if (this.mainDeck[cardId].sub_type === 'Leader') {
+                                        $wire.clearDeckCraft();
+                                    }
+                                    delete this.mainDeck[cardId];
+                                }
+                            }
+                        },
+
+                        removeCardFromEvoDeck(cardId) {
+                            if (this.evoDeck[cardId].quantity > 1) {
+                                this.evoDeck[cardId].quantity--;
                             } else {
-                                // If removing a Leader, update the component
-                                if (this.mainDeck[cardId].sub_type === 'Leader') {
-                                    $wire.clearDeckCraft();
-                                }
-                                delete this.mainDeck[cardId];
+                                delete this.evoDeck[cardId];
                             }
-                        }
-                    },
+                        },
 
-                    removeCardFromEvoDeck(cardId) {
-                        if (this.evoDeck[cardId]) {
-                            delete this.evoDeck[cardId];
-                        }
-                    },
-
-                    saveDeck() {
-                        // Validate deck name
-                        if (!$wire.deckName) {
-                            $wire.dispatch('notify', {
-                                type: 'error',
-                                message: 'Please provide a name for your deck'
-                            });
-                            return false;
-                        }
-
-                        // Validate deck size
-                        const totalMainDeckCards = this.getMainDeckCount();
-                        if (totalMainDeckCards < 40) {
-                            $wire.dispatch('notify', {
-                                type: 'error',
-                                message: 'Your main deck must have at least 40 cards'
-                            });
-                            return false;
-                        }
-
-                        if (totalMainDeckCards > 50) {
-                            $wire.dispatch('notify', {
-                                type: 'error',
-                                message: 'Your main deck cannot have more than 50 cards'
-                            });
-                            return false;
-                        }
-
-                        // Validate that the deck has a Leader card
-                        const hasLeader = Object.values(this.mainDeck).some(card => card.sub_type === 'Leader');
-                        if (!hasLeader) {
-                            $wire.dispatch('notify', {
-                                type: 'error',
-                                message: 'Your deck must have a Leader card'
-                            });
-                            return false;
-                        }
-
-                        // Sync deck data with Livewire before saving
-                        $wire.mainDeck = this.mainDeck;
-                        $wire.evolutionDeck = this.evoDeck;
-
-                        // Call the Livewire save method
-                        $wire.saveDeck();
-                        return true;
-                    },
-
-                    getMainDeckCount() {
-                        return Object.values(this.mainDeck).reduce((total, current) => total + current.quantity, 0);
-                    },
-
-                    getEvoDeckCount() {
-                        return Object.values(this.evoDeck).reduce((total, current) => total + current.quantity, 0);
-                    },
-
-                    generateMainDeckSlots() {
-                        return Array.from({
-                            length: 50
-                        }, (_, index) => {
-                            // Find the card for this slot based on index
-                            const deckCards = Object.values(this.mainDeck);
-                            let slotCard = null;
-                            let currentIndex = 0;
-
-                            for (const card of deckCards) {
-                                // Calculate where this card ends
-                                const cardEndIndex = currentIndex + card.quantity - 1;
-                                if (index >= currentIndex && index <= cardEndIndex) {
-                                    slotCard = card;
-                                    break;
-                                }
-                                currentIndex = cardEndIndex + 1;
+                        saveDeck() {
+                            // Validate deck name
+                            if (!$wire.deckName) {
+                                $wire.dispatch('notify', {
+                                    type: 'error',
+                                    message: 'Please provide a name for your deck'
+                                });
+                                return false;
                             }
 
-                            return {
-                                card: slotCard,
-                                index: index
-                            };
-                        });
-                    },
-
-                    generateEvoDeckSlots() {
-                        return Array.from({
-                            length: 10
-                        }, (_, index) => {
-                            const deckCards = Object.values(this.evoDeck);
-                            let slotCard = null;
-                            let currentIndex = 0;
-
-                            for (const card of deckCards) {
-                                const cardEndIndex = currentIndex + card.quantity - 1;
-                                if (index >= currentIndex && index <= cardEndIndex) {
-                                    slotCard = card;
-                                    break;
-                                }
-                                currentIndex = cardEndIndex + 1;
+                            // Validate deck size
+                            const totalMainDeckCards = this.getMainDeckCount();
+                            if (totalMainDeckCards < 40) {
+                                $wire.dispatch('notify', {
+                                    type: 'error',
+                                    message: 'Your main deck must have at least 40 cards'
+                                });
+                                return false;
                             }
 
-                            return {
-                                card: slotCard,
-                                index: index
-                            };
-                        });
-                    },
+                            if (totalMainDeckCards > 50) {
+                                $wire.dispatch('notify', {
+                                    type: 'error',
+                                    message: 'Your main deck cannot have more than 50 cards'
+                                });
+                                return false;
+                            }
 
-                    calculateCostPercentage(cost) {
-                        // Count cards with this cost
-                        const costCards = Object.values(this.mainDeck).filter(card => {
-                            return cost < 10 ? parseInt(card.cost) === cost : parseInt(card.cost) >= 10;
-                        });
+                            // Validate that the deck has a Leader card
+                            const hasLeader = Object.values(this.mainDeck).some(card => card.sub_type === 'Leader');
+                            if (!hasLeader) {
+                                $wire.dispatch('notify', {
+                                    type: 'error',
+                                    message: 'Your deck must have a Leader card'
+                                });
+                                return false;
+                            }
 
-                        // Calculate total cards with this cost
-                        const costTotal = costCards.reduce((total, card) => total + card.quantity, 0);
+                            // Sync deck data with Livewire before saving
+                            $wire.mainDeck = this.mainDeck;
+                            $wire.evolutionDeck = this.evoDeck;
 
-                        // Max height is 100%, min is 5% to always show something if there's at least one card
-                        if (costTotal === 0) return 0;
+                            // Call the Livewire save method
+                            $wire.saveDeck();
+                            return true;
+                        },
 
-                        // Find the max cost count for scaling
-                        const maxCount = Math.max(...Array(11).fill().map((_, i) => {
+                        getMainDeckCount() {
+                            return Object.values(this.mainDeck).reduce((total, current) => total + current.quantity, 0);
+                        },
+
+                        getEvoDeckCount() {
+                            return Object.values(this.evoDeck).reduce((total, current) => total + current.quantity, 0);
+                        },
+
+                        generateMainDeckSlots() {
+                            return Array.from({
+                                length: 50
+                            }, (_, index) => {
+                                // Find the card for this slot based on index
+                                const deckCards = Object.values(this.mainDeck);
+                                let slotCard = null;
+                                let currentIndex = 0;
+
+                                for (const card of deckCards) {
+                                    // Calculate where this card ends
+                                    const cardEndIndex = currentIndex + card.quantity - 1;
+                                    if (index >= currentIndex && index <= cardEndIndex) {
+                                        slotCard = card;
+                                        break;
+                                    }
+                                    currentIndex = cardEndIndex + 1;
+                                }
+
+                                return {
+                                    card: slotCard,
+                                    index: index
+                                };
+                            });
+                        },
+
+                        generateEvoDeckSlots() {
+                            return Array.from({
+                                length: 10
+                            }, (_, index) => {
+                                const deckCards = Object.values(this.evoDeck);
+                                let slotCard = null;
+                                let currentIndex = 0;
+
+                                for (const card of deckCards) {
+                                    const cardEndIndex = currentIndex + card.quantity - 1;
+                                    if (index >= currentIndex && index <= cardEndIndex) {
+                                        slotCard = card;
+                                        break;
+                                    }
+                                    currentIndex = cardEndIndex + 1;
+                                }
+
+                                return {
+                                    card: slotCard,
+                                    index: index
+                                };
+                            });
+                        },
+
+                        calculateCostPercentage(cost) {
+                            // Count cards with this cost
                             const costCards = Object.values(this.mainDeck).filter(card => {
-                                return i < 10 ? parseInt(card.cost) === i : parseInt(card.cost) >=
-                                    10;
+                                return cost < 10 ? parseInt(card.cost) === cost : parseInt(card.cost) >= 10;
                             });
-                            return costCards.reduce((total, card) => total + card.quantity, 0);
-                        }));
 
-                        // Scale the height (5-100%)
-                        return maxCount > 0 ? Math.max(5, Math.min(100, (costTotal / maxCount) * 100)) : 0;
-                    },
+                            // Calculate total cards with this cost
+                            const costTotal = costCards.reduce((total, card) => total + card.quantity, 0);
 
-                    getCardTypeCount(type) {
-                        const typeCards = Object.values(this.mainDeck).filter(card => card.card_type === type);
-                        return typeCards.reduce((total, card) => total + card.quantity, 0);
-                    },
+                            // Max height is 100%, min is 5% to always show something if there's at least one card
+                            if (costTotal === 0) return 0;
 
-                    getRarityCount(rarity) {
-                        const rarityCards = Object.values(this.mainDeck).filter(card => card.rarity === rarity);
-                        return rarityCards.reduce((total, card) => total + card.quantity, 0);
-                    }
-                }))
-            </script>
-        @endscript
+                            // Find the max cost count for scaling
+                            const maxCount = Math.max(...Array(11).fill().map((_, i) => {
+                                const costCards = Object.values(this.mainDeck).filter(card => {
+                                    return i < 10 ? parseInt(card.cost) === i : parseInt(card.cost) >=
+                                        10;
+                                });
+                                return costCards.reduce((total, card) => total + card.quantity, 0);
+                            }));
+
+                            // Scale the height (5-100%)
+                            return maxCount > 0 ? Math.max(5, Math.min(100, (costTotal / maxCount) * 100)) : 0;
+                        },
+
+                        getCardTypeCount(type) {
+                            const typeCards = Object.values(this.mainDeck).filter(card => card.card_type === type);
+                            return typeCards.reduce((total, card) => total + card.quantity, 0);
+                        },
+
+                        getRarityCount(rarity) {
+                            const rarityCards = Object.values(this.mainDeck).filter(card => card.rarity === rarity);
+                            return rarityCards.reduce((total, card) => total + card.quantity, 0);
+                        }
+                    }))
+                </script>
+            @endscript
+        </div>
     </div>
-</div>
