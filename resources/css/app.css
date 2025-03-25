@@ -59,3 +59,9 @@ h4 {
     letter-spacing: -0.05em;
     color: #ff3b3b;
 }
+.card-effect img, .card-effect>p>img {
+    display: inline-flex
+;
+    height: 18px;
+    width: auto;
+}

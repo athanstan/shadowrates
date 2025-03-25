@@ -54,6 +54,13 @@ return [
             'visibility' => 'public',
         ],
 
+        'effect-icons' => [
+            'driver' => 'local',
+            'root' => storage_path('app/effect-icons'),
+            'url' => env('APP_URL') . '/effect-icons',
+            'visibility' => 'public',
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
@@ -83,6 +90,7 @@ return [
     'links' => [
         public_path('storage') => storage_path('app/public'),
         public_path('card-images') => storage_path('app/card-images'),
+        public_path('effect-icons') => storage_path('app/effect-icons'),
     ],
 
 ];

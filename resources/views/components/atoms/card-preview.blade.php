@@ -111,7 +111,7 @@
                         @if ($card->effects)
                             <div class="pt-2 border-t border-purple-700">
                                 <p class="font-semibold text-purple-200">Effect:</p>
-                                <p class="text-purple-300">{!! $card->effects !!}</p>
+                                <p class="text-purple-300 card-effect">{!! $card->effects !!}</p>
                             </div>
                         @endif
                     </div>
