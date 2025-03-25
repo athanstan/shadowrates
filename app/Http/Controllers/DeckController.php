@@ -35,7 +35,6 @@ class DeckController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'craft_id' => 'required|exists:crafts,id',
             'description' => 'nullable|string',
             'is_public' => 'boolean',
             'format' => 'required|integer|min:1|max:3',
@@ -89,7 +88,6 @@ class DeckController extends Controller
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'craft_id' => 'required|exists:crafts,id',
             'description' => 'nullable|string',
             'is_public' => 'boolean',
             'format' => 'required|integer|min:1|max:3',

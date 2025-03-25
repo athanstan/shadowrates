@@ -16,10 +16,9 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug')->unique();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('craft_id')->constrained('crafts');
             $table->text('description')->nullable();
             $table->boolean('is_public')->default(false);
-            $table->integer('format')->default(1); // 1 = Rotation, 2 = Unlimited, etc.
+            $table->integer('format')->default(1);
             $table->timestamps();
         });
     }

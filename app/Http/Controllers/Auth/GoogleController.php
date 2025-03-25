@@ -56,7 +56,7 @@ class GoogleController extends Controller
             Auth::login($user, true);
 
             // Redirect to the intended page or home
-            return redirect()->intended('/');
+            return redirect()->intended()->with('success', 'Logged in successfully!');
         } catch (Exception) {
             // Handle errors during authentication
             return redirect()->route('login')->with('error', 'Google authentication failed. Please try again.');

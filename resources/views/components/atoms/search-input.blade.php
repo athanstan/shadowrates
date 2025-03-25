@@ -1,11 +1,12 @@
 @props([
     'placeholder' => 'Search...',
     'wire:model' => null,
+    'small' => false,
 ])
 
 <div class="relative">
     <input
-        {{ $attributes->merge(['class' => 'w-full bg-gray-800 border-purple-700 p-4 rounded-md shadow-inner shadow-purple-900/30 focus:border-purple-500 focus:ring focus:ring-purple-500/20 focus:ring-opacity-50 focus:outline-none text-purple-100 placeholder-purple-300/50']) }}
+        {{ $attributes->merge(['class' => 'w-full bg-gray-800 border-purple-700 ' . ($small ? 'p-2 text-sm' : 'p-4') . ' rounded-md shadow-inner shadow-purple-900/30 focus:border-purple-500 focus:ring focus:ring-purple-500/20 focus:ring-opacity-50 focus:outline-none text-purple-100 placeholder-purple-300/50']) }}
         type="text" placeholder="{{ $placeholder }}"
         @if (isset($attributes['wire:model'])) wire:model{{ $attributes['wire:model'] ? '.' . $attributes['wire:model'] : '' }}="{{ $attributes['name'] ?? 'search' }}" @endif>
     <div class="absolute inset-y-0 right-0 flex items-center pr-3">
