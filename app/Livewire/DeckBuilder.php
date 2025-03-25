@@ -39,8 +39,8 @@ class DeckBuilder extends Component
 
         // If editing an existing deck
         if ($deck === null) {
-            $this->deck = Deck::make();
-
+            $this->deck = new Deck();
+            $this->deckName = 'New Deck';
             $this->mainDeck = [];
             $this->evolutionDeck = [];
             $this->leaderCardId = null;
@@ -48,7 +48,24 @@ class DeckBuilder extends Component
         } else {
             $this->deckName = $deck->name;
             $this->deckDescription = $deck->description;
-            $this->mainDeck = $deck->cards->toArray();
+            foreach ($deck->cards as $card) {
+                $values = [
+                    "id" => $card->id,
+                    "name" => $card->name,
+                    "cost" => $card->cost,
+                    "rarity" => $card->rarity,
+                    "card_type" => $card->card_type,
+                    "sub_type" => $card->sub_type,
+                    "quantity" => $card->pivot->quantity,
+                    "image" => $card->getImage(),
+                ];
+
+                if ($card->sub_type === 'evolved') {
+                    $this->evolutionDeck[$card->id] = $values;  // Use card ID as key
+                } else {
+                    $this->mainDeck[$card->id] = $values;  // Use card ID as key
+                }
+            }
         }
 
         // Initialize card filters
@@ -80,8 +97,10 @@ class DeckBuilder extends Component
 
         $this->dispatch('show-success', message: 'Deck saved successfully!');
 
-        // Redirect to the decks index
-        return redirect()->route('decks.edit', ['deck' => $this->deck->id]);
+        return $this->redirect(
+            route('decks.edit', ['deck' => $this->deck->id]),
+            navigate: true
+        );
     }
 
     public function loadMore(): void

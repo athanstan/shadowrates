@@ -591,13 +591,14 @@
         @script
             <script>
                 Alpine.data('deckBuilder', () => ({
-                    mainDeck: {},
-                    evoDeck: {},
+                    mainDeck: $wire.mainDeck,
+                    evoDeck: $wire.evolutionDeck,
 
                     init() {
                         // Initialize from Livewire data if available
                         this.mainDeck = Object.keys($wire.mainDeck).length > 0 ? $wire.mainDeck : {};
                         this.evoDeck = Object.keys($wire.evolutionDeck).length > 0 ? $wire.evolutionDeck : {};
+                        console.log(this.mainDeck);
                     },
 
                     addCardToDeck(card) {
