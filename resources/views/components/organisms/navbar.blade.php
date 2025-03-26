@@ -1,4 +1,4 @@
-@props(['title' => 'ShadowRates'])
+@props(['title' => 'ShadowShowdown'])
 
 <nav x-data="{ mobileMenuOpen: false, activeSection: 'home' }" class="relative z-50 shadow-lg"
     style="background: linear-gradient(to bottom, rgba(20, 10, 30, 0.95), rgba(10, 5, 15, 0.95));">
@@ -26,15 +26,16 @@
                         class="px-3 py-2 text-sm font-medium transition-all duration-300 cyber-tab">
                         CARDS
                     </a>
-                    <a href="#" @click.prevent="activeSection = 'decks'"
+                    <a href="{{ route('decks.index') }}" wire:navigate @click.prevent="activeSection = 'decks'"
                         :class="{ 'active text-purple-200': activeSection === 'decks', 'text-purple-400': activeSection !== 'decks' }"
                         class="px-3 py-2 text-sm font-medium transition-all duration-300 cyber-tab">
-                        DECKS
+                        DECKS LIST
                     </a>
-                    <a href="#" @click.prevent="activeSection = 'meta'"
+
+                    <a href="{{ route('decks.create') }}" wire:navigate @click.prevent="activeSection = 'meta'"
                         :class="{ 'active text-purple-200': activeSection === 'meta', 'text-purple-400': activeSection !== 'meta' }"
                         class="px-3 py-2 text-sm font-medium transition-all duration-300 cyber-tab">
-                        META
+                        DECK BUILDER
                     </a>
                     <a href="#" @click.prevent="activeSection = 'community'"
                         :class="{ 'active text-purple-200': activeSection === 'community', 'text-purple-400': activeSection !== 'community' }"
@@ -45,10 +46,10 @@
             </div>
 
             <!-- Authentication Links -->
-            <div class="flex items-center">
+            <div x-data="{ open: false }" class="flex items-center">
                 @auth
                     <div class="items-center hidden space-x-4 md:flex">
-                        <div x-data="{ open: false }" class="relative">
+                        <div class="relative">
                             <button @click="open = !open"
                                 class="flex items-center px-3 py-1.5 text-sm text-purple-300 hover:text-white transition-colors duration-200">
                                 <span>{{ Auth::user()->name }}</span>
@@ -162,26 +163,3 @@
         </div>
     </div>
 </nav>
-
-<style>
-    .mobile-nav-link {
-        @apply block px-3 py-2 rounded-md text-base font-medium text-purple-300 hover:text-white hover:bg-purple-900/30 transition-colors duration-200;
-        border-left: 2px solid transparent;
-    }
-
-    .mobile-nav-link:hover {
-        border-left: 2px solid theme('colors.purple.500');
-    }
-</style>
-
-<script>
-    // JavaScript to toggle mobile menu
-    document.addEventListener('DOMContentLoaded', () => {
-        const button = document.getElementById('mobile-menu-button');
-        const menu = document.getElementById('mobile-menu');
-
-        button.addEventListener('click', () => {
-            menu.classList.toggle('hidden');
-        });
-    });
-</script>

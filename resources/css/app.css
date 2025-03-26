@@ -31,6 +31,97 @@ h4 {
     text-shadow: 0 0 10px rgba(138, 43, 226, 0.7);
 }
 
+/* App Layout */
+.floating-element {
+    position: absolute;
+    pointer-events: none;
+    opacity: 0.6;
+    z-index: 0;
+    filter: drop-shadow(0 0 8px rgba(147, 51, 234, 0.5));
+    will-change: transform;
+}
+
+.card-shape {
+    border-radius: 8px;
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(67, 56, 202, 0.2));
+    border: 1px solid rgba(147, 51, 234, 0.3);
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+}
+
+.mana-orb {
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, rgba(67, 56, 202, 0.2) 70%);
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
+}
+
+.pixel-element {
+    image-rendering: pixelated;
+}
+
+.pixel-star {
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%,
+            79% 91%, 50% 70%, 21% 91%, 32% 57%,
+            2% 35%, 39% 35%);
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.5), rgba(255, 165, 0, 0.3));
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+}
+
+.game-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: rgba(147, 51, 234, 0.5);
+    filter: drop-shadow(0 0 3px rgba(147, 51, 234, 0.8));
+}
+
+@keyframes twinkle {
+
+    0%,
+    100% {
+        opacity: 0.2;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+}
+
+.twinkle {
+    animation: twinkle 3s ease-in-out infinite;
+    animation-delay: calc(var(--delay) * 1s);
+}
+
+@keyframes glow {
+
+    0%,
+    100% {
+        filter: drop-shadow(0 0 8px rgba(147, 51, 234, 0.5));
+    }
+
+    50% {
+        filter: drop-shadow(0 0 15px rgba(147, 51, 234, 0.8));
+    }
+}
+
+.floating-element.hovered {
+    animation: glow 1s ease-in-out infinite;
+    opacity: 0.9 !important;
+    z-index: 10 !important;
+    transition: all 0.3s ease;
+}
+
+.cursor-trail {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(147, 51, 234, 0.8) 0%, rgba(147, 51, 234, 0) 70%);
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+/* end App Layout */
+
 .pixel-corners {
     clip-path: polygon(0px 8px,
             8px 0px,
@@ -64,4 +155,15 @@ h4 {
 ;
     height: 18px;
     width: auto;
+}
+
+/* From Navbar */
+
+.mobile-nav-link {
+    @apply block px-3 py-2 text-base font-medium text-purple-300 transition-colors duration-200 rounded-md hover:text-white hover:bg-purple-900/30;
+    border-left: 2px solid transparent;
+}
+
+.mobile-nav-link:hover {
+    border-left: 2px solid theme('colors.purple.500');
 }

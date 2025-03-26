@@ -34,9 +34,8 @@ Route::prefix('auth/google')->name('auth.google.')->group(function () {
 Route::post('/logout', [AuthController::class, 'destroy'])->name('logout');
 
 // Card Routes
-Route::get('/cards', function () {
-    return view('cards.index');
-})->name('cards.index');
+Route::get('/cards', CardCollection::class)->name('cards.index');
+
 Route::get('/cards/{card}', CardProfile::class)->name('cards.show');
 
 // User Routes

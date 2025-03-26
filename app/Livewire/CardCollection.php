@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
 use App\Traits\HasCardFilters;
+use Livewire\Attributes\Layout;
 
 class CardCollection extends Component
 {
@@ -77,6 +78,7 @@ class CardCollection extends Component
         return $query;
     }
 
+    #[Layout('layouts.app')]
     public function render()
     {
         return view('livewire.card-collection', [

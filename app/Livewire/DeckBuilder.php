@@ -36,8 +36,6 @@ class DeckBuilder extends Component
 
     public function mount($deck = null)
     {
-        // Initialize empty deck arrays
-
         // If editing an existing deck
         if ($deck === null) {
             $this->deck = new Deck();
@@ -118,7 +116,7 @@ class DeckBuilder extends Component
         return $this->applyCardFilters($query);
     }
 
-    #[Layout('components.app-layout')]
+    #[Layout('layouts.app')]
     public function render(): View
     {
         return view('livewire.deck-builder', [

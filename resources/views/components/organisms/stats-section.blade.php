@@ -1,9 +1,9 @@
 <div class="py-16 bg-gray-700 text-white">
     <div class="container mx-auto px-4">
         <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold mb-4">ShadowRates by the Numbers</h2>
+            <h2 class="text-3xl font-bold mb-4">ShadowShowdown by the Numbers</h2>
             <p class="text-lg text-gray-300 max-w-2xl mx-auto">Join thousands of players who are already using
-                ShadowRates to improve their gameplay.</p>
+                ShadowShowdown to improve their gameplay.</p>
         </div>
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">

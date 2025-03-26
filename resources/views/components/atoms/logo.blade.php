@@ -10,5 +10,5 @@
         </div>
     </div>
     <span
-        class="text-xl text-transparent font-cinzel bg-gradient-to-r from-white to-purple-300 bg-clip-text">SHADOWRATES</span>
+        class="text-xl text-transparent font-cinzel bg-gradient-to-r from-white to-purple-300 bg-clip-text">ShadowShowdown</span>
 </a>

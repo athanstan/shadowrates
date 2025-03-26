@@ -1,6 +1,7 @@
 @props([
     'title' => 'Ready to elevate your Shadowverse experience?',
-    'description' => 'Join thousands of players using ShadowRates to track cards, build decks, and improve their game.',
+    'description' =>
+        'Join thousands of players using ShadowShowdown to track cards, build decks, and improve their game.',
     'buttonText' => 'Explore Cards',
     'buttonLink' => null,
     'buttonWireNavigate' => true,

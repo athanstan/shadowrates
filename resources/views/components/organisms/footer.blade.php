@@ -1,5 +1,4 @@
-<footer class="relative mt-12 overflow-hidden text-white border-t border-purple-900/50 bg-black/60"
-    x-data="{ hoveredColumn: null }">
+<footer class="relative overflow-hidden text-white border-t border-purple-900/50 bg-black/60" x-data="{ hoveredColumn: null }">
     <!-- Background elements -->
     <div
         class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\'40\' height=\'40\' viewBox=\'0 0 40 40\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'%238a2be2\' fill-opacity=\'0.05\' fill-rule=\'evenodd\'%3E%3Cpath d=\'M0 0h40v40H0V0zm20 20h20v20H20V20zM0 20h20v20H0V20z\'/%3E%3C/g%3E%3C/svg%3E')] opacity-20">
@@ -180,7 +179,7 @@
 
         <!-- Bottom border with rune-like design -->
         <div class="pt-8 mt-8 text-center border-t border-purple-900/50">
-            <p class="text-sm text-purple-400">&copy; {{ date('Y') }} ShadowRates. All rights reserved. Not
+            <p class="text-sm text-purple-400">&copy; {{ date('Y') }} ShadowShowdown. All rights reserved. Not
                 affiliated with Cygames.</p>
             <p class="mt-2 text-xs text-purple-500">All game content and materials are trademarks and copyrights of
                 their respective owners.</p>
