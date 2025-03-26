@@ -6,6 +6,7 @@ use App\Livewire\CardCollection;
 use App\Livewire\DeckBuilder;
 use App\Livewire\Card\CardProfile;
 use App\Livewire\User\UserProfile;
+use App\Livewire\User\UserSettings;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,6 +41,11 @@ Route::get('/cards/{card}', CardProfile::class)->name('cards.show');
 
 // User Routes
 Route::get('/users/{slug}', UserProfile::class)->name('users.profile');
+
+// User Settings (protected by auth middleware)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/settings', UserSettings::class)->name('users.settings');
+});
 
 // Deck Routes
 Route::get('/decks', function () {

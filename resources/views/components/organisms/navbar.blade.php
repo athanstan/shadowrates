@@ -12,20 +12,7 @@
         <div class="flex items-center justify-between h-16">
             <!-- Logo -->
             <div class="flex items-center">
-                <a href="/" class="flex items-center font-bold text-white group">
-                    <div class="relative mr-3">
-                        <div
-                            class="absolute transition-opacity duration-300 rounded-full opacity-75 -inset-1 bg-gradient-to-r from-purple-600 to-blue-600 blur-md group-hover:opacity-100">
-                        </div>
-                        <div
-                            class="relative flex items-center justify-center bg-gray-900 border rounded-full shadow-lg w-9 h-9 border-purple-500/70 shadow-purple-500/20">
-                            <span
-                                class="text-xl text-transparent font-cinzel bg-gradient-to-br from-purple-300 to-purple-100 bg-clip-text">S</span>
-                        </div>
-                    </div>
-                    <span
-                        class="text-xl text-transparent font-cinzel bg-gradient-to-r from-white to-purple-300 bg-clip-text">SHADOWRATES</span>
-                </a>
+                <x-atoms.logo />
 
                 <!-- Desktop Navigation Links -->
                 <div class="hidden ml-10 space-x-2 md:flex">
@@ -61,17 +48,47 @@
             <div class="flex items-center">
                 @auth
                     <div class="items-center hidden space-x-4 md:flex">
-                        <a href="#"
-                            class="px-3 py-1.5 text-sm text-purple-300 hover:text-white transition-colors duration-200">
-                            Dashboard
-                        </a>
-                        <form method="POST" action="#">
-                            @csrf
-                            <button type="submit"
-                                class="neo-brutal-button pixel-corners inline-block px-4 py-1.5 text-sm font-bold text-white">
-                                Log Out
+                        <div x-data="{ open: false }" class="relative">
+                            <button @click="open = !open"
+                                class="flex items-center px-3 py-1.5 text-sm text-purple-300 hover:text-white transition-colors duration-200">
+                                <span>{{ Auth::user()->name }}</span>
+                                <svg class="w-4 h-4 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                    fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                        clip-rule="evenodd" />
+                                </svg>
                             </button>
-                        </form>
+
+                            <div x-show="open" @click.away="open = false"
+                                x-transition:enter="transition ease-out duration-100"
+                                x-transition:enter-start="transform opacity-0 scale-95"
+                                x-transition:enter-end="transform opacity-100 scale-100"
+                                x-transition:leave="transition ease-in duration-75"
+                                x-transition:leave-start="transform opacity-100 scale-100"
+                                x-transition:leave-end="transform opacity-0 scale-95"
+                                class="absolute right-0 z-10 w-48 mt-2 origin-top-right rounded-md shadow-lg">
+
+                                <div class="px-2 py-2 bg-gray-900 border border-gray-800 rounded-md shadow-xs">
+                                    <a href="{{ route('users.profile', Auth::user()->slug) }}" wire:navigate
+                                        class="block px-4 py-2 text-sm text-purple-300 rounded-sm hover:bg-gray-800 hover:text-white">
+                                        Your Profile
+                                    </a>
+                                    <a href="{{ route('users.settings') }}" wire:navigate
+                                        class="block px-4 py-2 text-sm text-purple-300 rounded-sm hover:bg-gray-800 hover:text-white">
+                                        Settings
+                                    </a>
+                                    <div class="my-1 border-t border-gray-800"></div>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit"
+                                            class="block w-full px-4 py-2 text-sm text-left text-purple-300 rounded-sm hover:bg-gray-800 hover:text-white">
+                                            Log Out
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 @else
                     <div class="items-center hidden space-x-3 md:flex">
@@ -121,10 +138,13 @@
                 </a>
 
                 @auth
-                    <a href="#" class="mobile-nav-link">
-                        Dashboard
+                    <a href="{{ route('users.profile', Auth::user()->slug) }}" wire:navigate class="mobile-nav-link">
+                        Your Profile
                     </a>
-                    <form method="POST" action="#">
+                    <a href="{{ route('users.settings') }}" wire:navigate class="mobile-nav-link">
+                        Settings
+                    </a>
+                    <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="w-full text-left mobile-nav-link">
                             Log Out

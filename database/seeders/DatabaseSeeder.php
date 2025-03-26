@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             ContentSeeder::class, // First seed content from db.json
             DeckSeeder::class,    // Then decks (which use cards)
             RatingSeeder::class,  // Then ratings (which use cards and decks)
+            SocialLinkSeeder::class, // Add social links
         ]);
     }
 }

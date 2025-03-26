@@ -112,10 +112,11 @@
 
 <body class="font-sans antialiased">
     <!-- Background Animation -->
-    <div id="animation-container" class="fixed inset-0 overflow-hidden pointer-events-none z-0"></div>
+    <div id="animation-container" class="fixed inset-0 z-0 overflow-hidden pointer-events-none"></div>
 
+    <x-organisms.navbar />
     <!-- Navigation -->
-    <nav class="fixed z-50 w-full bg-gray-900 border-b border-purple-900 bg-opacity-80 backdrop-blur-sm">
+    {{-- <nav class="fixed z-50 w-full bg-gray-900 border-b border-purple-900 bg-opacity-80 backdrop-blur-sm">
         <div class="container px-4 mx-auto">
             <div class="flex items-center justify-between h-16">
                 <!-- Logo -->
@@ -222,7 +223,7 @@
                 </a>
             </div>
         </div>
-    </nav>
+    </nav> --}}
 
     <!-- Page Content -->
     <main class="min-h-screen pt-16 pb-8">
@@ -230,20 +231,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="py-6 bg-gray-900 border-t border-purple-900">
-        <div class="container px-4 mx-auto">
-            <div class="flex flex-col items-center justify-between md:flex-row">
-                <div class="mb-4 md:mb-0">
-                    <span class="text-xl font-bold text-purple-400">Shadow<span
-                            class="text-indigo-400">Rates</span></span>
-                    <p class="mt-1 text-sm text-gray-400">The Ultimate Shadowverse Companion</p>
-                </div>
-                <div class="text-sm text-gray-400">
-                    &copy; {{ date('Y') }} ShadowRates. All rights reserved.
-                </div>
-            </div>
-        </div>
-    </footer>
+    <x-organisms.footer />
 
     <!-- Mobile menu JavaScript -->
     <script>

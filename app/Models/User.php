@@ -30,6 +30,14 @@ class User extends Authenticatable
         'provider',
         'provider_id',
         'provider_avatar',
+        'country',
+        'city',
+        'bio',
+        'favorite_class',
+        'games_played',
+        'wins',
+        'losses',
+        'last_game_at',
     ];
 
     /**
@@ -50,6 +58,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'last_game_at' => 'datetime',
     ];
 
     /**
@@ -139,5 +148,13 @@ class User extends Authenticatable
     public function getProfilePhotoUrlAttribute(): string
     {
         return $this->provider_avatar ?? $this->getAvatarAttribute(null);
+    }
+
+    public function socialLinks(): BelongsToMany
+    {
+        return $this->belongsToMany(SocialLink::class, 'social_link_user')
+            ->using(UserSocialLink::class)
+            ->withPivot('value')
+            ->withTimestamps();
     }
 }
