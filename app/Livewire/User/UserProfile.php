@@ -31,7 +31,7 @@ class UserProfile extends Component
             ->firstOrFail();
     }
 
-    #[Layout('components.app-layout')]
+    #[Layout('layouts.app')]
     public function render()
     {
         return view('livewire.user.user-profile');

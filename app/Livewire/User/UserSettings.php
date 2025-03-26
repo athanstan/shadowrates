@@ -74,7 +74,7 @@ class UserSettings extends Component
         $this->dispatch('settings-saved');
     }
 
-    #[Layout('components.app-layout')]
+    #[Layout('layouts.app')]
     public function render()
     {
         return view('livewire.user.user-settings');
