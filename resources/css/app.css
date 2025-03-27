@@ -11,6 +11,10 @@
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
+[x-cloak] {
+    display: none;
+}
+
 /* Base styles */
 body {
     font-family: 'Exo 2', sans-serif;

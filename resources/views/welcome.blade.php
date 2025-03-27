@@ -93,19 +93,19 @@
                 class="grid grid-cols-1 gap-10 px-6 mx-auto sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:gap-2 max-w-7xl">
 
                 <x-molecules.coming-soon-card title="Card Wishlist"
-                    description="Create a personal wishlist of cards you want to acquire for your collection or specific deck builds." />
+                    description="Create multiple wishlists of cards you want to acquire for your specific deck builds. Share with ease." />
 
-                <x-molecules.coming-soon-card title="Match Tracker"
-                    description="Record and analyze your match results to track your performance and identify areas for improvement." />
+                <x-molecules.coming-soon-card title="Match History"
+                    description="Track your match history and analyze your performance. See your win/loss ratio and recollect your plays." />
 
                 <x-molecules.coming-soon-card title="Trading Platform"
-                    description="List cards you're willing to trade and find others looking to exchange cards with you." />
+                    description="List cards you're willing to trade. Combines perfectly with our wishlist feature." />
 
                 <x-molecules.coming-soon-card title="Tournament Creator"
                     description="Organize and manage your own Shadowverse tournaments with friends or the broader community." />
 
-                <x-molecules.coming-soon-card title="Meta Analysis"
-                    description="Deep dive into the current meta with statistical analysis, trending decks, and card popularity rankings." />
+                <x-molecules.coming-soon-card title="User Profiles"
+                    description="Follow users and see their collection, favorite decks, and tournament achievements on their profile." />
 
                 <x-molecules.coming-soon-card title="Social Profiles"
                     description="Create and customize your profile to showcase your collection, favorite decks, and tournament achievements." />
@@ -119,91 +119,180 @@
         </div>
     </div>
 
-    {{-- <!-- Main Features Section -->
-    <div class="px-6 mx-auto mt-26 max-w-7xl sm:mt-32 lg:px-8">
-        <div class="max-w-2xl mx-auto lg:text-center">
-            <h2 class="font-semibold text-purple-400 text-base/7">Comprehensive Deck Builder</h2>
-            <p class="mt-2 text-4xl font-semibold tracking-tight text-white text-pretty sm:text-5xl lg:text-balance">
-                Everything you need for Shadowverse mastery</p>
-            <p class="mt-6 text-gray-300 text-lg/8">ShadowShowdown brings you a complete suite of tools to enhance your
-                Shadowverse experience, from tracking your collection to building competitive decks and connecting with
-                other players.</p>
+    <!-- Support Our Team Section -->
+    <div class="relative py-32 mt-16">
+        <div class="absolute inset-0 overflow-hidden">
+            <div
+                class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-500 to-transparent opacity-70">
+            </div>
+            <div
+                class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-70">
+            </div>
         </div>
-        <div class="max-w-2xl mx-auto mt-16 sm:mt-20 lg:mt-24 lg:max-w-none">
-            <dl class="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
-                <div class="flex flex-col">
-                    <dt class="font-semibold text-white text-base/7">
-                        <div class="flex items-center justify-center mb-6 bg-purple-500 rounded-lg size-10">
-                            <svg class="text-white size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                stroke="currentColor" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
-                            </svg>
-                        </div>
-                        Card Collection Manager
-                    </dt>
-                    <dd class="flex flex-col flex-auto mt-1 text-gray-300 text-base/7">
-                        <p class="flex-auto">Track your entire Shadowverse card collection. Easily see what cards you
-                            own, what you're missing, and organize them by set, rarity, or faction.</p>
-                        <p class="mt-6">
-                            <a href="#" class="font-semibold text-purple-400 text-sm/6">Manage Collection <span
-                                    aria-hidden="true">→</span></a>
-                        </p>
-                    </dd>
+
+        <div class="relative px-6 mx-auto max-w-7xl lg:px-8">
+            <div class="max-w-2xl mx-auto text-center">
+                <h2 class="font-semibold text-purple-400 text-base/7">Support Our Team</h2>
+                <p class="mt-2 text-4xl font-semibold tracking-tight text-white sm:text-5xl sm:text-balance">
+                    Help Us Keep the Magic Alive</p>
+                <p class="mt-6 text-gray-300 text-lg/8">
+                    ShadowShowdown is a passion project created by a small team of dedicated Shadowverse enthusiasts.
+                    Your support helps us maintain the servers, develop new features, and continue providing this
+                    service to the community.
+                </p>
+
+                <div class="flex flex-col justify-center gap-4 mt-10 sm:flex-row">
+                    <a href="#"
+                        class="inline-flex items-center justify-center px-5 py-3 text-base font-semibold text-white transition-colors bg-purple-500 rounded-md hover:bg-purple-400 shadow-glow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="currentColor"
+                            viewBox="0 0 24 24">
+                            <path
+                                d="M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z" />
+                        </svg>
+                        Become a Supporter
+                    </a>
+                    <a href="#"
+                        class="inline-flex items-center justify-center px-5 py-3 text-base font-semibold text-indigo-300 transition-colors rounded-md bg-indigo-500/10 ring-1 ring-indigo-500/30 hover:bg-indigo-500/20 shadow-glow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="currentColor"
+                            viewBox="0 0 24 24">
+                            <path
+                                d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm7 14c3.313 0 6-2.687 6-6s-2.687-6-6-6-6 2.687-6 6 2.687 6 6 6zm0-2c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z" />
+                        </svg>
+                        Buy Us a Coffee
+                    </a>
                 </div>
-                <div class="flex flex-col">
-                    <dt class="font-semibold text-white text-base/7">
-                        <div class="flex items-center justify-center mb-6 bg-purple-500 rounded-lg size-10">
-                            <svg class="text-white size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                stroke="currentColor" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M16.5 8.25V6a2.25 2.25 0 00-2.25-2.25H6A2.25 2.25 0 003.75 6v8.25A2.25 2.25 0 006 16.5h2.25m8.25-8.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-7.5A2.25 2.25 0 018.25 18v-1.5m8.25-8.25h-6a2.25 2.25 0 00-2.25 2.25v6" />
-                            </svg>
-                        </div>
-                        Deck Builder
-                    </dt>
-                    <dd class="flex flex-col flex-auto mt-1 text-gray-300 text-base/7">
-                        <p class="flex-auto">Create, save, and share your deck builds with the community. Get insights
-                            on card synergies and optimization recommendations for competitive play.</p>
-                        <p class="mt-6">
-                            <a href="#" class="font-semibold text-purple-400 text-sm/6">Build Decks <span
-                                    aria-hidden="true">→</span></a>
-                        </p>
-                    </dd>
-                </div>
-                <div class="flex flex-col">
-                    <dt class="font-semibold text-white text-base/7">
-                        <div class="flex items-center justify-center mb-6 bg-purple-500 rounded-lg size-10">
-                            <svg class="text-white size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                stroke="currentColor" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
-                            </svg>
-                        </div>
-                        Community Ratings
-                    </dt>
-                    <dd class="flex flex-col flex-auto mt-1 text-gray-300 text-base/7">
-                        <p class="flex-auto">Rate cards and see the community consensus. Discover undervalued gems and
-                            stay ahead of the meta with our powerful rating system.</p>
-                        <p class="mt-6">
-                            <a href="#" class="font-semibold text-purple-400 text-sm/6">View Ratings <span
-                                    aria-hidden="true">→</span></a>
-                        </p>
-                    </dd>
-                </div>
-            </dl>
+            </div>
         </div>
-    </div> --}}
+    </div>
 
-    {{-- <!-- Trending Cards section -->
-    <x-molecules.section-container title="TRENDING CARDS"
-        description="See which cards are making waves in the current meta based on our community ratings."
-        titleFrom="purple-400" titleVia="blue-500" titleTo="purple-400"
-        bgGradient="from-purple-900/10 to-transparent">
+    <!-- Sponsors Section -->
+    <div class="relative py-28">
+        <!-- Animated background elements -->
+        <div class="absolute inset-0 overflow-hidden -z-10">
+            <div
+                class="absolute transform -translate-x-1/2 -translate-y-1/2 rounded-full top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-purple-800/20 to-indigo-800/20 blur-3xl animate-pulse-slow">
+            </div>
+            <div
+                class="absolute w-64 h-64 rounded-full bottom-1/3 right-1/4 bg-gradient-to-r from-fuchsia-800/20 to-blue-800/20 blur-3xl animate-pulse-slow animation-delay-2000">
+            </div>
+        </div>
 
-        <!-- Trending cards content continues... -->
-        <!-- Keep all the trending cards content here -->
-    </x-molecules.section-container> --}}
+        <div class="relative px-6 mx-auto max-w-7xl lg:px-8">
+            <div class="text-center">
+                <h2 class="font-semibold text-indigo-400 text-base/7">Our Sponsors</h2>
+                <p
+                    class="mt-2 text-4xl font-bold tracking-tight text-transparent text-white sm:text-5xl sm:text-balance bg-clip-text bg-gradient-to-r from-purple-400 via-fuchsia-300 to-indigo-400">
+                    Powered by Industry Leaders</p>
+                <p class="max-w-2xl mx-auto mt-6 text-gray-300 text-lg/8">
+                    We're proud to partner with these amazing companies who share our vision for creating the ultimate
+                    Shadowverse companion platform.
+                </p>
+            </div>
+
+            <div class="relative mt-16">
+                <!-- Highlight glow behind the sponsors grid -->
+                <div
+                    class="absolute inset-0 bg-gradient-to-r from-purple-900/0 via-indigo-900/20 to-purple-900/0 rounded-2xl blur-xl">
+                </div>
+
+                <!-- Sponsors grid -->
+                <div class="relative grid grid-cols-2 gap-8 md:grid-cols-4 lg:grid-cols-5">
+                    <!-- Add your sponsor logos here - these are placeholder divs -->
+                    <div
+                        class="flex items-center justify-center h-24 px-8 transition-colors border bg-black/30 backdrop-blur-sm rounded-xl border-indigo-500/20 hover:border-indigo-500/50">
+                        <span class="text-lg font-bold text-indigo-300">Sponsor 1</span>
+                    </div>
+                    <div
+                        class="flex items-center justify-center h-24 px-8 transition-colors border bg-black/30 backdrop-blur-sm rounded-xl border-indigo-500/20 hover:border-indigo-500/50">
+                        <span class="text-lg font-bold text-indigo-300">Sponsor 2</span>
+                    </div>
+                    <div
+                        class="flex items-center justify-center h-24 px-8 transition-colors border bg-black/30 backdrop-blur-sm rounded-xl border-indigo-500/20 hover:border-indigo-500/50">
+                        <span class="text-lg font-bold text-indigo-300">Sponsor 3</span>
+                    </div>
+                    <div
+                        class="flex items-center justify-center h-24 px-8 transition-colors border bg-black/30 backdrop-blur-sm rounded-xl border-indigo-500/20 hover:border-indigo-500/50">
+                        <span class="text-lg font-bold text-indigo-300">Sponsor 4</span>
+                    </div>
+                    <div
+                        class="flex items-center justify-center h-24 px-8 transition-colors border bg-black/30 backdrop-blur-sm rounded-xl border-indigo-500/20 hover:border-indigo-500/50 md:col-span-4 lg:col-span-1">
+                        <span class="text-lg font-bold text-indigo-300">Sponsor 5</span>
+                    </div>
+                </div>
+
+                <!-- Border glow effect -->
+                <div
+                    class="absolute z-0 hidden border -inset-x-4 -inset-y-4 border-indigo-500/10 rounded-3xl lg:block">
+                </div>
+
+                <!-- Corner decorations -->
+                <div class="absolute w-6 h-6 border-t-2 border-l-2 -top-2 -left-2 border-indigo-500/50 rounded-tl-md">
+                </div>
+                <div class="absolute w-6 h-6 border-t-2 border-r-2 -top-2 -right-2 border-indigo-500/50 rounded-tr-md">
+                </div>
+                <div
+                    class="absolute w-6 h-6 border-b-2 border-l-2 -bottom-2 -left-2 border-indigo-500/50 rounded-bl-md">
+                </div>
+                <div
+                    class="absolute w-6 h-6 border-b-2 border-r-2 -bottom-2 -right-2 border-indigo-500/50 rounded-br-md">
+                </div>
+            </div>
+
+            <div class="mt-12 text-center">
+                <a href="#"
+                    class="inline-flex items-center text-sm font-semibold text-indigo-400 transition-colors hover:text-indigo-300">
+                    Become a Sponsor
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sign In Section -->
+    <div class="relative py-24">
+        <div class="absolute inset-0 overflow-hidden">
+            <!-- Animated particles background (subtle) -->
+            <div class="absolute inset-0">
+                <div class="absolute w-2 h-2 rounded-full top-1/2 left-1/3 bg-indigo-500/40 animate-float"></div>
+                <div
+                    class="absolute w-3 h-3 rounded-full top-1/4 left-1/2 bg-purple-500/30 animate-float animation-delay-1000">
+                </div>
+                <div
+                    class="absolute w-2 h-2 rounded-full bottom-1/3 right-1/4 bg-fuchsia-500/30 animate-float animation-delay-2000">
+                </div>
+                <div
+                    class="absolute w-2 h-2 rounded-full bottom-1/4 right-1/3 bg-blue-500/30 animate-float animation-delay-3000">
+                </div>
+            </div>
+        </div>
+
+        <div class="relative px-6 mx-auto max-w-7xl lg:px-8">
+            <div class="max-w-2xl mx-auto text-center">
+                <h2 class="font-semibold text-purple-400 text-base/7">Join Our Community</h2>
+                <p class="mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+                    Sign in to unlock all features</p>
+                <p class="mt-6 text-gray-300 text-lg/8">
+                    Create your personal collection, build and save your decks, rate cards, and connect with other
+                    players.
+                </p>
+
+                <div class="flex justify-center mt-10">
+                    <x-atoms.google-login-button size="lg"
+                        class="inline-block px-6 py-3 text-base font-bold text-white neo-brutal-button pixel-corners">
+                        Sign in with Google
+                    </x-atoms.google-login-button>
+                </div>
+
+                <p class="mt-6 text-sm text-gray-400">
+                    No account creation needed. Just sign in with Google and start using ShadowShowdown right away.
+                </p>
+            </div>
+        </div>
+    </div>
 
     <!-- Stats -->
     <div class="px-6 mx-auto mt-32 max-w-7xl sm:mt-56 lg:px-8">
@@ -235,15 +324,6 @@
             </div>
         </dl>
     </div>
-
-    <!-- Community section -->
-    <x-molecules.section-container title="JOIN THE COMMUNITY"
-        description="Connect with thousands of Shadowverse players around the world. Share strategies, rate cards, and climb the ranking together!"
-        titleFrom="indigo-400" titleVia="purple-500" titleTo="indigo-400" padding="py-20">
-
-        <!-- Community section content continues... -->
-        <!-- Keep all the community section content here -->
-    </x-molecules.section-container>
 
     <!-- CTA section -->
     <x-organisms.cta-section title="Ready to elevate your Shadowverse experience?"
