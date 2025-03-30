@@ -36,7 +36,7 @@ Route::post('/logout', [AuthController::class, 'destroy'])->name('logout');
 // Card Routes
 Route::get('/cards', CardCollection::class)->name('cards.index');
 
-Route::get('/cards/{card}', CardProfile::class)->name('cards.show');
+Route::get('/cards/{card:slug}', CardProfile::class)->name('cards.show');
 
 // User Routes
 Route::get('/users/{slug}', UserProfile::class)->name('users.profile');

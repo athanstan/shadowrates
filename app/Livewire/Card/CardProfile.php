@@ -2,24 +2,49 @@
 
 namespace App\Livewire\Card;
 
+use App\Livewire\ActionComponent;
+use App\Livewire\Traits\HasCollectionActions;
 use App\Models\Card;
 use App\Models\CardUser;
 use App\Models\Deck;
 use App\Models\User;
 use App\Traits\HasCardFilters;
 use Illuminate\Support\Facades\Auth;
-use Livewire\Component;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 
-class CardProfile extends Component
+class CardProfile extends ActionComponent
 {
     use HasCardFilters;
+    use HasCollectionActions;
 
+    public int $cardsInCollection = 0;
+    public int $decksContainingCard = 0;
+    public int $cardQuantity = 0;
     public Card $card;
 
     // Card collection management
-    public array $cardCollection = [];
+    public CardUser $cardCollection;
+
+    public function mount(Card $card)
+    {
+        $this->card = $card;
+
+        if (Auth::check()) {
+            $this->cardQuantity = CardUser::where('user_id', Auth::user()->id)
+                ->where('card_id', $this->card->id)
+                ->first()->quantity ?? 0;
+        }
+    }
+
+    protected function getCollection(): array
+    {
+        return [
+            'user_id' => Auth::user()->id,
+            'card_id' => $this->card->id,
+            'quantity' => $this->cardQuantity,
+        ];
+    }
 
     // Stats section
     #[Computed]
@@ -77,58 +102,7 @@ class CardProfile extends Component
             ->get();
     }
 
-    public function mount(Card $card)
-    {
-        $this->card = $card;
-        $this->initializeCardFilters();
-
-        if (Auth::check()) {
-            $this->cardCollection = CardUser::query()
-                ->where('user_id', Auth::user()->id)
-                ->where('quantity', '>', 0)
-                ->pluck('quantity', 'card_id')
-                ->toArray();
-        }
-    }
-
-    public function addToCollection()
-    {
-        if (!Auth::check()) {
-            return redirect()->route('login');
-        }
-
-        $this->cardCollection[$this->card->id] = ($this->cardCollection[$this->card->id] ?? 0) + 1;
-        $this->saveCollection();
-    }
-
-    public function removeFromCollection()
-    {
-        if (!Auth::check() || !isset($this->cardCollection[$this->card->id]) || $this->cardCollection[$this->card->id] <= 0) {
-            return;
-        }
-
-        $this->cardCollection[$this->card->id] = max(0, $this->cardCollection[$this->card->id] - 1);
-        $this->saveCollection();
-    }
-
-    private function saveCollection()
-    {
-        $userCards = [];
-        foreach ($this->cardCollection as $cardId => $quantity) {
-            if ($quantity > 0) {
-                $userCards[$cardId] = ['quantity' => $quantity];
-            }
-        }
-
-        try {
-            Auth::user()->cards()->syncWithoutDetaching($userCards);
-            $this->dispatch('show-success', message: 'Card collection updated successfully!');
-        } catch (\Exception) {
-            $this->dispatch('show-error', message: 'Failed to update card collection. Please try again.');
-        }
-    }
-
-    #[Layout('components.app-layout')]
+    #[Layout('layouts.app')]
     public function render()
     {
         return view('livewire.card.card-profile');
