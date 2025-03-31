@@ -460,6 +460,10 @@
                                 </span>
                             </div>
 
+                            @if ($errors->any())
+                                <x-atoms.alert.danger class="mb-2" :errors="$errors" />
+                            @endif
+
                             <div class="grid grid-cols-5 gap-2 md:grid-cols-10 lg:grid-cols-10 xl:grid-cols-10">
                                 <template x-for="(slot, index) in generateMainDeckSlots()" :key="index">
                                     <div class="aspect-[3/4] relative rounded-md overflow-hidden"
@@ -610,6 +614,7 @@
                     },
 
                     addCardToDeck(card) {
+
                         // Check if the card is an evolved card - automatically add to evolution deck
                         if (card.sub_type === 'evolved') {
                             // Check if evolution deck is full
@@ -717,7 +722,7 @@
                                 name: card.name,
                                 cost: card.cost,
                                 rarity: card.rarity,
-                                card_type: card.cardType ? card.cardType.name : '',
+                                card_type: card.cardType?.name,
                                 sub_type: card.sub_type,
                                 quantity: 1,
                                 image: card.getImage

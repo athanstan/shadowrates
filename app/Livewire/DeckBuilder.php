@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Card;
 use App\Models\Deck;
+use App\Rules\Deck\LeaderRule;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Computed;
@@ -34,9 +35,52 @@ class DeckBuilder extends Component
         $this->queryString = $this->getCardFilterQueryString();
     }
 
+    public function rules(): array
+    {
+        return [
+            'deckName' => 'required|string|max:255',
+            'deckDescription' => 'nullable|string|max:1000',
+            'mainDeck' => [
+                'required',
+                'array',
+                'max:50',
+                'min:1',
+                new LeaderRule(),
+            ],
+            'mainDeck.*.id' => 'required|exists:cards,id',
+            'mainDeck.*.quantity' => [
+                'required',
+                'integer',
+                'min:1',
+                'max:3',
+            ],
+            'evolutionDeck' => [
+                'required',
+                'array',
+                'max:10',
+                'min:1',
+            ],
+            'evolutionDeck.*.id' => 'required|exists:cards,id',
+            'evolutionDeck.*.quantity' => [
+                'required',
+                'integer',
+                'min:1',
+                'max:3',
+            ],
+
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'mainDeck.*.quantity.max' => 'You can only have 3 of each card in your main deck.',
+            'evolutionDeck.*.quantity.max' => 'You can only have 3 of each card in your evolution deck.',
+        ];
+    }
+
     public function mount($deck = null)
     {
-        // If editing an existing deck
         if ($deck === null) {
             $this->deck = new Deck();
             $this->deckName = 'New Deck';
@@ -48,13 +92,16 @@ class DeckBuilder extends Component
             $this->deckName = $deck->name;
             $this->deckDescription = $deck->description;
             $this->isPublic = $deck->is_public;
-            foreach ($deck->cards as $card) {
+
+            $cards = $deck->cards->load('cardType');
+
+            foreach ($cards as $card) {
                 $values = [
                     "id" => $card->id,
                     "name" => $card->name,
                     "cost" => $card->cost,
                     "rarity" => $card->rarity,
-                    "card_type" => $card->card_type,
+                    "card_type" => $card->cardType->name,
                     "sub_type" => $card->sub_type,
                     "quantity" => $card->pivot->quantity,
                     "image" => $card->getImage(),
@@ -76,6 +123,8 @@ class DeckBuilder extends Component
     {
         // authorize the action
         // Validate Data
+        $this->validate();
+
         $deckCards = collect($this->mainDeck)
             ->merge(collect($this->evolutionDeck))
             ->mapWithKeys(function ($item) {
