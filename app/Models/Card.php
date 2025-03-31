@@ -217,4 +217,14 @@ class Card extends Model
     {
         return $query->where('card_set_id', $setId);
     }
+
+    /**
+     * Get the wishlists that include this card.
+     */
+    public function wishlists(): BelongsToMany
+    {
+        return $this->belongsToMany(Wishlist::class)
+            ->withPivot('quantity')
+            ->withTimestamps();
+    }
 }

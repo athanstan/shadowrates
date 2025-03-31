@@ -22,7 +22,6 @@ class CardCollection extends Component
 
     public function boot()
     {
-        // Set up query string parameters by merging trait's query string with component-specific ones
         $this->queryString = array_merge(
             $this->getCardFilterQueryString(),
             ['ownedFilter' => ['except' => false]]
@@ -67,10 +66,8 @@ class CardCollection extends Component
     {
         $query = Card::query();
 
-        // Apply the common filters from the trait
         $query = $this->applyCardFilters($query);
 
-        // Apply the owned filter which is specific to this component
         if ($this->ownedFilter) {
             $query->whereIn('id', array_keys($this->cardCollection));
         }

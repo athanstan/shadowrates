@@ -157,4 +157,12 @@ class User extends Authenticatable
             ->withPivot('value')
             ->withTimestamps();
     }
+
+    /**
+     * Get the wishlists created by the user.
+     */
+    public function wishlists(): HasMany
+    {
+        return $this->hasMany(Wishlist::class);
+    }
 }

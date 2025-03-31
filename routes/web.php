@@ -7,6 +7,8 @@ use App\Livewire\DeckBuilder;
 use App\Livewire\Card\CardProfile;
 use App\Livewire\User\UserProfile;
 use App\Livewire\User\UserSettings;
+use App\Livewire\User\UserWishlistIndex;
+use App\Livewire\Wishlist\WishlistProfile;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,6 +42,7 @@ Route::get('/cards/{card:slug}', CardProfile::class)->name('cards.show');
 
 // User Routes
 Route::get('/users/{slug}', UserProfile::class)->name('users.profile');
+Route::get('/users/{slug}/wishlists', UserWishlistIndex::class)->name('users.wishlists');
 
 // User Settings (protected by auth middleware)
 Route::middleware(['auth'])->group(function () {
@@ -58,3 +61,6 @@ Route::get('/decks/{deck}/edit', DeckBuilder::class)->name('decks.edit');
 Route::get('/decks/{deck}', function ($deck) {
     return view('decks.show', ['deck' => \App\Models\Deck::findOrFail($deck)]);
 })->name('decks.show');
+
+// Wishlist Routes
+Route::get('/wishlists/{slug}', WishlistProfile::class)->name('wishlists.show');
