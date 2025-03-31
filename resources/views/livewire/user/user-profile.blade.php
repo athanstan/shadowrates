@@ -1,4 +1,4 @@
-<div class="container px-4 mx-auto" x-data="userProfile">
+<div class="container px-4 mx-auto">
     <x-atoms.neo-brutal-panel class="my-8">
         <!-- Profile Header Section -->
         <div class="mb-8">
@@ -39,8 +39,8 @@
         </div>
     </x-atoms.neo-brutal-panel>
 
-    <!-- Decks Collection Section -->
-    <div class="mb-8" x-data="{ showAllDecks: false }">
+    <!-- Decks Collection Section @TODO: add this section to the Deck Profile Page -->
+    {{-- <div class="mb-8" x-data="{ showAllDecks: false }">
         <x-molecules.section-heading title="Deck Collection" subtitle="Player's constructed decks"
             action-text="Show All" @click="showAllDecks = !showAllDecks" />
 
@@ -87,49 +87,31 @@
                 </div>
             @endforeach
         </div>
+    </div> --}}
+
+    <!-- Decks Section -->
+    <div class="mt-16 mb-16">
+        <x-molecules.section-heading :title="$user->name . '\'s Decks'" subtitle="See more details about each deck" />
+
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+            @foreach ($user->decks as $deck)
+                @if ($deck->getLeaderCard() !== null)
+                    <x-cards.leader :leader="$deck->getLeaderCard()" :craft="$deck->getLeaderCard()->craft->name" :title="$deck->name" :description="$deck->description"
+                        :count="$deck->cards_count" :deckUrl="route('decks.show', $deck)" />
+                @endif
+            @endforeach
+        </div>
     </div>
 
     <!-- Recent Cards Section -->
-    <div class="mb-8" x-data="{ currentSlide: 0 }">
+    <div class="mt-16 mb-16 ">
         <x-molecules.section-heading title="Recent Cards" subtitle="Last 20 cards added to collection" />
 
-        <div class="relative" x-data="{ expandedView: false }">
-            <div class="overflow-hidden" :class="expandedView ? 'h-auto' : 'h-64 shadow-lg shadow-purple-900/30'">
-                <div class="flex transition-transform duration-300 ease-in-out"
-                    :style="{ transform: `translateX(-${currentSlide * 100}%)` }">
-                    @foreach ($user->cards as $card)
-                        <div class="flex-none w-1/5 px-2">
-                            <div class="relative group">
-                                <div
-                                    class="overflow-hidden transition-all duration-300 transform bg-gray-900 border border-purple-900 rounded-lg shadow-lg hover:scale-105">
-                                    <div class="h-48" x-data="{ expanded: false }">
-                                        <img src="{{ $card->image_url }}" alt="{{ $card->name }}"
-                                            class="object-cover w-full" :class="expanded ? 'h-auto' : 'h-48'">
-                                        <div
-                                            class="absolute inset-0 flex flex-col justify-between p-4 transition-opacity bg-black bg-opacity-50 opacity-0 group-hover:opacity-100">
-                                            <div class="flex items-center justify-between">
-                                                <h4 class="font-bold text-white">{{ $card->name }}</h4>
-                                                <button @click="expanded = !expanded"
-                                                    class="px-2 py-1 text-sm text-white bg-purple-600 rounded hover:bg-purple-700">
-                                                    <span x-text="expanded ? 'Close' : 'View'"></span>
-                                                </button>
-                                            </div>
-                                            <p class="text-sm text-gray-300">Added
-                                                {{ $card->created_at->diffForHumans() }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-            <div class="flex justify-center mt-2">
-                <button @click="expandedView = !expandedView"
-                    class="px-4 py-2 text-sm text-white transition-colors bg-purple-600 rounded-md hover:bg-purple-700">
-                    <span x-text="expandedView ? 'Show Less' : 'Show More'"></span>
-                </button>
-            </div>
-        </div>
+        <x-molecules.card-grid>
+            @forelse($user->cards as $card)
+                <x-atoms.card-preview :card="$card" />
+            @empty
+            @endforelse
+        </x-molecules.card-grid>
     </div>
 </div>

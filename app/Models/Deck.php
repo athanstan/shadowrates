@@ -80,6 +80,11 @@ class Deck extends Model
             ->withTimestamps();
     }
 
+    public function getLeaderCard(): ?Card
+    {
+        return $this->cards->where('main_type', 'leader')->first();
+    }
+
     /**
      * Get the deck code for this deck.
      */

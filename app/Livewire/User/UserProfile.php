@@ -15,15 +15,25 @@ class UserProfile extends Component
         $this->user = User::with([
             'decks' => function ($query) {
                 $query->orderBy('decks.created_at', 'desc')
-                    ->with(
-                        'cards',
-                        fn($q) => $q->orderByRaw("CASE WHEN main_type = 'leader' THEN 0 ELSE 1 END")
-                            ->orderBy('name')
-                    );
+                    ->withCount('cards')
+                    ->with([
+                        'cards' => fn($q) => $q->with([
+                            'craft:id,name'
+                        ])
+                            ->orderByRaw("CASE WHEN main_type = 'leader' THEN 0 ELSE 1 END")
+                            ->orderBy('name'),
+                    ]);
             },
             'cards' => function ($query) {
-                $query->orderBy('cards.created_at', 'desc')->take(20);
+                $query
+                    ->with([
+                        'cardType:id,name',
+                        'craft:id,name',
+                        'cardSet:id,name',
+                    ])
+                    ->orderBy('cards.created_at', 'desc')->take(18);
             }
+
         ])
             ->withCount(['decks'])
             ->withSum('cards as cards_count', 'card_user.quantity')
