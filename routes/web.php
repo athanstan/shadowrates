@@ -9,7 +9,10 @@ use App\Livewire\User\UserProfile;
 use App\Livewire\User\UserSettings;
 use App\Livewire\User\UserWishlistIndex;
 use App\Livewire\Wishlist\WishlistProfile;
+use App\Livewire\Deck\DeckProfile;
+use App\Livewire\Deck\DeckCollection;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,17 +53,13 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Deck Routes
-Route::get('/decks', function () {
-    return view('decks.index');
-})->name('decks.index');
+Route::get('/decks', DeckCollection::class)->name('decks.index');
 
 Route::get('/decks/create', DeckBuilder::class)->name('decks.create');
 
 Route::get('/decks/{deck}/edit', DeckBuilder::class)->name('decks.edit');
 
-Route::get('/decks/{deck}', function ($deck) {
-    return view('decks.show', ['deck' => \App\Models\Deck::findOrFail($deck)]);
-})->name('decks.show');
+Route::get('/decks/{slug}', DeckProfile::class)->name('decks.show');
 
 // Wishlist Routes
 Route::get('/wishlists/{slug}', WishlistProfile::class)->name('wishlists.show');
