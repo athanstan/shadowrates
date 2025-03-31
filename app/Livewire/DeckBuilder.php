@@ -93,7 +93,7 @@ class DeckBuilder extends Component
             $this->deckDescription = $deck->description;
             $this->isPublic = $deck->is_public;
 
-            $cards = $deck->cards->load('cardType');
+            $cards = $deck->cards->loadMissing('cardType');
 
             foreach ($cards as $card) {
                 $values = [
@@ -121,7 +121,10 @@ class DeckBuilder extends Component
 
     public function saveDeck()
     {
-        // authorize the action
+        if ($this->deck->id) {
+            $this->authorize('update', $this->deck);
+        }
+
         // Validate Data
         $this->validate();
 
