@@ -11,33 +11,28 @@ class DeckProfile extends ActionComponent
     public Deck $deck;
     public $leaderCard = null;
 
-    public function mount(Deck $deck)
-    {
-        $this->deck = $deck;
-        $this->loadLeaderCard();
-    }
-
-    protected function loadLeaderCard()
-    {
-        // Find the leader card if exists
-        $this->leaderCard = $this->deck->cards()
-            ->where('main_type', 'leader')
-            ->first();
-    }
-
     public function authorizeAction(): void
     {
-        // By default, allow all actions
+        //
+    }
+
+    public function mount(string $slug)
+    {
+        $this->deck = Deck::query()
+            ->where('slug', $slug)
+            ->with([
+                'cards' => fn($q) => $q->orderBy('cost'),
+                'cards.cardType',
+                'cards.cardSet',
+                'cards.craft',
+            ])
+            ->firstOrFail();
+        $this->leaderCard = $this->deck->getLeaderCard();
     }
 
     #[Layout('layouts.app')]
     public function render()
     {
-        // Load deck with cards sorted by cost
-        $this->deck->load(['cards' => function ($query) {
-            $query->orderBy('cost');
-        }]);
-
         return view('livewire.deck.deck-profile');
     }
 }

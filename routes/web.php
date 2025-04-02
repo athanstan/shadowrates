@@ -53,13 +53,12 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Deck Routes
-Route::get('/decks', DeckCollection::class)->name('decks.index');
-
-Route::get('/decks/create', DeckBuilder::class)->name('decks.create');
-
-Route::get('/decks/{deck}/edit', DeckBuilder::class)->name('decks.edit');
-
-Route::get('/decks/{slug}', DeckProfile::class)->name('decks.show');
+Route::prefix('/decks')->name('decks.')->group(function () {
+    Route::get('/', DeckCollection::class)->name('index');
+    Route::get('/create', DeckBuilder::class)->name('create');
+    Route::get('/{deck}/edit', DeckBuilder::class)->name('edit');
+    Route::get('/{slug}', DeckProfile::class)->name('show');
+});
 
 // Wishlist Routes
 Route::get('/wishlists/{slug}', WishlistProfile::class)->name('wishlists.show');

@@ -12,6 +12,7 @@ use Livewire\Attributes\Computed;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\HasCardFilters;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class DeckBuilder extends Component
@@ -89,6 +90,8 @@ class DeckBuilder extends Component
             $this->leaderCardId = null;
             $this->deckCraftId = null;
         } else {
+            Gate::authorize('update', $deck);
+
             $this->deckName = $deck->name;
             $this->deckDescription = $deck->description;
             $this->isPublic = $deck->is_public;
@@ -122,7 +125,7 @@ class DeckBuilder extends Component
     public function saveDeck()
     {
         if ($this->deck->id) {
-            $this->authorize('update', $this->deck);
+            Gate::authorize('update', $this->deck);
         }
 
         // Validate Data

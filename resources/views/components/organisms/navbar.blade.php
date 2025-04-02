@@ -73,7 +73,15 @@
                                 <div class="px-2 py-2 bg-gray-900 border border-gray-800 rounded-md shadow-xs">
                                     <a href="{{ route('users.profile', Auth::user()->slug) }}" wire:navigate
                                         class="block px-4 py-2 text-sm text-purple-300 rounded-sm hover:bg-gray-800 hover:text-white">
-                                        Your Profile
+                                        My Profile
+                                    </a>
+                                    <a href="{{ route('users.profile', Auth::user()->slug) }}" wire:navigate
+                                        class="block px-4 py-2 text-sm text-purple-300 rounded-sm hover:bg-gray-800 hover:text-white">
+                                        My Collection
+                                    </a>
+                                    <a href="{{ route('users.profile', Auth::user()->slug) }}" wire:navigate
+                                        class="block px-4 py-2 text-sm text-purple-300 rounded-sm hover:bg-gray-800 hover:text-white">
+                                        My Wishlists
                                     </a>
                                     <a href="{{ route('users.settings') }}" wire:navigate
                                         class="block px-4 py-2 text-sm text-purple-300 rounded-sm hover:bg-gray-800 hover:text-white">
@@ -134,13 +142,20 @@
                     META
                 </a>
                 <a href="#" @click.prevent="activeSection = 'community'"
-                    :class="{ 'bg-purple-900/30 text-white': activeSection === 'community' }" class="mobile-nav-link">
+                    :class="{ 'bg-purple-900/30 text-white': activeSection === 'community' }"
+                    class="mobile-nav-link">
                     COMMUNITY
                 </a>
 
                 @auth
                     <a href="{{ route('users.profile', Auth::user()->slug) }}" wire:navigate class="mobile-nav-link">
-                        Your Profile
+                        My Profile
+                    </a>
+                    <a href="{{ route('users.profile', Auth::user()->slug) }}" wire:navigate class="mobile-nav-link">
+                        My Collection
+                    </a>
+                    <a href="{{ route('users.profile', Auth::user()->slug) }}" wire:navigate class="mobile-nav-link">
+                        My Wishlists
                     </a>
                     <a href="{{ route('users.settings') }}" wire:navigate class="mobile-nav-link">
                         Settings

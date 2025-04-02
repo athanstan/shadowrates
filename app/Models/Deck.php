@@ -40,11 +40,6 @@ class Deck extends Model
         'is_public' => 'boolean',
     ];
 
-    /**
-     * Return the sluggable configuration array for this model.
-     *
-     * @return array
-     */
     public function sluggable(): array
     {
         return [

@@ -4,65 +4,59 @@
         <x-atoms.success-alert position="top-center" />
         <x-atoms.error-alert position="top-center" />
 
-        <!-- Epic Banner with Leader Card and Deck Info -->
-        <div
-            class="relative mb-8 overflow-hidden shadow-2xl rounded-3xl shadow-purple-900/50 bg-gradient-to-r from-purple-950 to-indigo-950">
-            <div class="absolute inset-0 opacity-20 bg-[url('https://via.placeholder.com/1920x400')] bg-center bg-cover">
-            </div>
-            <div class="relative z-10 flex flex-col items-center p-6 md:flex-row md:p-8">
-                <!-- Leader Card -->
-                <div
-                    class="w-full mb-6 transition-transform duration-500 transform md:w-1/3 lg:w-1/4 md:mb-0 hover:scale-105">
-                    @if ($leaderCard)
-                        <div class="overflow-hidden shadow-lg rounded-2xl shadow-purple-900">
-                            <x-atoms.card-image :card="$leaderCard" :showEvolved="true" />
-                        </div>
-                    @else
-                        <div
-                            class="flex items-center justify-center h-64 border-2 border-purple-700 border-dashed bg-purple-900/50 rounded-2xl">
-                            <span class="text-lg text-purple-300">No Leader Card</span>
-                        </div>
-                    @endif
-                </div>
-
-                <!-- Deck Info -->
-                <div class="w-full text-center md:w-2/3 lg:w-3/4 md:pl-8 md:text-left">
-                    <h1 class="mb-4 text-4xl font-bold text-white md:text-5xl text-shadow-lg">{{ $deck->name }}</h1>
-
-                    <div class="flex flex-wrap items-center justify-center gap-4 mb-4 md:justify-start">
-                        @if ($deck->craft)
-                            <span class="px-3 py-1.5 rounded-full bg-purple-700/70 text-purple-100 font-medium">
-                                {{ $deck->craft->name }}
-                            </span>
-                        @endif
-                        <span class="px-3 py-1.5 rounded-full bg-blue-700/70 text-blue-100 font-medium">
-                            @if ($deck->format === 1)
-                                Rotation
-                            @elseif ($deck->format === 2)
-                                Unlimited
-                            @else
-                                Custom
-                            @endif
-                        </span>
-                        <span
-                            class="px-3 py-1.5 rounded-full {{ $deck->is_public ? 'bg-green-700/70 text-green-100' : 'bg-red-700/70 text-red-100' }} font-medium">
-                            {{ $deck->is_public ? 'Public' : 'Private' }}
-                        </span>
-                        <span class="px-3 py-1.5 rounded-full bg-indigo-700/70 text-indigo-100 font-medium">
-                            {{ $deck->cards->sum('pivot.quantity') }} cards
-                        </span>
-                    </div>
-
-                    @if ($deck->description)
-                        <p class="max-w-3xl text-lg text-purple-200">{{ $deck->description }}</p>
-                    @endif
-
-                    <div class="mt-4 text-sm text-purple-300">
-                        Created by <span class="font-semibold text-purple-100">{{ $deck->user?->name }}</span>
-                    </div>
-                </div>
-            </div>
+        <div class="flex justify-end mb-4">
+            <x-atoms.action-button variant="secondary" href="{{ route('decks.edit', $deck) }}" wire:navigate>
+                Edit Deck
+            </x-atoms.action-button>
         </div>
+        <x-organisms.container.neo-brutal>
+            <div class="w-full mb-6">
+                <article
+                    class="grid grid-cols-1 overflow-hidden duration-300 rounded-2xl group md:grid-cols-8 text-on-surface dark:text-on-surface-dark">
+                    <!-- image -->
+                    <div class="relative col-span-2 overflow-hidden">
+                        <img src="{{ $leaderCard->getImage() }}"
+                            class="object-cover w-full transition duration-700 ease-out h-52 md:h-full group-hover:scale-105"
+                            alt="{{ $leaderCard->name }}" />
+                        <div class="absolute bottom-0 right-0 px-2 py-1 m-2 text-xs font-bold text-white rounded-md">
+                            LEADER
+                        </div>
+                    </div>
+                    <!-- body -->
+                    <div class="flex flex-col justify-start col-span-5 p-6">
+
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-3">
+                                <span
+                                    class="px-3 py-1 text-sm font-medium text-white rounded-full bg-purple-600/80 backdrop-filter backdrop-blur-sm">{{ $leaderCard->craft->name }}</span>
+
+                                @if ($deck->is_public)
+                                    <span
+                                        class="px-3 py-1 text-sm font-medium text-white rounded-full bg-gradient-to-r from-purple-600 to-indigo-500 backdrop-filter backdrop-blur-sm">Public</span>
+                                @else
+                                    <span
+                                        class="px-3 py-1 text-sm font-medium text-white rounded-full bg-gradient-to-r from-red-600 to-pink-500 backdrop-filter backdrop-blur-sm">Private</span>
+                                @endif
+                            </div>
+                            <div class="flex items-center w-1/3 space-x-1.5">
+                                <div
+                                    class="w-full bg-gray-200/80 rounded-full h-2.5 dark:bg-gray-700/80 backdrop-filter backdrop-blur-sm">
+                                    <div class="bg-gradient-to-r from-purple-600 to-indigo-500 h-2.5 rounded-full"
+                                        style="width: {{ ($deck->cards->count() / 50) * 100 }}%"></div>
+                                </div>
+                                <span class="text-xs font-medium text-blue-100">{{ $deck->cards->count() }}/50</span>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold text-balance text-on-surface-strong lg:text-2xl dark:text-on-surface-dark-strong"
+                            aria-describedby="articleDescription">{{ $deck->name }}</h3>
+                        <p id="articleDescription" class="max-w-lg my-4 text-sm text-pretty">
+                            {{ $deck->description }}
+                        </p>
+
+                    </div>
+                </article>
+            </div>
+        </x-organisms.container.neo-brutal>
 
         <!-- Cards List Container -->
         <x-organisms.container.neo-brutal>
@@ -74,11 +68,12 @@
                         <p class="text-purple-300">No cards in this deck yet.</p>
                     </div>
                 @else
-                    <div class="divide-y divide-purple-800">
+                    <div class="grid grid-cols-1 gap-4 divide-y divide-purple-800 md:grid-cols-2 lg:grid-cols-3">
                         @foreach ($deck->cards as $card)
-                            <div class="flex items-center py-4">
+                            <div
+                                class="flex items-center px-4 py-4 overflow-hidden transition-shadow duration-300 border border-white shadow-lg rounded-2xl group rounded-radius border-outline backdrop-blur-md bg-surface-alt/80 text-on-surface dark:border-outline-dark dark:bg-surface-dark-alt/80 dark:text-on-surface-dark hover:shadow-xl backdrop-filter bg-white/10 dark:bg-black/10">
                                 <!-- Card Image (Clickable) -->
-                                <div class="flex-shrink-0 w-20 overflow-hidden rounded-lg shadow-md cursor-pointer h-28 hover:shadow-purple-700/50"
+                                <div class="flex-shrink-0 w-20 overflow-hidden rounded-lg cursor-pointer h-28"
                                     x-data="{ showModal: false }" @click="showModal = true">
                                     <x-atoms.card-image :card="$card" />
 
