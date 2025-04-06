@@ -41,6 +41,7 @@ class DeckBuilder extends Component
         return [
             'deckName' => 'required|string|max:255',
             'deckDescription' => 'nullable|string|max:1000',
+            'isPublic' => 'required|boolean',
             'mainDeck' => [
                 'required',
                 'array',
@@ -144,6 +145,7 @@ class DeckBuilder extends Component
                     'name' => $this->deckName,
                     'description' => $this->deckDescription,
                     'user_id' => Auth::id(),
+                    'is_public' => $this->isPublic,
                 ]
             );
 
