@@ -16,32 +16,27 @@
 
                 <!-- Desktop Navigation Links -->
                 <div class="hidden ml-10 space-x-2 md:flex">
-                    <a href="#" @click.prevent="activeSection = 'home'"
-                        :class="{ 'active text-purple-200': activeSection === 'home', 'text-purple-400': activeSection !== 'home' }"
-                        class="px-3 py-2 text-sm font-medium transition-all duration-300 cyber-tab">
+                    <x-atoms.nav-link route="home">
                         HOME
-                    </a>
-                    <a href="{{ route('cards.index') }}" wire:navigate @click.prevent="activeSection = 'cards'"
-                        :class="{ 'active text-purple-200': activeSection === 'cards', 'text-purple-400': activeSection !== 'cards' }"
-                        class="px-3 py-2 text-sm font-medium transition-all duration-300 cyber-tab">
-                        CARDS
-                    </a>
-                    <a href="{{ route('decks.index') }}" wire:navigate @click.prevent="activeSection = 'decks'"
-                        :class="{ 'active text-purple-200': activeSection === 'decks', 'text-purple-400': activeSection !== 'decks' }"
-                        class="px-3 py-2 text-sm font-medium transition-all duration-300 cyber-tab">
-                        DECKS LIST
-                    </a>
+                    </x-atoms.nav-link>
 
-                    <a href="{{ route('decks.create') }}" wire:navigate @click.prevent="activeSection = 'meta'"
-                        :class="{ 'active text-purple-200': activeSection === 'meta', 'text-purple-400': activeSection !== 'meta' }"
-                        class="px-3 py-2 text-sm font-medium transition-all duration-300 cyber-tab">
+                    <x-atoms.nav-link route="cards.index" section="cards">
+                        CARDS
+                    </x-atoms.nav-link>
+
+                    <x-atoms.nav-link route="decks.index" section="decks">
+                        DECKS LIST
+                    </x-atoms.nav-link>
+
+                    <x-atoms.nav-link route="decks.create" section="meta">
                         DECK BUILDER
-                    </a>
-                    <a href="#" @click.prevent="activeSection = 'community'"
-                        :class="{ 'active text-purple-200': activeSection === 'community', 'text-purple-400': activeSection !== 'community' }"
-                        class="px-3 py-2 text-sm font-medium transition-all duration-300 cyber-tab">
-                        COMMUNITY
-                    </a>
+                    </x-atoms.nav-link>
+
+                    <x-molecules.coming-soon-link section="tournaments" title="Tournaments Coming Soon!"
+                        description="Create, find, and join tournaments, compete against other players, and earn rewards and prizes."
+                        icon="sparkles">
+                        TOURNAMENTS
+                    </x-molecules.coming-soon-link>
                 </div>
             </div>
 
@@ -71,22 +66,22 @@
                                 class="absolute right-0 z-10 w-48 mt-2 origin-top-right rounded-md shadow-lg">
 
                                 <div class="px-2 py-2 bg-gray-900 border border-gray-800 rounded-md shadow-xs">
-                                    <a href="{{ route('users.profile', Auth::user()->slug) }}" wire:navigate
-                                        class="block px-4 py-2 text-sm text-purple-300 rounded-sm hover:bg-gray-800 hover:text-white">
+                                    <x-atoms.dropdown-link route="users.profile" :params="['slug' => Auth::user()->slug]">
                                         My Profile
-                                    </a>
-                                    <a href="{{ route('users.profile', Auth::user()->slug) }}" wire:navigate
-                                        class="block px-4 py-2 text-sm text-purple-300 rounded-sm hover:bg-gray-800 hover:text-white">
+                                    </x-atoms.dropdown-link>
+
+                                    <x-atoms.dropdown-link route="users.profile" :params="['slug' => Auth::user()->slug]">
                                         My Collection
-                                    </a>
-                                    <a href="{{ route('users.profile', Auth::user()->slug) }}" wire:navigate
-                                        class="block px-4 py-2 text-sm text-purple-300 rounded-sm hover:bg-gray-800 hover:text-white">
+                                    </x-atoms.dropdown-link>
+
+                                    <x-atoms.dropdown-link route="users.profile" :params="['slug' => Auth::user()->slug]">
                                         My Wishlists
-                                    </a>
-                                    <a href="{{ route('users.settings') }}" wire:navigate
-                                        class="block px-4 py-2 text-sm text-purple-300 rounded-sm hover:bg-gray-800 hover:text-white">
+                                    </x-atoms.dropdown-link>
+
+                                    <x-atoms.dropdown-link route="users.settings">
                                         Settings
-                                    </a>
+                                    </x-atoms.dropdown-link>
+
                                     <div class="my-1 border-t border-gray-800"></div>
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
@@ -125,44 +120,49 @@
         <div class="mt-1 overflow-hidden transition-all duration-300 border-t md:hidden border-purple-900/30"
             :style="{ maxHeight: mobileMenuOpen ? '300px' : '0px', opacity: mobileMenuOpen ? '1' : '0' }">
             <div class="px-2 pt-2 pb-3 space-y-1">
-                <a href="#" @click.prevent="activeSection = 'home'"
-                    :class="{ 'bg-purple-900/30 text-white': activeSection === 'home' }" class="mobile-nav-link">
+                <x-atoms.mobile-nav-link section="home">
                     HOME
-                </a>
-                <a href="{{ route('cards.index') }}" wire:navigate
-                    :class="{ 'bg-purple-900/30 text-white': activeSection === 'cards' }" class="mobile-nav-link">
+                </x-atoms.mobile-nav-link>
+
+                <x-atoms.mobile-nav-link route="cards.index" section="cards">
                     CARDS
-                </a>
-                <a href="#" @click.prevent="activeSection = 'decks'"
-                    :class="{ 'bg-purple-900/30 text-white': activeSection === 'decks' }" class="mobile-nav-link">
+                </x-atoms.mobile-nav-link>
+
+                <x-atoms.mobile-nav-link route="decks.index" section="decks">
                     DECKS
-                </a>
-                <a href="#" @click.prevent="activeSection = 'meta'"
-                    :class="{ 'bg-purple-900/30 text-white': activeSection === 'meta' }" class="mobile-nav-link">
-                    META
-                </a>
-                <a href="#" @click.prevent="activeSection = 'community'"
-                    :class="{ 'bg-purple-900/30 text-white': activeSection === 'community' }"
-                    class="mobile-nav-link">
+                </x-atoms.mobile-nav-link>
+
+                <x-atoms.mobile-nav-link route="decks.create" section="meta">
+                    DECK BUILDER
+                </x-atoms.mobile-nav-link>
+
+                <x-molecules.coming-soon-link section="community" title="Community Coming Soon!"
+                    description="Join discussions, share decks, and connect with other players." icon="construction"
+                    mobile="true">
                     COMMUNITY
-                </a>
+                </x-molecules.coming-soon-link>
 
                 @auth
-                    <a href="{{ route('users.profile', Auth::user()->slug) }}" wire:navigate class="mobile-nav-link">
+                    <x-atoms.mobile-nav-user-link route="users.profile" :params="['slug' => Auth::user()->slug]">
                         My Profile
-                    </a>
-                    <a href="{{ route('users.profile', Auth::user()->slug) }}" wire:navigate class="mobile-nav-link">
+                    </x-atoms.mobile-nav-user-link>
+
+                    <x-atoms.mobile-nav-user-link route="users.profile" :params="['slug' => Auth::user()->slug]">
                         My Collection
-                    </a>
-                    <a href="{{ route('users.profile', Auth::user()->slug) }}" wire:navigate class="mobile-nav-link">
+                    </x-atoms.mobile-nav-user-link>
+
+                    <x-atoms.mobile-nav-user-link route="users.profile" :params="['slug' => Auth::user()->slug]">
                         My Wishlists
-                    </a>
-                    <a href="{{ route('users.settings') }}" wire:navigate class="mobile-nav-link">
+                    </x-atoms.mobile-nav-user-link>
+
+                    <x-atoms.mobile-nav-user-link route="users.settings">
                         Settings
-                    </a>
+                    </x-atoms.mobile-nav-user-link>
+
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button type="submit" class="w-full text-left mobile-nav-link">
+                        <button type="submit"
+                            class="block w-full px-3 py-2 text-sm font-medium text-left text-purple-300 rounded-md hover:bg-gray-800 hover:text-white">
                             Log Out
                         </button>
                     </form>

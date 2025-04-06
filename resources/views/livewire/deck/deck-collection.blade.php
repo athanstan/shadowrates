@@ -8,7 +8,7 @@
             <h1 class="mb-2 text-3xl font-bold text-white">Public Decks</h1>
             <p class="text-purple-300">Check out what other players have built</p>
         </div>
-        <a href="{{ route('decks.create') }}" class="mt-4 md:mt-0">
+        <a href="{{ route('decks.create') }}" wire:navigate class="mt-4 md:mt-0">
             <x-atoms.action-button>Create New Deck</x-atoms.action-button>
         </a>
     </div>

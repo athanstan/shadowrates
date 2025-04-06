@@ -27,7 +27,7 @@ use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
 
 // Google Sign-In Routes
 Route::prefix('auth/google')->name('auth.google.')->group(function () {
