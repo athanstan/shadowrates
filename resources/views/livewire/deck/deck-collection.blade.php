@@ -14,62 +14,28 @@
     </div>
 
     @if ($decks->isEmpty())
-        <x-organisms.container.neo-brutal>
+        <x-atoms.neo-brutal-panel>
             <div class="p-8 text-center">
-                <p class="mb-6 text-xl text-purple-300">You haven't created any decks yet.</p>
+                <p class="mb-6 text-xl text-purple-300">No decks have been created yet.</p>
                 <a href="{{ route('decks.create') }}">
                     <x-atoms.action-button size="lg">Create Your First Deck</x-atoms.action-button>
                 </a>
             </div>
-        </x-organisms.container.neo-brutal>
+        </x-atoms.neo-brutal-panel>
     @else
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            @foreach ($decks as $deck)
-                <x-organisms.container.neo-brutal>
-                    <div class="p-6">
-                        <h2 class="mb-2 text-xl font-bold text-purple-100">{{ $deck->name }}</h2>
-                        <div class="flex flex-wrap items-center gap-2 mb-4">
-                            @if ($deck->craft)
-                                <span class="px-2 py-1 text-xs text-purple-100 rounded-full bg-purple-700/70">
-                                    {{ $deck->craft->name }}
-                                </span>
-                            @endif
-                            <span class="px-2 py-1 text-xs text-blue-100 rounded-full bg-blue-700/70">
-                                @if ($deck->format === 1)
-                                    Rotation
-                                @elseif ($deck->format === 2)
-                                    Unlimited
-                                @else
-                                    Custom
-                                @endif
-                            </span>
-                            <span
-                                class="px-2 py-1 text-xs rounded-full {{ $deck->is_public ? 'bg-green-700/70 text-green-100' : 'bg-red-700/70 text-red-100' }}">
-                                {{ $deck->is_public ? 'Public' : 'Private' }}
-                            </span>
-                            <span class="px-2 py-1 text-xs text-indigo-100 rounded-full bg-indigo-700/70">
-                                {{ $deck->cards->sum('pivot.quantity') ?? 0 }} cards
-                            </span>
-                        </div>
+        @foreach ($decksByUser as $username => $userDecks)
+            <div class="mt-16 mb-16">
+                <x-molecules.section-heading title="{{ $username }}'s Decks"
+                    subtitle="See more details about each deck" />
 
-                        @if ($deck->description)
-                            <p class="mb-4 text-sm text-purple-400">{{ Str::limit($deck->description, 100) }}</p>
-                        @endif
-
-                        <div class="flex justify-between mt-6">
-                            <a href="{{ route('decks.show', $deck->slug) }}"
-                                class="text-purple-300 transition hover:text-white" wire:navigate>
-                                View Deck
-                            </a>
-                            <a href="{{ route('decks.edit', $deck) }}"
-                                class="text-purple-300 transition hover:text-white">
-                                Edit
-                            </a>
-                        </div>
-                    </div>
-                </x-organisms.container.neo-brutal>
-            @endforeach
-        </div>
+                <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    @foreach ($userDecks as $deck)
+                        <x-cards.leader :leader="$deck->getLeaderCard()" :craft="$deck->getLeaderCard()->craft->name ?? 'Unknown'" :title="$deck->name" :description="$deck->description"
+                            :count="$deck->cards_count" :deckUrl="route('decks.show', $deck->slug)" />
+                    @endforeach
+                </div>
+            </div>
+        @endforeach
 
         <div class="mt-8">
             {{ $decks->links() }}

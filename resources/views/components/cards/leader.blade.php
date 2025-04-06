@@ -5,10 +5,6 @@
         <img src="{{ $leader?->getImage() }}"
             class="object-cover w-full transition duration-700 ease-out h-52 md:h-full group-hover:scale-105"
             alt="{{ $leader->name }}" />
-        <div
-            class="absolute bottom-0 right-0 px-2 py-1 m-2 text-xs font-bold text-white rounded-md bg-black/70 backdrop-filter backdrop-blur-sm">
-            LEADER
-        </div>
     </div>
     <!-- body -->
     <div class="flex flex-col justify-center col-span-5 p-6 backdrop-blur-sm bg-white/5 dark:bg-black/5">

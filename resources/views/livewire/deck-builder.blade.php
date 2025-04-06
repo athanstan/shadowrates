@@ -1,61 +1,62 @@
 <div x-data='deckBuilder'>
     <div class="container py-6 mx-auto">
         <div class="flex items-center justify-between mb-6">
-            <div class="flex flex-col items-start" x-data="{ showDeckNameInput: false, showDeckDescInput: false }">
-                <div class="flex items-center">
-                    <h1 class="text-3xl font-bold text-purple-100" x-text="$wire.deckName"></h1>
-                    <button @click="showDeckNameInput = true" x-show="!showDeckNameInput"
-                        class="p-1 ml-2 text-purple-300 transition-colors rounded-full hover:bg-purple-900/50 hover:text-purple-100">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                        </svg>
-                    </button>
-                </div>
-                <div class="mt-2" x-show="showDeckNameInput">
-                    <div class="flex items-center">
-                        <input type="text" wire:model="deckName"
-                            class="px-3 py-1 text-white bg-transparent border-b border-purple-500 focus:border-purple-300 focus:outline-none"
-                            placeholder="Deck Name" @blur="showDeckNameInput = false">
-                        <button @click="showDeckNameInput = false"
-                            class="p-1 ml-2 text-purple-300 transition-colors rounded-full hover:bg-purple-900/50 hover:text-purple-100">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M5 13l4 4L19 7" />
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-                <div class="flex items-center mt-1">
-                    <p class="text-sm text-purple-300" x-text="$wire.deckDescription || 'No description'"></p>
-                    <button @click="showDeckDescInput = true" x-show="!showDeckDescInput"
-                        class="p-1 ml-2 text-purple-300 transition-colors rounded-full hover:bg-purple-900/50 hover:text-purple-100">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                        </svg>
-                    </button>
-                </div>
-                <div class="mt-2" x-show="showDeckDescInput">
-                    <div class="flex items-center">
-                        <input type="text" wire:model="deckDescription"
-                            class="px-3 py-1 text-white bg-transparent border-b border-purple-500 focus:border-purple-300 focus:outline-none"
-                            placeholder="Deck Description" @blur="showDeckDescInput = false">
-                        <button @click="showDeckDescInput = false"
-                            class="p-1 ml-2 text-purple-300 transition-colors rounded-full hover:bg-purple-900/50 hover:text-purple-100">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M5 13l4 4L19 7" />
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
             @auth
+                <div class="flex flex-col items-start" x-data="{ showDeckNameInput: false, showDeckDescInput: false }">
+                    <div class="flex items-center">
+                        <h1 class="text-3xl font-bold text-purple-100" x-text="$wire.deckName"></h1>
+                        <button @click="showDeckNameInput = true" x-show="!showDeckNameInput"
+                            class="p-1 ml-2 text-purple-300 transition-colors rounded-full hover:bg-purple-900/50 hover:text-purple-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="mt-2" x-show="showDeckNameInput">
+                        <div class="flex items-center">
+                            <input type="text" wire:model="deckName"
+                                class="px-3 py-1 text-white bg-transparent border-b border-purple-500 focus:border-purple-300 focus:outline-none"
+                                placeholder="Deck Name" @blur="showDeckNameInput = false">
+                            <button @click="showDeckNameInput = false"
+                                class="p-1 ml-2 text-purple-300 transition-colors rounded-full hover:bg-purple-900/50 hover:text-purple-100">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex items-center mt-1">
+                        <p class="text-sm text-purple-300" x-text="$wire.deckDescription || 'No description'"></p>
+                        <button @click="showDeckDescInput = true" x-show="!showDeckDescInput"
+                            class="p-1 ml-2 text-purple-300 transition-colors rounded-full hover:bg-purple-900/50 hover:text-purple-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="mt-2" x-show="showDeckDescInput">
+                        <div class="flex items-center">
+                            <input type="text" wire:model="deckDescription"
+                                class="px-3 py-1 text-white bg-transparent border-b border-purple-500 focus:border-purple-300 focus:outline-none"
+                                placeholder="Deck Description" @blur="showDeckDescInput = false">
+                            <button @click="showDeckDescInput = false"
+                                class="p-1 ml-2 text-purple-300 transition-colors rounded-full hover:bg-purple-900/50 hover:text-purple-100">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="flex-col space-y-4">
                     <div class="flex items-center space-x-3">
                         <a href="{{ route('decks.index') }}" wire:navigate
@@ -72,10 +73,12 @@
             @endauth
         </div>
 
-        <!-- Alert Components -->
-        <x-atoms.success-alert position="top-center" />
-        <x-atoms.error-alert position="top-center" />
+        @auth
+            <!-- Alert Components -->
+            <x-atoms.success-alert position="top-center" />
+            <x-atoms.error-alert position="top-center" />
 
+        @endauth
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
             <!-- Cards Collection Panel - Left -->
             <div class="space-y-4 lg:col-span-1">
@@ -276,62 +279,64 @@
                                         </svg>
                                     </div>
                                     <div class="flex items-center space-x-4">
-                                        <div class="flex items-center space-x-2">
-                                            <span class="text-sm font-medium text-purple-300">Public Deck</span>
-                                            <x-atoms.toggle-input wire:model='isPublic' id="deckPublic" />
-                                        </div>
-                                        <!-- Deck Actions Dropdown -->
-                                        <div class="relative">
-                                            <button @click="showActions = !showActions"
-                                                class="p-1 text-purple-300 transition-colors rounded-full hover:bg-purple-900/50 hover:text-purple-100">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"
-                                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        stroke-width="2"
-                                                        d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-                                                </svg>
-                                            </button>
-                                            <div x-show="showActions" @click.away="showActions = false"
-                                                class="absolute right-0 z-50 w-48 mt-2 overflow-hidden bg-gray-800 border border-purple-900 rounded-md shadow-lg">
-                                                <div class="py-1">
-                                                    <button @click="$dispatch('open-wishlist-modal')"
-                                                        class="flex items-center w-full px-4 py-2 text-sm text-left text-purple-200 hover:bg-purple-900/50">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2"
-                                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                                                        </svg>
-                                                        Create Wishlist for this Deck
-                                                    </button>
-                                                    <button wire:click="copyDeck"
-                                                        class="flex items-center w-full px-4 py-2 text-sm text-left text-purple-200 hover:bg-purple-900/50">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2"
-                                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                                                        </svg>
-                                                        Copy this Deck
-                                                    </button>
-                                                </div>
-                                                <div class="py-1 border-t border-purple-900/50">
-                                                    <div class="px-4 py-1 text-xs font-semibold text-red-400">Danger
-                                                        Zone</div>
-                                                    <button wire:click="deleteDeck"
-                                                        wire:confirm="Are you sure you want to delete this deck?"
-                                                        class="flex items-center w-full px-4 py-2 text-sm text-left text-red-400 hover:bg-red-900/30">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2"
-                                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                        </svg>
-                                                        Delete Deck
-                                                    </button>
+                                        @auth
+                                            <div class="flex items-center space-x-2">
+                                                <span class="text-sm font-medium text-purple-300">Public Deck</span>
+                                                <x-atoms.toggle-input wire:model='isPublic' id="deckPublic" />
+                                            </div>
+                                            <!-- Deck Actions Dropdown -->
+                                            <div class="relative">
+                                                <button @click="showActions = !showActions"
+                                                    class="p-1 text-purple-300 transition-colors rounded-full hover:bg-purple-900/50 hover:text-purple-100">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"
+                                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                                                    </svg>
+                                                </button>
+                                                <div x-show="showActions" @click.away="showActions = false"
+                                                    class="absolute right-0 z-50 w-48 mt-2 overflow-hidden bg-gray-800 border border-purple-900 rounded-md shadow-lg">
+                                                    <div class="py-1">
+                                                        <button @click="$dispatch('open-wishlist-modal')"
+                                                            class="flex items-center w-full px-4 py-2 text-sm text-left text-purple-200 hover:bg-purple-900/50">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2"
+                                                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                                            </svg>
+                                                            Create Wishlist for this Deck
+                                                        </button>
+                                                        <button wire:click="copyDeck"
+                                                            class="flex items-center w-full px-4 py-2 text-sm text-left text-purple-200 hover:bg-purple-900/50">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2"
+                                                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                                            </svg>
+                                                            Copy this Deck
+                                                        </button>
+                                                    </div>
+                                                    <div class="py-1 border-t border-purple-900/50">
+                                                        <div class="px-4 py-1 text-xs font-semibold text-red-400">Danger
+                                                            Zone</div>
+                                                        <button wire:click="deleteDeck"
+                                                            wire:confirm="Are you sure you want to delete this deck?"
+                                                            class="flex items-center w-full px-4 py-2 text-sm text-left text-red-400 hover:bg-red-900/30">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2"
+                                                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                            </svg>
+                                                            Delete Deck
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        @endauth
                                     </div>
                                 </div>
 
@@ -568,141 +573,143 @@
             </div>
         </div>
 
-        <!-- Wishlist Creation Modal -->
-        <div x-data="{ showWishlistModal: false }" x-on:open-wishlist-modal.window="showWishlistModal = true">
-            <div x-show="showWishlistModal" x-cloak x-trap.noscroll.inert="showWishlistModal"
-                class="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black/80"
-                @click.self="showWishlistModal = false" @keydown.escape.window="showWishlistModal = false"
-                x-transition:enter="transition ease-out duration-300"
-                x-transition:enter-start="opacity-0 transform scale-95"
-                x-transition:enter-end="opacity-100 transform scale-100"
-                x-transition:leave="transition ease-in duration-200"
-                x-transition:leave-start="opacity-100 transform scale-100"
-                x-transition:leave-end="opacity-0 transform scale-95">
-                <div
-                    class="w-full max-w-5xl p-6 mx-4 bg-gray-800 border rounded-lg shadow-xl border-purple-900/50 max-h-[90vh] overflow-y-auto">
-                    <div class="flex items-center justify-between mb-6">
-                        <h2 class="text-2xl font-bold text-purple-100">Create Wishlist from Deck</h2>
-                        <button @click="showWishlistModal = false" class="text-purple-300 hover:text-purple-100">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
-                    </div>
-
-                    <div class="grid grid-cols-1 gap-6 mb-6 md:grid-cols-2">
-                        <div>
-                            <div class="mb-4">
-                                <label for="wishlistTitle"
-                                    class="block mb-2 text-sm font-medium text-purple-300">Wishlist Title</label>
-                                <x-atoms.text-input id="wishlistTitle" x-model="$wire.wishlist.title" class="w-full"
-                                    placeholder="Enter wishlist title" />
-                            </div>
-
-                            <div class="flex items-center space-x-2">
-                                <span class="text-sm font-medium text-purple-300">Public Wishlist</span>
-                                <x-atoms.toggle-input x-model="$wire.wishlist.is_public" id="wishlistPublic" />
-                            </div>
-
+        @auth
+            <!-- Wishlist Creation Modal -->
+            <div x-data="{ showWishlistModal: false }" x-on:open-wishlist-modal.window="showWishlistModal = true">
+                <div x-show="showWishlistModal" x-cloak x-trap.noscroll.inert="showWishlistModal"
+                    class="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black/80"
+                    @click.self="showWishlistModal = false" @keydown.escape.window="showWishlistModal = false"
+                    x-transition:enter="transition ease-out duration-300"
+                    x-transition:enter-start="opacity-0 transform scale-95"
+                    x-transition:enter-end="opacity-100 transform scale-100"
+                    x-transition:leave="transition ease-in duration-200"
+                    x-transition:leave-start="opacity-100 transform scale-100"
+                    x-transition:leave-end="opacity-0 transform scale-95">
+                    <div
+                        class="w-full max-w-5xl p-6 mx-4 bg-gray-800 border rounded-lg shadow-xl border-purple-900/50 max-h-[90vh] overflow-y-auto">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-2xl font-bold text-purple-100">Create Wishlist from Deck</h2>
+                            <button @click="showWishlistModal = false" class="text-purple-300 hover:text-purple-100">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
                         </div>
 
-                        <div>
-                            <h3 class="mb-3 text-lg font-medium text-purple-200">Some cards are already in your
-                                wishlist</h3>
-
-                            <div class="mt-6 text-sm text-purple-300">
-                                <p>This will create a wishlist containing only the cards you don't currently own, based
-                                    on your collection.</p>
-                                <p class="mt-2">Each deck can have only one wishlist. If you want to share your
-                                    wishlist with others, please ensure it is set to public.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Detailed Cards View (collapsible) -->
-                    <div x-data="{ showDetailedCards: false }" class="mb-6">
-                        <button @click="showDetailedCards = !showDetailedCards"
-                            class="flex items-center space-x-2 text-sm font-medium text-purple-300 hover:text-purple-100">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform"
-                                :class="showDetailedCards ? 'rotate-90' : ''" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 5l7 7-7 7" />
-                            </svg>
-                            <span>Show Detailed Card List</span>
-                        </button>
-
-                        <div x-show="showDetailedCards" x-transition class="mt-4 overflow-y-auto">
-                            <!-- Main Deck Cards -->
-                            <div class="mb-4"
-                                x-show="Object.values($wire.mainDeck).some(c => (c.quantity - (c.owned || 0)) > 0)">
-                                <h4 class="mb-2 text-sm font-medium text-purple-300">Main Deck</h4>
-                                <div
-                                    class="grid grid-cols-2 gap-2 p-2 overflow-y-auto rounded-md sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 max-h-64 bg-gray-900/30">
-                                    <template x-for="card in Object.values($wire.mainDeck)" :key="card.id">
-                                        <template x-if="(card.quantity - (card.owned || 0)) > 0">
-                                            <div class="flex flex-col items-center">
-                                                <div class="relative w-16 h-20">
-                                                    <img :src="card.image" :alt="card.name"
-                                                        class="object-cover w-full h-full rounded">
-                                                    <div
-                                                        class="absolute bottom-0 right-0 flex items-center justify-center px-2 text-xs font-bold text-white bg-black/70 rounded-xl">
-                                                        <span
-                                                            x-text="'x' + (card.quantity - (card.owned || 0))"></span>
-                                                    </div>
-                                                </div>
-                                                <div class="w-full mt-1 text-xs text-center text-purple-200 truncate"
-                                                    :title="card.name" x-text="card.name"></div>
-                                            </div>
-                                        </template>
-                                    </template>
+                        <div class="grid grid-cols-1 gap-6 mb-6 md:grid-cols-2">
+                            <div>
+                                <div class="mb-4">
+                                    <label for="wishlistTitle"
+                                        class="block mb-2 text-sm font-medium text-purple-300">Wishlist Title</label>
+                                    <x-atoms.text-input id="wishlistTitle" x-model="$wire.wishlist.title" class="w-full"
+                                        placeholder="Enter wishlist title" />
                                 </div>
+
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-sm font-medium text-purple-300">Public Wishlist</span>
+                                    <x-atoms.toggle-input x-model="$wire.wishlist.is_public" id="wishlistPublic" />
+                                </div>
+
                             </div>
 
-                            <!-- Evolution Deck Cards -->
-                            <div
-                                x-show="Object.values($wire.evolutionDeck).some(c => (c.quantity - (c.owned || 0)) > 0)">
-                                <h4 class="mb-2 text-sm font-medium text-purple-300">Evolution Deck</h4>
-                                <div
-                                    class="grid grid-cols-2 gap-2 p-2 overflow-y-auto rounded-md sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 max-h-64 bg-gray-900/30">
-                                    <template x-for="card in Object.values($wire.evolutionDeck)"
-                                        :key="card.id">
-                                        <template x-if="(card.quantity - (card.owned || 0)) > 0">
-                                            <div class="flex flex-col items-center">
-                                                <div class="relative w-16 h-20">
-                                                    <img :src="card.image" :alt="card.name"
-                                                        class="object-cover w-full h-full rounded">
-                                                    <div
-                                                        class="absolute bottom-0 right-0 flex items-center justify-center px-2 text-xs font-bold text-white bg-black/70 rounded-xl">
-                                                        <span
-                                                            x-text="'x' + (card.quantity - (card.owned || 0))"></span>
-                                                    </div>
-                                                </div>
-                                                <div class="w-full mt-1 text-xs text-center text-purple-200 truncate"
-                                                    :title="card.name" x-text="card.name"></div>
-                                            </div>
-                                        </template>
-                                    </template>
+                            <div>
+                                <h3 class="mb-3 text-lg font-medium text-purple-200">Some cards are already in your
+                                    wishlist</h3>
+
+                                <div class="mt-6 text-sm text-purple-300">
+                                    <p>This will create a wishlist containing only the cards you don't currently own, based
+                                        on your collection.</p>
+                                    <p class="mt-2">Each deck can have only one wishlist. If you want to share your
+                                        wishlist with others, please ensure it is set to public.</p>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="flex justify-end pt-4 space-x-3 border-t border-purple-900/30">
-                        <button @click="showWishlistModal = false"
-                            class="px-4 py-2 text-sm font-medium text-purple-300 transition-colors border border-purple-700 rounded-md hover:bg-gray-700">
-                            Cancel
-                        </button>
-                        <button @click="$wire.saveCardsToWishlist(); showWishlistModal = false"
-                            class="px-4 py-2 text-sm font-medium text-white transition-colors bg-purple-700 rounded-md hover:bg-purple-600">
-                            Save Wishlist
-                        </button>
+                        <!-- Detailed Cards View (collapsible) -->
+                        <div x-data="{ showDetailedCards: false }" class="mb-6">
+                            <button @click="showDetailedCards = !showDetailedCards"
+                                class="flex items-center space-x-2 text-sm font-medium text-purple-300 hover:text-purple-100">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform"
+                                    :class="showDetailedCards ? 'rotate-90' : ''" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5l7 7-7 7" />
+                                </svg>
+                                <span>Show Detailed Card List</span>
+                            </button>
+
+                            <div x-show="showDetailedCards" x-transition class="mt-4 overflow-y-auto">
+                                <!-- Main Deck Cards -->
+                                <div class="mb-4"
+                                    x-show="Object.values($wire.mainDeck).some(c => (c.quantity - (c.owned || 0)) > 0)">
+                                    <h4 class="mb-2 text-sm font-medium text-purple-300">Main Deck</h4>
+                                    <div
+                                        class="grid grid-cols-2 gap-2 p-2 overflow-y-auto rounded-md sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 max-h-64 bg-gray-900/30">
+                                        <template x-for="card in Object.values($wire.mainDeck)" :key="card.id">
+                                            <template x-if="(card.quantity - (card.owned || 0)) > 0">
+                                                <div class="flex flex-col items-center">
+                                                    <div class="relative w-16 h-20">
+                                                        <img :src="card.image" :alt="card.name"
+                                                            class="object-cover w-full h-full rounded">
+                                                        <div
+                                                            class="absolute bottom-0 right-0 flex items-center justify-center px-2 text-xs font-bold text-white bg-black/70 rounded-xl">
+                                                            <span
+                                                                x-text="'x' + (card.quantity - (card.owned || 0))"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="w-full mt-1 text-xs text-center text-purple-200 truncate"
+                                                        :title="card.name" x-text="card.name"></div>
+                                                </div>
+                                            </template>
+                                        </template>
+                                    </div>
+                                </div>
+
+                                <!-- Evolution Deck Cards -->
+                                <div
+                                    x-show="Object.values($wire.evolutionDeck).some(c => (c.quantity - (c.owned || 0)) > 0)">
+                                    <h4 class="mb-2 text-sm font-medium text-purple-300">Evolution Deck</h4>
+                                    <div
+                                        class="grid grid-cols-2 gap-2 p-2 overflow-y-auto rounded-md sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 max-h-64 bg-gray-900/30">
+                                        <template x-for="card in Object.values($wire.evolutionDeck)"
+                                            :key="card.id">
+                                            <template x-if="(card.quantity - (card.owned || 0)) > 0">
+                                                <div class="flex flex-col items-center">
+                                                    <div class="relative w-16 h-20">
+                                                        <img :src="card.image" :alt="card.name"
+                                                            class="object-cover w-full h-full rounded">
+                                                        <div
+                                                            class="absolute bottom-0 right-0 flex items-center justify-center px-2 text-xs font-bold text-white bg-black/70 rounded-xl">
+                                                            <span
+                                                                x-text="'x' + (card.quantity - (card.owned || 0))"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="w-full mt-1 text-xs text-center text-purple-200 truncate"
+                                                        :title="card.name" x-text="card.name"></div>
+                                                </div>
+                                            </template>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end pt-4 space-x-3 border-t border-purple-900/30">
+                            <button @click="showWishlistModal = false"
+                                class="px-4 py-2 text-sm font-medium text-purple-300 transition-colors border border-purple-700 rounded-md hover:bg-gray-700">
+                                Cancel
+                            </button>
+                            <button @click="$wire.saveCardsToWishlist(); showWishlistModal = false"
+                                class="px-4 py-2 text-sm font-medium text-white transition-colors bg-purple-700 rounded-md hover:bg-purple-600">
+                                Save Wishlist
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @endauth
 
         @script
             <script>
