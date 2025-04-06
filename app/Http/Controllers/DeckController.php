@@ -44,7 +44,7 @@ class DeckController extends Controller
         $deck->user_id = Auth::id();
         $deck->save();
 
-        return redirect()->route('decks.show', $deck)
+        return redirect()->route('decks.show', $deck->slug)
             ->with('success', 'Deck created successfully!');
     }
 
@@ -95,7 +95,7 @@ class DeckController extends Controller
 
         $deck->update($validated);
 
-        return redirect()->route('decks.show', $deck)
+        return redirect()->route('decks.show', $deck->slug)
             ->with('success', 'Deck updated successfully!');
     }
 

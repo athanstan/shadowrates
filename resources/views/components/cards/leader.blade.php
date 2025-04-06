@@ -2,7 +2,7 @@
     class="grid max-w-2xl grid-cols-1 overflow-hidden transition-shadow duration-300 border shadow-lg rounded-2xl group rounded-radius md:grid-cols-8 border-outline backdrop-blur-md bg-surface-alt/80 text-on-surface dark:border-outline-dark dark:bg-surface-dark-alt/80 dark:text-on-surface-dark hover:shadow-xl backdrop-filter backdrop-blur-sm bg-white/10 dark:bg-black/10">
     <!-- image -->
     <div class="relative col-span-3 overflow-hidden">
-        <img src="{{ $leader->getImage() }}"
+        <img src="{{ $leader?->getImage() }}"
             class="object-cover w-full transition duration-700 ease-out h-52 md:h-full group-hover:scale-105"
             alt="{{ $leader->name }}" />
         <div

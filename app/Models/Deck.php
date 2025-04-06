@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -118,5 +120,11 @@ class Deck extends Model
     public function getCardCountAttribute(): int
     {
         return $this->cards()->sum('quantity');
+    }
+
+    #[Scope]
+    public function withLeader($query): Builder
+    {
+        return $query->whereRelation('cards', 'main_type', '=', 'leader');
     }
 }

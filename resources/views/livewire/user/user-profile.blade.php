@@ -95,10 +95,8 @@
 
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
             @foreach ($user->decks as $deck)
-                @if ($deck->getLeaderCard() !== null)
-                    <x-cards.leader :leader="$deck->getLeaderCard()" :craft="$deck->getLeaderCard()->craft->name" :title="$deck->name" :description="$deck->description"
-                        :count="$deck->cards_count" :deckUrl="route('decks.show', $deck)" />
-                @endif
+                <x-cards.leader :leader="$deck->getLeaderCard()" :craft="$deck->getLeaderCard()->craft->name" :title="$deck->name" :description="$deck->description"
+                    :count="$deck->cards_count" :deckUrl="route('decks.show', $deck->slug)" />
             @endforeach
         </div>
     </div>

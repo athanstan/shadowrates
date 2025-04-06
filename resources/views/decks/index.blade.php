@@ -41,7 +41,8 @@
                                 <p class="text-purple-400 text-sm mb-4">{{ Str::limit($deck->description, 100) }}</p>
                             @endif
                             <div class="flex justify-between mt-4">
-                                <a href="{{ route('decks.show', $deck) }}" class="text-purple-300 hover:text-white">
+                                <a href="{{ route('decks.show', $deck->slug) }}"
+                                    class="text-purple-300 hover:text-white">
                                     View Deck
                                 </a>
                                 <a href="{{ route('decks.edit', $deck) }}" class="text-purple-300 hover:text-white">

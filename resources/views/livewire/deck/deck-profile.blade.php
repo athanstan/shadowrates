@@ -15,7 +15,7 @@
                     class="grid grid-cols-1 overflow-hidden duration-300 rounded-2xl group md:grid-cols-8 text-on-surface dark:text-on-surface-dark">
                     <!-- image -->
                     <div class="relative col-span-2 overflow-hidden">
-                        <img src="{{ $leaderCard->getImage() }}"
+                        <img src="{{ $leaderCard?->getImage() }}"
                             class="object-cover w-full transition duration-700 ease-out h-52 md:h-full group-hover:scale-105"
                             alt="{{ $leaderCard->name }}" />
                         <div class="absolute bottom-0 right-0 px-2 py-1 m-2 text-xs font-bold text-white rounded-md">
