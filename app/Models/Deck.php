@@ -122,6 +122,14 @@ class Deck extends Model
         return $this->cards()->sum('quantity');
     }
 
+    /**
+     * Get the wishlists created from this deck.
+     */
+    public function wishlists(): HasMany
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+
     #[Scope]
     public function withLeader($query): Builder
     {

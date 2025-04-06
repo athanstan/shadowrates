@@ -242,20 +242,6 @@
                     </div>
 
                     @if ($cards->hasMorePages())
-                        <div wire:loading wire:target="loadMore" class="flex justify-center mt-4">
-                            <div class="flex items-center text-purple-300 animate-pulse">
-                                <svg class="w-5 h-5 mr-2 animate-spin" xmlns="http://www.w3.org/2000/svg"
-                                    fill="none" viewBox="0 0 24 24">
-                                    <circle class="opacity-25" cx="12" cy="12" r="10"
-                                        stroke="currentColor" stroke-width="4"></circle>
-                                    <path class="opacity-75" fill="currentColor"
-                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                    </path>
-                                </svg>
-                                Loading more cards...
-                            </div>
-                        </div>
-
                         <div wire:loading.remove wire:target="loadMore" class="flex justify-center mt-4">
                             <p class="text-sm text-purple-300 cursor-pointer" wire:click.prevent="loadMore">
                                 Scroll to load more cards
@@ -308,7 +294,7 @@
                                             <div x-show="showActions" @click.away="showActions = false"
                                                 class="absolute right-0 z-50 w-48 mt-2 overflow-hidden bg-gray-800 border border-purple-900 rounded-md shadow-lg">
                                                 <div class="py-1">
-                                                    <button wire:click="createWishlist"
+                                                    <button @click="$dispatch('open-wishlist-modal')"
                                                         class="flex items-center w-full px-4 py-2 text-sm text-left text-purple-200 hover:bg-purple-900/50">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2"
                                                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -521,7 +507,8 @@
                                             <div>
                                                 <img :src="slot.card.image" :alt="slot.card.name"
                                                     @click="removeCardFromMainDeck(slot.card.id)"
-                                                    class="absolute inset-0 object-cover w-full h-full">
+                                                    class="absolute inset-0 object-cover w-full h-full"
+                                                    :class="{ 'filter grayscale': !slot.isOwned }">
                                             </div>
                                         </template>
                                         <template x-if="!slot.card">
@@ -558,7 +545,8 @@
                                         <div>
                                             <img :src="slot.card.image" :alt="slot.card.name"
                                                 @click="removeCardFromEvoDeck(slot.card.id)"
-                                                class="absolute inset-0 object-cover w-full h-full">
+                                                class="absolute inset-0 object-cover w-full h-full"
+                                                :class="{ 'filter grayscale': !slot.isOwned }">
                                         </div>
                                     </template>
                                     <template x-if="!slot.card">
@@ -580,6 +568,96 @@
             </div>
         </div>
 
+        <!-- Wishlist Creation Modal -->
+        <div x-data="{ showWishlistModal: false, wishlistTitle: $wire.deckName + ' Wishlist' }" x-on:open-wishlist-modal.window="showWishlistModal = true">
+            <div x-show="showWishlistModal" x-cloak
+                class="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
+                @click.self="showWishlistModal = false" @keydown.escape.window="showWishlistModal = false"
+                x-transition>
+                <div class="w-full max-w-5xl p-6 mx-4 bg-gray-800 rounded-lg shadow-xl">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-2xl font-bold text-purple-100">Create Wishlist from Deck</h2>
+                        <button @click="showWishlistModal = false" class="text-purple-300 hover:text-purple-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="wishlistTitle" class="block mb-2 text-sm font-medium text-purple-300">Wishlist
+                            Title</label>
+                        <input type="text" id="wishlistTitle" x-model="wishlistTitle"
+                            class="w-full px-3 py-2 text-white border border-purple-700 rounded-md bg-gray-700/50 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            placeholder="Enter wishlist title">
+                    </div>
+
+                    <div class="mb-6">
+                        <h3 class="mb-3 text-lg font-medium text-purple-200">Cards to be added to wishlist:</h3>
+
+                        <!-- Main Deck Cards -->
+                        <div class="mb-4">
+                            <h4 class="mb-2 text-sm font-medium text-purple-300">Main Deck</h4>
+                            <div
+                                class="grid grid-cols-2 gap-2 p-2 overflow-y-auto rounded-md sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 max-h-64 bg-gray-900/30">
+                                <template x-for="card in Object.values($wire.mainDeck)" :key="card.id">
+                                    <template x-if="card.quantity - card.owned > 0">
+                                        <div class="flex flex-col items-center">
+                                            <div class="relative w-16 h-20">
+                                                <img :src="card.image" :alt="card.name"
+                                                    class="object-cover w-full h-full rounded">
+                                                <div
+                                                    class="absolute bottom-0 right-0 flex items-center justify-center px-2 text-xs font-bold text-white bg-black/50 rounded-xl">
+                                                    <span x-text="'x' + (card.quantity - card.owned)"></span>
+                                                </div>
+                                            </div>
+                                            <div class="w-full mt-1 text-xs text-center text-purple-200 truncate"
+                                                :title="card.name" x-text="card.name"></div>
+                                        </div>
+                                    </template>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Evolution Deck Cards -->
+                        <div>
+                            <h4 class="mb-2 text-sm font-medium text-purple-300">Evolution Deck</h4>
+                            <div
+                                class="grid grid-cols-2 gap-2 p-2 overflow-y-auto rounded-md sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 max-h-64 bg-gray-900/30">
+                                <template x-for="card in Object.values($wire.evolutionDeck)" :key="card.id">
+                                    <div class="flex flex-col items-center">
+                                        <div class="relative w-16 h-20">
+                                            <img :src="card.image" :alt="card.name"
+                                                class="object-cover w-full h-full rounded">
+                                            <div
+                                                class="absolute bottom-0 right-0 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-purple-700 rounded-full">
+                                                <span x-text="card.quantity"></span>
+                                            </div>
+                                        </div>
+                                        <div class="w-full mt-1 text-xs text-center text-purple-200 truncate"
+                                            :title="card.name" x-text="card.name"></div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end space-x-3">
+                        <button @click="showWishlistModal = false"
+                            class="px-4 py-2 text-sm font-medium text-purple-300 transition-colors bg-gray-700 rounded-md hover:bg-gray-600">
+                            Cancel
+                        </button>
+                        <button @click="$wire.saveCardsToWishlist(wishlistTitle); showWishlistModal = false"
+                            class="px-4 py-2 text-sm font-medium text-white transition-colors bg-purple-700 rounded-md hover:bg-purple-600">
+                            Save Wishlist
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         @script
             <script>
                 Alpine.data('deckBuilder', () => ({
@@ -590,7 +668,6 @@
                         // Initialize from Livewire data if available
                         this.mainDeck = Object.keys($wire.mainDeck).length > 0 ? $wire.mainDeck : {};
                         this.evoDeck = Object.keys($wire.evolutionDeck).length > 0 ? $wire.evolutionDeck : {};
-                        console.log(this.mainDeck);
                     },
 
                     addCardToDeck(card) {
@@ -818,12 +895,23 @@
                             const deckCards = Object.values(this.mainDeck);
                             let slotCard = null;
                             let currentIndex = 0;
+                            let isOwned = false;
 
                             for (const card of deckCards) {
                                 // Calculate where this card ends
                                 const cardEndIndex = currentIndex + card.quantity - 1;
+                                const cardOwned = card.owned || 0;
+
                                 if (index >= currentIndex && index <= cardEndIndex) {
-                                    slotCard = card;
+                                    // Calculate if this specific instance of the card is owned
+                                    // If user owns X copies and there are Y copies in deck,
+                                    // the first X copies (up to Y) are considered owned
+                                    const positionInCardGroup = index - currentIndex;
+                                    isOwned = positionInCardGroup < cardOwned;
+
+                                    slotCard = {
+                                        ...card
+                                    };
                                     break;
                                 }
                                 currentIndex = cardEndIndex + 1;
@@ -831,7 +919,8 @@
 
                             return {
                                 card: slotCard,
-                                index: index
+                                index: index,
+                                isOwned: isOwned
                             };
                         });
                     },
@@ -843,11 +932,22 @@
                             const deckCards = Object.values(this.evoDeck);
                             let slotCard = null;
                             let currentIndex = 0;
+                            let isOwned = false;
 
                             for (const card of deckCards) {
                                 const cardEndIndex = currentIndex + card.quantity - 1;
+                                const cardOwned = card.owned || 0;
+
                                 if (index >= currentIndex && index <= cardEndIndex) {
-                                    slotCard = card;
+                                    // Calculate if this specific instance of the card is owned
+                                    // If user owns X copies and there are Y copies in deck,
+                                    // the first X copies (up to Y) are considered owned
+                                    const positionInCardGroup = index - currentIndex;
+                                    isOwned = positionInCardGroup < cardOwned;
+
+                                    slotCard = {
+                                        ...card
+                                    };
                                     break;
                                 }
                                 currentIndex = cardEndIndex + 1;
@@ -855,7 +955,8 @@
 
                             return {
                                 card: slotCard,
-                                index: index
+                                index: index,
+                                isOwned: isOwned
                             };
                         });
                     },

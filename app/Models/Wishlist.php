@@ -22,6 +22,7 @@ class Wishlist extends Model
         'slug',
         'user_id',
         'is_public',
+        'deck_id',
     ];
 
     /**
@@ -54,6 +55,14 @@ class Wishlist extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the deck associated with this wishlist, if any.
+     */
+    public function deck(): BelongsTo
+    {
+        return $this->belongsTo(Deck::class);
     }
 
     /**

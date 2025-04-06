@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Card;
 use App\Models\Deck;
+use App\Models\Wishlist;
 use App\Rules\Deck\LeaderRule;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
@@ -97,7 +98,11 @@ class DeckBuilder extends Component
             $this->deckDescription = $deck->description;
             $this->isPublic = $deck->is_public;
 
-            $cards = $deck->cards->loadMissing('cardType');
+            $cards = $deck
+                ->cards()
+                ->with('cardType')
+                ->with('collections', fn($query) => $query->where('user_id', Auth::id()))
+                ->get();
 
             foreach ($cards as $card) {
                 $values = [
@@ -108,6 +113,7 @@ class DeckBuilder extends Component
                     "card_type" => $card->cardType->name,
                     "sub_type" => $card->sub_type,
                     "quantity" => $card->pivot->quantity,
+                    "owned" => $card->collections->first()?->quantity ?? 0,
                     "image" => $card->getImage(),
                 ];
 
@@ -158,6 +164,58 @@ class DeckBuilder extends Component
             route('decks.edit', ['deck' => $this->deck->id]),
             navigate: true
         );
+    }
+
+    public function saveCardsToWishlist($wishlistTitle): void
+    {
+        // Validate title
+        if (empty($wishlistTitle)) {
+            $this->dispatch('show-error', message: 'Please provide a title for your wishlist');
+            return;
+        }
+
+        // Check if there are cards in the deck
+        if (empty($this->mainDeck) && empty($this->evolutionDeck)) {
+            $this->dispatch('show-error', message: 'No cards to add to wishlist');
+            return;
+        }
+
+        // DB transaction
+        DB::transaction(function () use ($wishlistTitle) {
+            // Find or create a wishlist for the user
+            $wishlist = Wishlist::firstOrCreate(
+                [
+                    'title' => $wishlistTitle,
+                    'user_id' => Auth::id(),
+                    'deck_id' => $this->deck->id ?? null,
+                ],
+                [
+                    'is_public' => false, // Default to private
+                ]
+            );
+
+            // Prepare cards from both decks
+            $wishlistCards = [];
+            foreach ($this->mainDeck as $card) {
+                $quantity = $card['quantity'] - $card['owned'];
+                if ($quantity > 0) {
+                    $wishlistCards[$card['id']] = ['quantity' => $quantity];
+                }
+            }
+
+            foreach ($this->evolutionDeck as $card) {
+                $quantity = $card['quantity'] - $card['owned'];
+                if ($quantity > 0) {
+                    $wishlistCards[$card['id']] = ['quantity' => $quantity];
+                }
+            }
+
+            // Sync the cards to the wishlist (this will overwrite existing cards)
+            $wishlist->cards()->sync($wishlistCards);
+        });
+
+        // dispatch a success message
+        $this->dispatch('show-success', message: 'Cards saved to wishlist!');
     }
 
     public function loadMore(): void
