@@ -569,13 +569,19 @@
         </div>
 
         <!-- Wishlist Creation Modal -->
-        <div x-data="{ showWishlistModal: false, wishlistTitle: $wire.deckName + ' Wishlist' }" x-on:open-wishlist-modal.window="showWishlistModal = true">
-            <div x-show="showWishlistModal" x-cloak
-                class="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
+        <div x-data="{ showWishlistModal: false }" x-on:open-wishlist-modal.window="showWishlistModal = true">
+            <div x-show="showWishlistModal" x-cloak x-trap.noscroll.inert="showWishlistModal"
+                class="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black/80"
                 @click.self="showWishlistModal = false" @keydown.escape.window="showWishlistModal = false"
-                x-transition>
-                <div class="w-full max-w-5xl p-6 mx-4 bg-gray-800 rounded-lg shadow-xl">
-                    <div class="flex items-center justify-between mb-4">
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 transform scale-95"
+                x-transition:enter-end="opacity-100 transform scale-100"
+                x-transition:leave="transition ease-in duration-200"
+                x-transition:leave-start="opacity-100 transform scale-100"
+                x-transition:leave-end="opacity-0 transform scale-95">
+                <div
+                    class="w-full max-w-5xl p-6 mx-4 bg-gray-800 border rounded-lg shadow-xl border-purple-900/50 max-h-[90vh] overflow-y-auto">
+                    <div class="flex items-center justify-between mb-6">
                         <h2 class="text-2xl font-bold text-purple-100">Create Wishlist from Deck</h2>
                         <button @click="showWishlistModal = false" class="text-purple-300 hover:text-purple-100">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
@@ -586,70 +592,110 @@
                         </button>
                     </div>
 
-                    <div class="mb-4">
-                        <label for="wishlistTitle" class="block mb-2 text-sm font-medium text-purple-300">Wishlist
-                            Title</label>
-                        <input type="text" id="wishlistTitle" x-model="wishlistTitle"
-                            class="w-full px-3 py-2 text-white border border-purple-700 rounded-md bg-gray-700/50 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            placeholder="Enter wishlist title">
-                    </div>
-
-                    <div class="mb-6">
-                        <h3 class="mb-3 text-lg font-medium text-purple-200">Cards to be added to wishlist:</h3>
-
-                        <!-- Main Deck Cards -->
-                        <div class="mb-4">
-                            <h4 class="mb-2 text-sm font-medium text-purple-300">Main Deck</h4>
-                            <div
-                                class="grid grid-cols-2 gap-2 p-2 overflow-y-auto rounded-md sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 max-h-64 bg-gray-900/30">
-                                <template x-for="card in Object.values($wire.mainDeck)" :key="card.id">
-                                    <template x-if="card.quantity - card.owned > 0">
-                                        <div class="flex flex-col items-center">
-                                            <div class="relative w-16 h-20">
-                                                <img :src="card.image" :alt="card.name"
-                                                    class="object-cover w-full h-full rounded">
-                                                <div
-                                                    class="absolute bottom-0 right-0 flex items-center justify-center px-2 text-xs font-bold text-white bg-black/50 rounded-xl">
-                                                    <span x-text="'x' + (card.quantity - card.owned)"></span>
-                                                </div>
-                                            </div>
-                                            <div class="w-full mt-1 text-xs text-center text-purple-200 truncate"
-                                                :title="card.name" x-text="card.name"></div>
-                                        </div>
-                                    </template>
-                                </template>
-                            </div>
-                        </div>
-
-                        <!-- Evolution Deck Cards -->
+                    <div class="grid grid-cols-1 gap-6 mb-6 md:grid-cols-2">
                         <div>
-                            <h4 class="mb-2 text-sm font-medium text-purple-300">Evolution Deck</h4>
-                            <div
-                                class="grid grid-cols-2 gap-2 p-2 overflow-y-auto rounded-md sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 max-h-64 bg-gray-900/30">
-                                <template x-for="card in Object.values($wire.evolutionDeck)" :key="card.id">
-                                    <div class="flex flex-col items-center">
-                                        <div class="relative w-16 h-20">
-                                            <img :src="card.image" :alt="card.name"
-                                                class="object-cover w-full h-full rounded">
-                                            <div
-                                                class="absolute bottom-0 right-0 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-purple-700 rounded-full">
-                                                <span x-text="card.quantity"></span>
-                                            </div>
-                                        </div>
-                                        <div class="w-full mt-1 text-xs text-center text-purple-200 truncate"
-                                            :title="card.name" x-text="card.name"></div>
-                                    </div>
-                                </template>
+                            <div class="mb-4">
+                                <label for="wishlistTitle"
+                                    class="block mb-2 text-sm font-medium text-purple-300">Wishlist Title</label>
+                                <x-atoms.text-input id="wishlistTitle" x-model="$wire.wishlist.title" class="w-full"
+                                    placeholder="Enter wishlist title" />
+                            </div>
+
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm font-medium text-purple-300">Public Wishlist</span>
+                                <x-atoms.toggle-input x-model="$wire.wishlist.is_public" id="wishlistPublic" />
+                            </div>
+
+                        </div>
+
+                        <div>
+                            <h3 class="mb-3 text-lg font-medium text-purple-200">Some cards are already in your
+                                wishlist</h3>
+
+                            <div class="mt-6 text-sm text-purple-300">
+                                <p>This will create a wishlist containing only the cards you don't currently own, based
+                                    on your collection.</p>
+                                <p class="mt-2">Each deck can have only one wishlist. If you want to share your
+                                    wishlist with others, please ensure it is set to public.</p>
                             </div>
                         </div>
                     </div>
 
-                    <div class="flex justify-end space-x-3">
+                    <!-- Detailed Cards View (collapsible) -->
+                    <div x-data="{ showDetailedCards: false }" class="mb-6">
+                        <button @click="showDetailedCards = !showDetailedCards"
+                            class="flex items-center space-x-2 text-sm font-medium text-purple-300 hover:text-purple-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform"
+                                :class="showDetailedCards ? 'rotate-90' : ''" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 5l7 7-7 7" />
+                            </svg>
+                            <span>Show Detailed Card List</span>
+                        </button>
+
+                        <div x-show="showDetailedCards" x-transition class="mt-4 overflow-y-auto">
+                            <!-- Main Deck Cards -->
+                            <div class="mb-4"
+                                x-show="Object.values($wire.mainDeck).some(c => (c.quantity - (c.owned || 0)) > 0)">
+                                <h4 class="mb-2 text-sm font-medium text-purple-300">Main Deck</h4>
+                                <div
+                                    class="grid grid-cols-2 gap-2 p-2 overflow-y-auto rounded-md sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 max-h-64 bg-gray-900/30">
+                                    <template x-for="card in Object.values($wire.mainDeck)" :key="card.id">
+                                        <template x-if="(card.quantity - (card.owned || 0)) > 0">
+                                            <div class="flex flex-col items-center">
+                                                <div class="relative w-16 h-20">
+                                                    <img :src="card.image" :alt="card.name"
+                                                        class="object-cover w-full h-full rounded">
+                                                    <div
+                                                        class="absolute bottom-0 right-0 flex items-center justify-center px-2 text-xs font-bold text-white bg-black/70 rounded-xl">
+                                                        <span
+                                                            x-text="'x' + (card.quantity - (card.owned || 0))"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="w-full mt-1 text-xs text-center text-purple-200 truncate"
+                                                    :title="card.name" x-text="card.name"></div>
+                                            </div>
+                                        </template>
+                                    </template>
+                                </div>
+                            </div>
+
+                            <!-- Evolution Deck Cards -->
+                            <div
+                                x-show="Object.values($wire.evolutionDeck).some(c => (c.quantity - (c.owned || 0)) > 0)">
+                                <h4 class="mb-2 text-sm font-medium text-purple-300">Evolution Deck</h4>
+                                <div
+                                    class="grid grid-cols-2 gap-2 p-2 overflow-y-auto rounded-md sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 max-h-64 bg-gray-900/30">
+                                    <template x-for="card in Object.values($wire.evolutionDeck)"
+                                        :key="card.id">
+                                        <template x-if="(card.quantity - (card.owned || 0)) > 0">
+                                            <div class="flex flex-col items-center">
+                                                <div class="relative w-16 h-20">
+                                                    <img :src="card.image" :alt="card.name"
+                                                        class="object-cover w-full h-full rounded">
+                                                    <div
+                                                        class="absolute bottom-0 right-0 flex items-center justify-center px-2 text-xs font-bold text-white bg-black/70 rounded-xl">
+                                                        <span
+                                                            x-text="'x' + (card.quantity - (card.owned || 0))"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="w-full mt-1 text-xs text-center text-purple-200 truncate"
+                                                    :title="card.name" x-text="card.name"></div>
+                                            </div>
+                                        </template>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end pt-4 space-x-3 border-t border-purple-900/30">
                         <button @click="showWishlistModal = false"
-                            class="px-4 py-2 text-sm font-medium text-purple-300 transition-colors bg-gray-700 rounded-md hover:bg-gray-600">
+                            class="px-4 py-2 text-sm font-medium text-purple-300 transition-colors border border-purple-700 rounded-md hover:bg-gray-700">
                             Cancel
                         </button>
-                        <button @click="$wire.saveCardsToWishlist(wishlistTitle); showWishlistModal = false"
+                        <button @click="$wire.saveCardsToWishlist(); showWishlistModal = false"
                             class="px-4 py-2 text-sm font-medium text-white transition-colors bg-purple-700 rounded-md hover:bg-purple-600">
                             Save Wishlist
                         </button>
@@ -665,7 +711,6 @@
                     evoDeck: $wire.evolutionDeck,
 
                     init() {
-                        // Initialize from Livewire data if available
                         this.mainDeck = Object.keys($wire.mainDeck).length > 0 ? $wire.mainDeck : {};
                         this.evoDeck = Object.keys($wire.evolutionDeck).length > 0 ? $wire.evolutionDeck : {};
                     },

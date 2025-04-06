@@ -31,6 +31,7 @@ class DeckBuilder extends Component
     protected $queryString = [];
 
     public Deck $deck;
+    public ?array $wishlist = null;
 
     public function boot()
     {
@@ -104,6 +105,8 @@ class DeckBuilder extends Component
                 ->with('collections', fn($query) => $query->where('user_id', Auth::id()))
                 ->get();
 
+            $this->wishlist = $deck->wishlist->toArray();
+
             foreach ($cards as $card) {
                 $values = [
                     "id" => $card->id,
@@ -166,55 +169,53 @@ class DeckBuilder extends Component
         );
     }
 
-    public function saveCardsToWishlist($wishlistTitle): void
+    public function saveCardsToWishlist(): void
     {
-        // Validate title
-        if (empty($wishlistTitle)) {
+        if (empty($this->wishlist['title'])) {
             $this->dispatch('show-error', message: 'Please provide a title for your wishlist');
             return;
         }
 
-        // Check if there are cards in the deck
         if (empty($this->mainDeck) && empty($this->evolutionDeck)) {
             $this->dispatch('show-error', message: 'No cards to add to wishlist');
             return;
         }
 
-        // DB transaction
-        DB::transaction(function () use ($wishlistTitle) {
-            // Find or create a wishlist for the user
-            $wishlist = Wishlist::firstOrCreate(
+        DB::transaction(function () {
+            $wishlist = Wishlist::updateOrCreate(
                 [
-                    'title' => $wishlistTitle,
                     'user_id' => Auth::id(),
                     'deck_id' => $this->deck->id ?? null,
                 ],
                 [
-                    'is_public' => false, // Default to private
+                    'title' => $this->wishlist['title'],
+                    'is_public' => $this->wishlist['is_public'],
                 ]
             );
 
-            // Prepare cards from both decks
+            if ($wishlist->wasRecentlyCreated === false) {
+                $wishlist->update(['is_public' => $this->wishlist['is_public']]);
+            }
+
             $wishlistCards = [];
+
             foreach ($this->mainDeck as $card) {
-                $quantity = $card['quantity'] - $card['owned'];
+                $quantity = $card['quantity'] - ($card['owned'] ?? 0);
                 if ($quantity > 0) {
                     $wishlistCards[$card['id']] = ['quantity' => $quantity];
                 }
             }
 
             foreach ($this->evolutionDeck as $card) {
-                $quantity = $card['quantity'] - $card['owned'];
+                $quantity = $card['quantity'] - ($card['owned'] ?? 0);
                 if ($quantity > 0) {
                     $wishlistCards[$card['id']] = ['quantity' => $quantity];
                 }
             }
 
-            // Sync the cards to the wishlist (this will overwrite existing cards)
             $wishlist->cards()->sync($wishlistCards);
         });
 
-        // dispatch a success message
         $this->dispatch('show-success', message: 'Cards saved to wishlist!');
     }
 
