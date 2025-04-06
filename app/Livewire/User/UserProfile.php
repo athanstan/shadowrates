@@ -16,6 +16,7 @@ class UserProfile extends Component
             'decks' => function ($query) {
                 $query->orderBy('decks.created_at', 'desc')
                     ->withCount('cards')
+                    ->withSum('cards as cards_count', 'deck_cards.quantity')
                     ->withLeader()
                     ->with([
                         'cards' => fn($q) => $q->with([
@@ -36,7 +37,6 @@ class UserProfile extends Component
             }
         ])
             ->withCount(['decks'])
-            ->withSum('cards as cards_count', 'card_user.quantity')
             ->where('slug', $slug)
             ->firstOrFail();
     }

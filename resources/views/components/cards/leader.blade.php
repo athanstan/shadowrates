@@ -16,9 +16,9 @@
                 <div
                     class="w-full bg-gray-200/80 rounded-full h-2.5 dark:bg-gray-700/80 backdrop-filter backdrop-blur-sm">
                     <div class="bg-gradient-to-r from-purple-600 to-indigo-500 h-2.5 rounded-full"
-                        style="width: {{ ($count / 50) * 100 }}%"></div>
+                        style="width: {{ ($count / 60) * 100 }}%"></div>
                 </div>
-                <span class="text-xs font-medium text-blue-100">{{ $count }}/50</span>
+                <span class="text-xs font-medium text-blue-100">{{ $count }}/60</span>
             </div>
         </div>
         <h3 class="text-xl font-bold text-balance text-on-surface-strong lg:text-2xl dark:text-on-surface-dark-strong"

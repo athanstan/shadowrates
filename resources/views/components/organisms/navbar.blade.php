@@ -25,12 +25,17 @@
                     </x-atoms.nav-link>
 
                     <x-atoms.nav-link route="decks.index" section="decks">
-                        DECKS LIST
+                        DECKS
                     </x-atoms.nav-link>
 
                     <x-atoms.nav-link route="decks.create" section="meta">
                         DECK BUILDER
                     </x-atoms.nav-link>
+
+                    <x-molecules.coming-soon-link section="players" title="Players Coming Soon!"
+                        description="Find and join players to play against." icon="hot">
+                        PLAYERS
+                    </x-molecules.coming-soon-link>
 
                     <x-molecules.coming-soon-link section="tournaments" title="Tournaments Coming Soon!"
                         description="Create, find, and join tournaments, compete against other players, and earn rewards and prizes."
@@ -135,6 +140,11 @@
                 <x-atoms.mobile-nav-link route="decks.create" section="meta">
                     DECK BUILDER
                 </x-atoms.mobile-nav-link>
+
+                <x-molecules.coming-soon-link section="players" title="Players Coming Soon!"
+                    description="Find and join players to play against." icon="hot" mobile="true">
+                    PLAYERS
+                </x-molecules.coming-soon-link>
 
                 <x-molecules.coming-soon-link section="community" title="Community Coming Soon!"
                     description="Join discussions, share decks, and connect with other players." icon="construction"

@@ -29,6 +29,10 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+Route::get('/roadmap', function () {
+    return view('roadmap');
+})->name('roadmap');
+
 // Google Sign-In Routes
 Route::prefix('auth/google')->name('auth.google.')->group(function () {
     Route::get('redirect', [GoogleController::class, 'redirectToGoogle'])->name('redirect');

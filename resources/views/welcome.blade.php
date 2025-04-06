@@ -95,14 +95,6 @@
                 <x-molecules.coming-soon-card title="Card Wishlist"
                     description="Create multiple wishlists of cards you want to acquire for your specific deck builds. Share with ease." />
 
-                <x-molecules.coming-soon-card title="Match History"
-                    description="Track your match history and analyze your performance. See your win/loss ratio and recollect your plays." />
-
-                <x-molecules.coming-soon-card title="Trading Platform"
-                    description="List cards you're willing to trade. Combines perfectly with our wishlist feature." />
-
-                <x-molecules.coming-soon-card title="Tournament Creator"
-                    description="Organize and manage your own Shadowverse tournaments with friends or the broader community." />
 
                 <x-molecules.coming-soon-card title="User Profiles"
                     description="Follow users and see their collection, favorite decks, and tournament achievements on their profile." />
@@ -113,9 +105,32 @@
                 <x-molecules.coming-soon-card title="Deck Sharing"
                     description="Share your deck creations with the community and discover new strategies from other players." />
 
-                <x-molecules.coming-soon-card title="Card Analytics"
-                    description="Get detailed statistics on card performance, usage rates, and synergy recommendations for your decks." />
+                <x-molecules.coming-soon-card title="Card Profile/Analytics"
+                    description="Dedicated card profiles with statistics on usage rates, and synergy recommendations for your decks." />
+                <x-molecules.coming-soon-card title="Match History" comingSoon
+                    description="Track your match history and analyze your performance. See your win/loss ratio and recollect your plays." />
+
+                <x-molecules.coming-soon-card title="Trading Platform" comingSoon
+                    description="List cards you're willing to trade. Combines perfectly with our wishlist feature." />
+
+                <x-molecules.coming-soon-card title="Tournament Creator" comingSoon
+                    description="Organize and manage your own Shadowverse tournaments with friends or the broader community." />
             </div>
+        </div>
+
+        <!-- View More button -->
+        <div class="flex justify-center mt-16">
+            <a href="{{ route('roadmap') }}"
+                class="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white transition-all duration-200 rounded-md group shadow-glow-md bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500"
+                wire:navigate>
+                <span>View Full Roadmap</span>
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    class="w-5 h-5 ml-2 transition-transform duration-200 group-hover:translate-x-1" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+            </a>
         </div>
     </div>
 
