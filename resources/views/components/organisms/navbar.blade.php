@@ -79,7 +79,7 @@
                                         My Collection
                                     </x-atoms.dropdown-link>
 
-                                    <x-atoms.dropdown-link route="users.profile" :params="['slug' => Auth::user()->slug]">
+                                    <x-atoms.dropdown-link route="users.wishlists" :params="['slug' => Auth::user()->slug]">
                                         My Wishlists
                                     </x-atoms.dropdown-link>
 

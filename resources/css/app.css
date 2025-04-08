@@ -9,6 +9,17 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --forestcraft: #4CAF50;
+    --swordcraft: #FFC107;
+    --runecraft: #a35bae;
+    --dragoncraft: #c1432e;
+    --abysscraft: #53565a;
+    --havencraft: #d9a93e;
+    --neutral: #8e262d;
+    --umamusume: #7e57c2;
+    --idolmaster_cinderella: #7e57c2;
+    --cf_vanguard: #7e57c2;
 }
 
 [x-cloak] {

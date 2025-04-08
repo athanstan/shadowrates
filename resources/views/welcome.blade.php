@@ -95,7 +95,6 @@
                 <x-molecules.coming-soon-card title="Card Wishlist"
                     description="Create multiple wishlists of cards you want to acquire for your specific deck builds. Share with ease." />
 
-
                 <x-molecules.coming-soon-card title="User Profiles"
                     description="Follow users and see their collection, favorite decks, and tournament achievements on their profile." />
 

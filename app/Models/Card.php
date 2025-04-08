@@ -2,19 +2,20 @@
 
 namespace App\Models;
 
+use App\Traits\Scopes\Card\HasCardScopes;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\Storage;
 
 class Card extends Model
 {
     /** @use HasFactory<\Database\Factories\CardFactory> */
-    use HasFactory, Sluggable;
-
+    use HasFactory;
+    use Sluggable;
+    use HasCardScopes;
     /**
      * The attributes that are mass assignable.
      *
@@ -184,38 +185,6 @@ class Card extends Model
         return $this->evolved_image
             ? url('/card-images/' . $this->evolved_image)
             : asset('images/card-placeholder.png');
-    }
-
-    /**
-     * Scope a query to only include active cards.
-     */
-    public function scopeActive($query)
-    {
-        return $query->where('is_active', true);
-    }
-
-    /**
-     * Scope a query to only include cards of a specific craft.
-     */
-    public function scopeByCraft($query, $craftId)
-    {
-        return $query->where('craft_id', $craftId);
-    }
-
-    /**
-     * Scope a query to only include cards of a specific type.
-     */
-    public function scopeByType($query, $typeId)
-    {
-        return $query->where('card_type_id', $typeId);
-    }
-
-    /**
-     * Scope a query to only include cards of a specific set.
-     */
-    public function scopeBySet($query, $setId)
-    {
-        return $query->where('card_set_id', $setId);
     }
 
     /**
