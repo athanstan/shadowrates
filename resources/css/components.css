@@ -48,25 +48,44 @@
 
 /* Neo-Brutal Button */
 .neo-brutal-button {
-    background: linear-gradient(to bottom, #8a2be2, #4a0080);
-    border: 2px solid rgba(138, 43, 226, 0.7);
-    box-shadow:
-        0 0 0 2px rgba(0, 0, 0, 0.3),
-        0 4px 0 0 #2d0a6d,
-        0 4px 10px rgba(0, 0, 0, 0.5),
-        0 0 15px rgba(138, 43, 226, 0.5);
-    transition: all 0.1s ease;
-    transform: translateY(-2px);
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    background: linear-gradient(to bottom right, #8a2be2, #4a0080);
+    font-weight: bold;
+    font-size: 1.125rem;
+    transition-property: all;
+    transition-duration: 100ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0.25rem 0.25rem 0px rgb(0, 0, 0);
+}
+
+.neo-brutal-button:hover {
+    box-shadow: 0.5rem 0.5rem 0px rgb(0, 0, 0);
+    transform: translate(-0.25rem, -0.25rem);
 }
 
 .neo-brutal-button:active {
-    transform: translateY(2px);
-    box-shadow:
-        0 0 0 2px rgba(0, 0, 0, 0.3),
-        0 0 0 0 #2d0a6d,
-        0 0 5px rgba(0, 0, 0, 0.5),
-        0 0 5px rgba(138, 43, 226, 0.5);
+    box-shadow: 0.125rem 0.125rem 0px rgb(0, 0, 0);
+    transform: translate(0.125rem, 0.125rem);
+}
+
+/* Neo-brutal link */
+.neo-brutal-link {
+    background: linear-gradient(to bottom right, #3b6fba, #1a4a8f);
+    font-weight: bold;
+    transition-property: all;
+    transition-duration: 100ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0.15rem 0.15rem 0px rgb(0, 0, 0);
+    text-decoration: none;
+}
+
+.neo-brutal-link:hover {
+    box-shadow: 0.35rem 0.35rem 0px rgb(0, 0, 0);
+    transform: translate(-0.2rem, -0.2rem);
+}
+
+.neo-brutal-link:active {
+    box-shadow: 0.1rem 0.1rem 0px rgb(0, 0, 0);
+    transform: translate(0.05rem, 0.05rem);
 }
 
 /* Star Glow Effect */
