@@ -27,6 +27,13 @@
 
     <!-- Page Content -->
     <main>
+        @auth
+            <!-- Alert Components -->
+            <x-atoms.success-alert position="top-center" />
+            <x-atoms.error-alert position="top-center" />
+
+        @endauth
+
         {{ $slot }}
     </main>
 

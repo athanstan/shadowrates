@@ -73,12 +73,6 @@
             @endauth
         </div>
 
-        @auth
-            <!-- Alert Components -->
-            <x-atoms.success-alert position="top-center" />
-            <x-atoms.error-alert position="top-center" />
-
-        @endauth
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
             <!-- Cards Collection Panel - Left -->
             <div class="space-y-4 lg:col-span-1">

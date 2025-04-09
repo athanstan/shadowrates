@@ -7,23 +7,29 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Rule;
+use App\Enums\Craft;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class UserSettings extends Component
 {
     public User $user;
-
-    #[Rule('nullable|string|max:100')]
     public $country;
-
-    #[Rule('nullable|string|max:100')]
     public $city;
-
-    #[Rule('nullable|string|max:1000')]
     public $bio;
-
-    #[Rule('nullable|string|max:50')]
+    public $username;
     public $favorite_class;
+
+    protected function rules()
+    {
+        return [
+            'username' => ['required', 'string', 'max:255', 'unique:users,name,' . $this->user->id],
+            'country' => ['nullable', 'string', 'max:100'],
+            'city' => ['nullable', 'string', 'max:100'],
+            'bio' => ['nullable', 'string', 'max:1000'],
+            'favorite_class' => ['required', 'string', Rule::enum(Craft::class)],
+        ];
+    }
 
     public $socialLinks = [];
     public $userSocialLinks = [];
@@ -35,6 +41,7 @@ class UserSettings extends Component
         $this->city = $this->user->city;
         $this->bio = $this->user->bio;
         $this->favorite_class = $this->user->favorite_class;
+        $this->username = $this->user->name;
 
         // Load all available social links
         $this->socialLinks = SocialLink::all();
@@ -45,7 +52,9 @@ class UserSettings extends Component
         foreach ($this->socialLinks as $socialLink) {
             $userLink = $userLinks->where('id', $socialLink->id)->first();
             /** @phpstan-ignore-next-line */
-            $this->userSocialLinks[$socialLink->id] = $userLink ? $userLink->pivot->value : '';
+            $this->userSocialLinks[$socialLink->id] = $userLink
+                ? $userLink->pivot->value
+                : '';
         }
     }
 
@@ -53,25 +62,31 @@ class UserSettings extends Component
     {
         $this->validate();
 
-        $this->user->update([
-            'country' => $this->country,
-            'city' => $this->city,
-            'bio' => $this->bio,
-            'favorite_class' => $this->favorite_class,
-        ]);
+        DB::transaction(function () {
+            $this->user->update([
+                'country' => $this->country,
+                'city' => $this->city,
+                'bio' => $this->bio,
+                'favorite_class' => $this->favorite_class,
+                'name' => $this->username,
+            ]);
 
-        // Update social links
-        foreach ($this->userSocialLinks as $socialLinkId => $value) {
-            if (!empty($value)) {
-                $this->user->socialLinks()->syncWithoutDetaching([
-                    $socialLinkId => ['value' => $value]
-                ]);
-            } else {
-                $this->user->socialLinks()->detach($socialLinkId);
+            // Update social links
+            foreach ($this->userSocialLinks as $socialLinkId => $value) {
+                if (!empty($value)) {
+                    $this->user->socialLinks()->syncWithoutDetaching([
+                        $socialLinkId => ['value' => $value]
+                    ]);
+                } else {
+                    $this->user->socialLinks()->detach($socialLinkId);
+                }
             }
-        }
+        });
 
-        $this->dispatch('settings-saved');
+        $this->dispatch(
+            'show-success',
+            message: 'User settings saved successfully!'
+        );
     }
 
     #[Layout('layouts.app')]

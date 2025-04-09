@@ -50,6 +50,7 @@ enum Craft: string
             self::UMAMUSUME => 'bg-[#7e57c2]',
             self::IDOLMASTER_CINDERELLA => 'bg-[#7e57c2]',
             self::CF_VANGUARD => 'bg-[#7e57c2]',
+            default => 'bg-gray-500',
         };
     }
 

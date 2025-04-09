@@ -58,6 +58,42 @@ class SocialLinkSeeder extends Seeder
                 'link' => 'https://facebook.com/',
                 'logo' => 'fab fa-facebook',
             ],
+            [
+                'slug' => 'tiktok',
+                'name' => 'TikTok',
+                'link' => 'https://tiktok.com/',
+                'logo' => 'fab fa-tiktok',
+            ],
+            [
+                'slug' => 'linkedin',
+                'name' => 'LinkedIn',
+                'link' => 'https://linkedin.com/',
+                'logo' => 'fab fa-linkedin',
+            ],
+            [
+                'slug' => 'telegram',
+                'name' => 'Telegram',
+                'link' => 'https://t.me/',
+                'logo' => 'fab fa-telegram',
+            ],
+            [
+                'slug' => 'pinterest',
+                'name' => 'Pinterest',
+                'link' => 'https://pinterest.com/',
+                'logo' => 'fab fa-pinterest',
+            ],
+            [
+                'slug' => 'snapchat',
+                'name' => 'Snapchat',
+                'link' => 'https://snapchat.com/',
+                'logo' => 'fab fa-snapchat',
+            ],
+            [
+                'slug' => 'patreon',
+                'name' => 'Patreon',
+                'link' => 'https://patreon.com/',
+                'logo' => 'fab fa-patreon',
+            ],
         ];
 
         foreach ($socialLinks as $link) {
