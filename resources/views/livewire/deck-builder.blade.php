@@ -118,9 +118,9 @@
                                             name: '{{ addslashes($card->name) }}',
                                             cost: '{{ $card->cost }}',
                                             rarity: '{{ $card->rarity }}',
-                                            cardType: { name: '{{ $card->cardType->name }}' },
+                                            card_type: '{{ $card->cardType->name }}',
                                             sub_type: '{{ $card->sub_type }}',
-                                            getImage: '{{ $card->getImage() }}'
+                                            image: '{{ $card->getImage() }}'
                                         });"
                                         class="object-cover w-full h-auto transition-transform duration-300 cursor-pointer transform-gpu"
                                         style="image-rendering: -webkit-optimize-contrast; backface-visibility: hidden;">
@@ -147,80 +147,7 @@
 
                                 <!-- Modal -->
                                 <template x-teleport="body">
-                                    <div x-show="showModal" x-cloak
-                                        class="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
-                                        @click.self="showModal = false" @keydown.escape.window="showModal = false"
-                                        x-transition>
-                                        <div class="flex w-full max-w-4xl p-6 mx-4 bg-gray-800 rounded-lg shadow-xl">
-                                            <!-- Left side - Card Image -->
-                                            <div class="w-1/2 pr-6">
-                                                <img src="{{ $card->getImage() }}" alt="{{ $card->name }}"
-                                                    class="w-full rounded-lg">
-                                            </div>
-
-                                            <!-- Right side - Card Details -->
-                                            <div class="w-1/2 space-y-4">
-                                                <h2 class="text-2xl font-bold text-purple-100">{{ $card->name }}
-                                                </h2>
-
-                                                <div class="space-y-2">
-                                                    <p class="text-purple-300"><span
-                                                            class="font-semibold">Type:</span>
-                                                        {{ $card->cardType->name }}
-                                                    </p>
-                                                    <p class="text-purple-300"><span
-                                                            class="font-semibold">Craft:</span>
-                                                        {{ $card->craft->name }}
-                                                    </p>
-                                                    <p class="text-purple-300"><span class="font-semibold">Set:</span>
-                                                        {{ $card->cardSet->name }}
-                                                    </p>
-                                                    <p class="text-purple-300"><span
-                                                            class="font-semibold">Rarity:</span>
-                                                        {{ $card->rarity }}</p>
-                                                    <p class="text-purple-300"><span
-                                                            class="font-semibold">Cost:</span>
-                                                        {{ $card->cost }} PP</p>
-
-                                                    @if ($card->traits)
-                                                        <p class="text-purple-300"><span
-                                                                class="font-semibold">Traits:</span>
-                                                            {{ $card->traits }}
-                                                        </p>
-                                                    @endif
-
-                                                    @if ($card->cardType && $card->cardType->name === 'Follower')
-                                                        <div class="pt-2 border-t border-purple-700">
-                                                            <p class="text-purple-300"><span
-                                                                    class="font-semibold">Stats:</span>
-                                                                {{ $card->atk }}/{{ $card->health }}</p>
-                                                            @if ($card->evolved_atk && $card->evolved_health)
-                                                                <p class="text-purple-300"><span
-                                                                        class="font-semibold">Evolved:</span>
-                                                                    {{ $card->evolved_atk }}/{{ $card->evolved_health }}
-                                                                </p>
-                                                            @endif
-                                                        </div>
-                                                    @endif
-
-                                                    @if ($card->effects)
-                                                        <div class="pt-2 border-t border-purple-700">
-                                                            <p class="font-semibold text-purple-200">Effect:</p>
-                                                            <p class="text-purple-300">{!! $card->effects !!}</p>
-                                                        </div>
-                                                    @endif
-                                                </div>
-
-                                                <div class="flex pt-4 space-x-2">
-
-                                                    <button @click="showModal = false"
-                                                        class="px-4 py-2 font-semibold text-purple-200 transition-colors duration-200 bg-transparent border border-purple-700 rounded hover:bg-purple-700/30">
-                                                        Close
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <x-atoms.card-details-modal :card="$card" />
                                 </template>
 
                             </div>
@@ -503,11 +430,28 @@
                                         :class="slot.card ? 'border-2 border-purple-500' : 'border border-purple-900/80'"
                                         style="background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxkZWZzPgogICAgPHBhdHRlcm4gaWQ9InBhdHRlcm4iIHg9IjAiIHk9IjAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgcGF0dGVyblRyYW5zZm9ybT0icm90YXRlKDQ1KSI+CiAgICAgIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSI2IiBoZWlnaHQ9IjYiIGZpbGw9IiMyMzFmMzkwMCIgLz4KICAgIDwvcGF0dGVybj4KICA8L2RlZnM+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzEzMTEyMCIgLz4KICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3BhdHRlcm4pIiAvPgo8L3N2Zz4=');">
                                         <template x-if="slot.card">
-                                            <div>
+                                            <div class="relative w-full h-full" :key="slot.card.id + '-' + slot.index">
                                                 <img :src="slot.card.image" :alt="slot.card.name"
                                                     @click="removeCardFromMainDeck(slot.card.id)"
                                                     class="absolute inset-0 object-cover w-full h-full"
                                                     :class="{ 'filter grayscale': !slot.isOwned }">
+
+                                                <!-- Info button -->
+                                                <div x-data="{ showModal: false, card: slot.card }" class="absolute z-10 top-1 right-1">
+                                                    <button type="button"
+                                                        @click.stop="showModal = true; card = slot.card"
+                                                        class="p-1 text-purple-300 transition-colors rounded-full bg-black/80 hover:bg-purple-900/80">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3"
+                                                            viewBox="0 0 20 20" fill="currentColor">
+                                                            <path fill-rule="evenodd"
+                                                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                                                clip-rule="evenodd" />
+                                                        </svg>
+                                                    </button>
+                                                    <template x-teleport="body">
+                                                        <x-atoms.card-details-modal-js />
+                                                    </template>
+                                                </div>
                                             </div>
                                         </template>
                                         <template x-if="!slot.card">
@@ -541,11 +485,28 @@
                                     :class="slot.card ? 'border-2 border-purple-500' : 'border border-purple-900/80'"
                                     style="background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxkZWZzPgogICAgPHBhdHRlcm4gaWQ9InBhdHRlcm4iIHg9IjAiIHk9IjAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgcGF0dGVyblRyYW5zZm9ybT0icm90YXRlKDQ1KSI+CiAgICAgIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSI2IiBoZWlnaHQ9IjYiIGZpbGw9IiMyYzFmMzkwMCIgLz4KICAgIDwvcGF0dGVybj4KICA8L2RlZnM+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzEzMTEyMCIgLz4KICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3BhdHRlcm4pIiAvPgo8L3N2Zz4=');">
                                     <template x-if="slot.card">
-                                        <div>
+                                        <div class="relative w-full h-full" :key="slot.card.id + '-' + slot.index">
                                             <img :src="slot.card.image" :alt="slot.card.name"
                                                 @click="removeCardFromEvoDeck(slot.card.id)"
                                                 class="absolute inset-0 object-cover w-full h-full"
                                                 :class="{ 'filter grayscale': !slot.isOwned }">
+
+                                            <!-- Info button -->
+                                            <div x-data="{ showModal: false, card: slot.card }" class="absolute z-10 top-1 right-1">
+                                                <button type="button"
+                                                    @click.stop="showModal = true; card = slot.card"
+                                                    class="p-1 text-purple-300 transition-colors rounded-full bg-black/80 hover:bg-purple-900/80">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3"
+                                                        viewBox="0 0 20 20" fill="currentColor">
+                                                        <path fill-rule="evenodd"
+                                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                                            clip-rule="evenodd" />
+                                                    </svg>
+                                                </button>
+                                                <template x-teleport="body">
+                                                    <x-atoms.card-details-modal-js />
+                                                </template>
+                                            </div>
                                         </div>
                                     </template>
                                     <template x-if="!slot.card">
@@ -769,10 +730,10 @@
                                     name: card.name,
                                     cost: card.cost,
                                     rarity: card.rarity,
-                                    card_type: card.cardType ? card.cardType.name : '',
+                                    card_type: card.card_type,
                                     sub_type: card.sub_type,
                                     quantity: 1,
-                                    image: card.getImage
+                                    image: card.image
                                 };
                             } else if (this.evoDeck[card.id] && totalCardCountInEvoDeck < 3) {
                                 // Increment quantity of this specific card
@@ -825,10 +786,10 @@
                                 name: card.name,
                                 cost: card.cost,
                                 rarity: card.rarity,
-                                card_type: card.cardType?.name,
+                                card_type: card.card_type || (card.cardType ? card.cardType.name : ''),
                                 sub_type: card.sub_type,
                                 quantity: 1,
-                                image: card.getImage
+                                image: card.image
                             };
                         } else if (this.mainDeck[card.id] && totalCardCountInDeck < 3) {
                             // Increment quantity of this specific card
